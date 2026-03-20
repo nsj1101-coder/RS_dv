@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환자 접수 - MediW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;background:#f5f7fa;color:#1a1a2e;min-height:100vh;}
+
+    .app{display:flex;height:100vh;overflow:hidden;}
+
+    /* ===== SIDEBAR (동일) ===== */
+    .sidebar{width:240px;background:#fff;border-right:1px solid #e8ecf1;display:flex;flex-direction:column;flex-shrink:0;}
+    .sidebar-logo{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:.625rem;border-bottom:1px solid #e8ecf1;}
+    .sidebar-logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.875rem;}
+    .sidebar-logo-text{font-size:1.125rem;font-weight:700;color:#1a1a2e;}
+    .user-card{margin:1rem 1rem 0;padding:1rem;border:1px solid #e8ecf1;border-radius:.75rem;display:flex;align-items:center;gap:.75rem;}
+    .user-avatar{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;}
+    .user-avatar svg{width:1.25rem;height:1.25rem;color:#2563eb;}
+    .user-name{font-size:.875rem;font-weight:600;color:#1a1a2e;}
+    .user-role-label{font-size:.75rem;color:#3391ff;font-weight:500;}
+    .type-switcher{display:flex;gap:.25rem;margin:1rem 1rem 0;padding:.25rem;background:#f0f4f8;border-radius:.5rem;}
+    .type-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.5rem .25rem;border:none;border-radius:.375rem;background:transparent;cursor:pointer;transition:all .2s;font-size:.625rem;font-weight:500;color:#999;font-family:inherit;}
+    .type-btn svg{width:1.125rem;height:1.125rem;color:#999;transition:color .2s;}
+    .type-btn:hover{background:#e2e8f0;}
+    .type-btn.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#3391ff;}
+    .type-btn.active svg{color:#3391ff;}
+    .nav-menu{flex:1;padding:1rem 0;margin-top:.5rem;}
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;cursor:pointer;transition:all .15s;color:#8896a6;font-size:.875rem;font-weight:500;border-left:3px solid transparent;text-decoration:none;}
+    .nav-item:hover{background:#f5f7fa;color:#1a1a2e;}
+    .nav-item.active{background:rgba(51,145,255,.06);color:#3391ff;border-left-color:#3391ff;font-weight:600;}
+    .nav-item svg{width:1.25rem;height:1.25rem;flex-shrink:0;}
+    .sidebar-footer{padding:1rem 1.5rem;border-top:1px solid #e8ecf1;}
+    .logout-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.625rem 0;border:none;background:none;cursor:pointer;color:#8896a6;font-size:.875rem;font-weight:500;transition:color .15s;font-family:inherit;}
+    .logout-btn:hover{color:#e74c3c;}
+    .logout-btn svg{width:1.25rem;height:1.25rem;}
+
+    /* ===== MAIN ===== */
+    .main{flex:1;overflow-y:auto;padding:0;background:#fff;}
+    .main-inner{max-width:860px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+
+    /* Header */
+    .page-header{padding:0 0 1.5rem;margin-bottom:0;border-bottom:1px solid #f1f5f9;}
+    .page-title{font-size:1.5rem;font-weight:700;color:#1a1a2e;letter-spacing:-.02em;margin-bottom:.375rem;}
+    .page-desc{font-size:.9375rem;color:#94a3b8;line-height:1.5;}
+
+    /* Stepper */
+    .stepper{position:sticky;top:0;z-index:10;background:#fff;padding:1.5rem 0;border-bottom:1px solid #f1f5f9;margin-bottom:2rem;}
+    .stepper-track{display:flex;align-items:center;gap:0;}
+    .step-item{flex:1;display:flex;align-items:center;gap:.5rem;cursor:pointer;transition:opacity .15s;}
+    .step-item.disabled{opacity:.4;pointer-events:none;}
+    .step-num{width:1.75rem;height:1.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:2px solid #e2e8f0;color:#94a3b8;background:#fff;transition:all .2s;flex-shrink:0;}
+    .step-item.active .step-num{border-color:#3391ff;background:#3391ff;color:#fff;}
+    .step-item.done .step-num{border-color:#10b981;background:#10b981;color:#fff;}
+    .step-label{font-size:.75rem;font-weight:600;color:#94a3b8;white-space:nowrap;transition:color .2s;}
+    .step-item.active .step-label{color:#1a1a2e;}
+    .step-item.done .step-label{color:#10b981;}
+    .step-line{flex:0 0 1.5rem;height:1px;background:#e2e8f0;}
+
+    /* Form Sections */
+    .form-step{display:none;}
+    .form-step.active{display:block;}
+    .section{margin-bottom:2.5rem;}
+    .section:last-child{margin-bottom:0;}
+    .section-title{font-size:1.0625rem;font-weight:700;color:#1a1a2e;margin-bottom:.375rem;}
+    .section-desc{font-size:.8125rem;color:#94a3b8;margin-bottom:1.5rem;}
+
+    /* Form Grid */
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 2rem;}
+    .fg.cols-3{grid-template-columns:1fr 1fr 1fr;}
+    .fg.cols-1{grid-template-columns:1fr;}
+    .field{display:flex;flex-direction:column;gap:.375rem;}
+    .field.full{grid-column:1/-1;}
+    .label{font-size:.8125rem;font-weight:500;color:#64748b;}
+    .label .req{color:#ef4444;margin-left:.125rem;}
+    .input,.select,.textarea{width:100%;padding:.75rem 1rem;border:1px solid #e2e8f0;border-radius:.5rem;font-size:.9375rem;font-family:inherit;color:#1a1a2e;background:#fff;transition:border-color .15s,box-shadow .15s;outline:none;}
+    .input:focus,.select:focus,.textarea:focus{border-color:#3391ff;box-shadow:0 0 0 3px rgba(51,145,255,.08);}
+    .input::placeholder,.textarea::placeholder{color:#cbd5e1;}
+    .textarea{min-height:5rem;resize:vertical;}
+    .select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .875rem center;background-size:1rem;padding-right:2.75rem;}
+    .hint{font-size:.75rem;color:#94a3b8;}
+
+    /* Selected hospital/dept banner */
+    .selected-info{background:#f8fbff;border:1px solid #dbeafe;border-radius:.75rem;padding:1.25rem 1.5rem;margin-bottom:2rem;display:none;}
+    .selected-info.show{display:block;}
+    .selected-info-title{font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.03em;margin-bottom:.625rem;}
+    .selected-hospital{font-size:1rem;font-weight:700;color:#1d4ed8;margin-bottom:.625rem;}
+    .selected-depts{display:flex;flex-wrap:wrap;gap:.375rem;}
+    .selected-dept-tag{padding:.3125rem .75rem;border-radius:2rem;font-size:.75rem;font-weight:600;background:#eff6ff;color:#3391ff;border:1px solid #bfdbfe;}
+
+    /* Chips */
+    .chips{display:flex;flex-wrap:wrap;gap:.5rem;}
+    .chip{display:inline-flex;align-items:center;padding:.5rem 1rem;border:1px solid #e2e8f0;border-radius:2rem;cursor:pointer;transition:all .15s;font-size:.8125rem;font-weight:500;color:#475569;background:#fff;user-select:none;}
+    .chip:hover{border-color:#93c5fd;background:#f8fbff;}
+    .chip.selected{border-color:#3391ff;background:#eff6ff;color:#1d4ed8;font-weight:600;}
+    .chip input{display:none;}
+
+    /* Radio */
+    .radios{display:flex;flex-wrap:wrap;gap:.5rem;}
+    .radio{display:flex;align-items:center;gap:.5rem;padding:.625rem 1rem;border:1px solid #e2e8f0;border-radius:.5rem;cursor:pointer;transition:all .15s;font-size:.875rem;font-weight:500;color:#475569;background:#fff;}
+    .radio:hover{border-color:#93c5fd;background:#f8fbff;}
+    .radio.selected{border-color:#3391ff;background:#eff6ff;color:#1d4ed8;font-weight:600;}
+    .radio input{display:none;}
+
+    /* Pain Scale */
+    .pain-scale{display:flex;gap:.375rem;align-items:center;}
+    .pain-dot{width:2.25rem;height:2.25rem;border-radius:50%;border:2px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:#94a3b8;cursor:pointer;transition:all .15s;background:#fff;}
+    .pain-dot:hover{border-color:#93c5fd;}
+    .pain-dot.selected{border-color:#ef4444;background:#fef2f2;color:#ef4444;}
+    .pain-dot.selected.low{border-color:#f59e0b;background:#fffbeb;color:#f59e0b;}
+    .pain-dot.selected.mid{border-color:#f97316;background:#fff7ed;color:#f97316;}
+    .pain-dot.selected.high{border-color:#ef4444;background:#fef2f2;color:#ef4444;}
+    .pain-labels{display:flex;justify-content:space-between;font-size:.6875rem;color:#cbd5e1;margin-top:.25rem;}
+
+    /* Toggle */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.875rem 0;border-bottom:1px solid #f8fafc;}
+    .toggle-row:last-child{border-bottom:none;}
+    .toggle-label{font-size:.875rem;font-weight:500;color:#475569;}
+    .toggle{position:relative;width:2.75rem;height:1.5rem;background:#e2e8f0;border-radius:1rem;cursor:pointer;transition:background .2s;flex-shrink:0;}
+    .toggle.on{background:#3391ff;}
+    .toggle::after{content:'';position:absolute;top:2px;left:2px;width:1.25rem;height:1.25rem;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.1);}
+    .toggle.on::after{transform:translateX(1.25rem);}
+
+    /* Upload */
+    .upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .upload-slot{border:1px dashed #d1d5db;border-radius:.5rem;padding:1.5rem 1rem;text-align:center;cursor:pointer;transition:all .15s;background:#fafbfc;}
+    .upload-slot:hover{border-color:#3391ff;background:#f8fbff;}
+    .upload-slot svg{width:1.25rem;height:1.25rem;color:#94a3b8;margin-bottom:.375rem;}
+    .upload-slot .upload-title{font-size:.8125rem;font-weight:600;color:#475569;margin-bottom:.125rem;}
+    .upload-slot .upload-hint{font-size:.6875rem;color:#cbd5e1;}
+    .upload-slot.required{border-color:#fca5a5;background:#fef7f7;}
+    .upload-slot.required .upload-title::after{content:' *';color:#ef4444;}
+    .upload-slot input{display:none;}
+
+    /* Buttons */
+    .form-nav{display:flex;align-items:center;justify-content:space-between;margin-top:3rem;padding-top:2rem;border-top:1px solid #f1f5f9;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.9375rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .15s;padding:.75rem 1.75rem;font-family:inherit;}
+    .btn-primary{background:#3391ff;color:#fff;}
+    .btn-primary:hover{background:#2577e0;}
+    .btn-ghost{background:none;color:#64748b;padding:.75rem 1rem;}
+    .btn-ghost:hover{color:#1a1a2e;}
+    .btn-submit{background:#10b981;color:#fff;padding:.875rem 2rem;font-size:1rem;}
+    .btn-submit:hover{background:#059669;}
+    .btn:disabled{opacity:.4;pointer-events:none;}
+
+    /* Mobile */
+    .mobile-header{display:none;padding:1rem;background:#fff;border-bottom:1px solid #e8ecf1;align-items:center;justify-content:space-between;}
+    .mobile-menu-btn{width:2.25rem;height:2.25rem;border:1px solid #e8ecf1;border-radius:.5rem;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .mobile-menu-btn svg{width:1.25rem;height:1.25rem;color:#64748b;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:99;}
+
+    /* Toast */
+    .toast{position:fixed;bottom:2rem;right:2rem;padding:1rem 1.5rem;background:#0f172a;color:#fff;border-radius:.75rem;font-size:.875rem;font-weight:500;display:flex;align-items:center;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(120%);transition:transform .3s ease;z-index:999;}
+    .toast.show{transform:translateY(0);}
+    .toast svg{width:1.25rem;height:1.25rem;color:#34d399;flex-shrink:0;}
+
+    @media(max-width:1024px){.fg.cols-3{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){
+      .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;transition:left .3s;}
+      .sidebar.open{left:0;}
+      .sidebar-overlay.show{display:block;}
+      .mobile-header{display:flex;}
+      .main-inner{padding:1.5rem 1rem 3rem;}
+      .fg,.fg.cols-3,.upload-grid{grid-template-columns:1fr;}
+      .step-label{display:none;}
+      .step-line{flex:0 0 .75rem;}
+      .form-nav{flex-direction:column;gap:.75rem;}
+      .btn{width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div style="font-weight:700;color:#3391ff;">MediW</div>
+    <div style="width:2.25rem;"></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-icon">M</div><div class="sidebar-logo-text">MediW</div></div>
+      <div class="user-card">
+        <div class="user-avatar"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+        <div><div class="user-name">Kim Minsoo</div><div class="user-role-label">에이전시</div></div>
+      </div>
+      <div class="type-switcher">
+        <button class="type-btn" data-type="patient"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>환자</span></button>
+        <button class="type-btn" data-type="doctor"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg><span>의료인</span></button>
+        <button class="type-btn active" data-type="agency"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg><span>에이전시</span></button>
+      </div>
+      <nav class="nav-menu">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg><span>대시보드</span></a>
+        <a href="profile.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg><span>내 정보</span></a>
+        <a href="patient-list.html" class="nav-item active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span>환자 관리</span></a>
+        <a href="hospitals.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg><span>병원 검색</span></a>
+        <a href="#" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>설정</span></a>
+      </nav>
+      <div class="sidebar-footer"><button class="logout-btn" onclick="location.href='login.html'"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg><span>로그아웃</span></button></div>
+    </aside>
+
+    <main class="main">
+      <div class="main-inner">
+        <!-- Header -->
+        <div class="page-header">
+          <h1 class="page-title">환자 대리 접수</h1>
+          <p class="page-desc">환자 정보를 입력해주세요. 접수 후 담당 코디네이터가 배정됩니다.</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper">
+          <div class="stepper-track">
+            <div class="step-item active" data-step="1" onclick="goStep(1)"><div class="step-num">1</div><span class="step-label">간단 접수</span></div>
+            <div class="step-line"></div>
+            <div class="step-item disabled" data-step="2" onclick="goStep(2)"><div class="step-num">2</div><span class="step-label">상세 의료정보</span></div>
+          </div>
+        </div>
+
+        <!-- Selected Hospital/Dept from hospitals.html -->
+        <div class="selected-info" id="selectedInfo">
+          <div class="selected-info-title">선택된 병원 · 진료과</div>
+          <div class="selected-hospital" id="selectedHospital"></div>
+          <div class="selected-depts" id="selectedDepts"></div>
+        </div>
+
+        <!-- ===== STEP 1: 간단 접수 ===== -->
+        <div class="form-step active" id="step1">
+          <div class="section">
+            <div class="section-title">환자 기본 정보</div>
+            <div class="fg">
+              <div class="field"><label class="label">이름 <span class="req">*</span></label><input type="text" class="input" placeholder="Full Name"></div>
+              <div class="field"><label class="label">국적 <span class="req">*</span></label><select class="select"><option value="">선택</option><option>Russia</option><option>Kazakhstan</option><option>Uzbekistan</option><option>Mongolia</option><option>China</option><option>Japan</option><option>United States</option><option>기타</option></select></div>
+              <div class="field"><label class="label">전화번호 <span class="req">*</span></label><input type="tel" class="input" placeholder="+7-000-000-0000"></div>
+              <div class="field"><label class="label">이메일 <span class="req">*</span></label><input type="email" class="input" placeholder="email@example.com"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">희망 진료과</div>
+            <div class="fg cols-1">
+              <div class="field">
+                <label class="label">진료과 선택 <span class="req">*</span></label>
+                <div class="chips">
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Cardiology</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Orthopedic Surgery</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Neurosurgery</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Plastic Surgery</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Oncology</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Dermatology</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Dentistry</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Ophthalmology</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Internal Medicine</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">Urology</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">OB/GYN</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">주요 증상</div>
+            <div class="fg cols-1">
+              <div class="field"><label class="label">증상 설명 <span class="req">*</span></label><textarea class="textarea" placeholder="현재 겪고 있는 증상을 구체적으로 설명해주세요"></textarea></div>
+            </div>
+            <div class="fg" style="margin-top:1.5rem;">
+              <div class="field">
+                <label class="label">통증 강도 (1~10)</label>
+                <div class="pain-scale" id="painScale"></div>
+                <div class="pain-labels"><span>없음</span><span>보통</span><span>극심</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-nav">
+            <div></div>
+            <button class="btn btn-primary" onclick="nextStep()">다음 단계 →</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: 상세 의료정보 ===== -->
+        <div class="form-step" id="step2">
+          <div class="section">
+            <div class="section-title">현지 진단 정보</div>
+            <div class="fg">
+              <div class="field"><label class="label">현지 병원 진단명</label><input type="text" class="input" placeholder="Diagnosis"></div>
+              <div class="field"><label class="label">진단 병원</label><input type="text" class="input" placeholder="Hospital Name"></div>
+              <div class="field"><label class="label">현재 치료 여부</label><select class="select"><option value="">선택</option><option>치료 중</option><option>치료 완료</option><option>치료 안 함</option></select></div>
+              <div class="field"><label class="label">현지 처방 내용</label><input type="text" class="input" placeholder="처방 약물 또는 치료 내용"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">병력 및 건강 상태</div>
+            <div class="fg cols-1">
+              <div class="field">
+                <label class="label">기저 질환</label>
+                <div class="chips">
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">당뇨</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">고혈압</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">심장질환</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">암</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">간질환</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">신장질환</label>
+                  <label class="chip" onclick="toggleChip(this)"><input type="checkbox">없음</label>
+                </div>
+              </div>
+              <div class="field"><label class="label">알레르기</label><input type="text" class="input" placeholder="약물, 음식, 기타 알레르기"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">현재 복용 약물</div>
+            <div class="fg">
+              <div class="field"><label class="label">약물 이름</label><input type="text" class="input" placeholder="Medication Name"></div>
+              <div class="field"><label class="label">복용 용량 / 기간</label><input type="text" class="input" placeholder="예: 500mg, 1일 2회, 6개월"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">의료 기록 업로드</div>
+            <div class="section-desc">PDF, JPG, DICOM 형식 지원 · 파일당 최대 50MB</div>
+            <div class="upload-grid">
+              <div class="upload-slot required" onclick="this.querySelector('input').click()">
+                <input type="file" accept=".pdf,.jpg,.png,.dcm">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                <div class="upload-title">진단서 (Diagnosis Report)</div>
+                <div class="upload-hint">필수 · PDF, JPG</div>
+              </div>
+              <div class="upload-slot" onclick="this.querySelector('input').click()">
+                <input type="file" accept=".pdf,.jpg,.png,.dcm">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                <div class="upload-title">CT / MRI / X-ray</div>
+                <div class="upload-hint">PDF, JPG, DICOM</div>
+              </div>
+              <div class="upload-slot" onclick="this.querySelector('input').click()">
+                <input type="file" accept=".pdf,.jpg,.png">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                <div class="upload-title">혈액검사 / 병리검사</div>
+                <div class="upload-hint">PDF, JPG</div>
+              </div>
+              <div class="upload-slot" onclick="this.querySelector('input').click()">
+                <input type="file" accept=".pdf,.jpg,.png,.dcm,.zip">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                <div class="upload-title">기타 (처방전 등)</div>
+                <div class="upload-hint">PDF, JPG, DICOM, ZIP</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">방문 일정</div>
+            <div class="fg">
+              <div class="field"><label class="label">방문 희망 시기</label><input type="date" class="input"></div>
+              <div class="field"><label class="label">예상 체류 기간</label><select class="select"><option value="">선택</option><option>1주 이내</option><option>1~2주</option><option>2~4주</option><option>1~3개월</option><option>3개월 이상</option></select></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">컨시어지 서비스</div>
+            <div class="section-desc">필요한 서비스를 선택하면 담당자가 안내해드립니다</div>
+            <div class="toggle-row"><span class="toggle-label">공항 픽업 서비스</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><span class="toggle-label">차량 서비스 (병원 이동)</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><span class="toggle-label">숙박 예약</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><span class="toggle-label">통역 서비스</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn btn-ghost" onclick="prevStep()">← 이전</button>
+            <button class="btn btn-submit" onclick="submitForm()">접수 완료</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span id="toastText">저장되었습니다</span></div>
+
+  <script>
+    let current = 1;
+    const total = 2;
+
+    function goStep(n) {
+      if (n < 1 || n > total) return;
+      current = n;
+      document.querySelectorAll('.form-step').forEach((s,i) => s.classList.toggle('active', i+1 === n));
+      document.querySelectorAll('.step-item').forEach((s,i) => {
+        const step = i+1;
+        s.classList.remove('active','done','disabled');
+        if (step === n) s.classList.add('active');
+        else if (step < n) s.classList.add('done');
+        else s.classList.add('disabled');
+      });
+      document.querySelector('.main').scrollTop = 0;
+    }
+
+    function nextStep() { goStep(current + 1); }
+    function prevStep() { goStep(current - 1); }
+
+    function selectRadio(el) {
+      el.closest('.radios').querySelectorAll('.radio').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      el.querySelector('input').checked = true;
+    }
+
+    function toggleChip(el) {
+      el.classList.toggle('selected');
+      const cb = el.querySelector('input');
+      cb.checked = !cb.checked;
+    }
+
+    // Pain scale
+    (function(){
+      const ps = document.getElementById('painScale');
+      for(let i=1;i<=10;i++){
+        const d = document.createElement('div');
+        d.className = 'pain-dot';
+        d.textContent = i;
+        d.onclick = function(){
+          ps.querySelectorAll('.pain-dot').forEach(p => p.className = 'pain-dot');
+          for(let j=0;j<i;j++){
+            const dot = ps.children[j];
+            const cls = j<3?'low':j<6?'mid':'high';
+            dot.className = `pain-dot selected ${cls}`;
+          }
+        };
+        ps.appendChild(d);
+      }
+    })();
+
+    function submitForm() {
+      const t = document.getElementById('toast');
+      document.getElementById('toastText').textContent = '환자 접수가 완료되었습니다';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    // Parse URL params from hospitals.html
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const hospital = params.get('hospital');
+      const depts = params.get('depts');
+      if (hospital) {
+        const box = document.getElementById('selectedInfo');
+        document.getElementById('selectedHospital').textContent = hospital;
+        if (depts) {
+          const deptsArr = depts.split('||');
+          document.getElementById('selectedDepts').innerHTML = deptsArr.map(d => '<span class="selected-dept-tag">' + d + '</span>').join('');
+        }
+        box.classList.add('show');
+      }
+    })();
+  </script>
+</body>
+</html>

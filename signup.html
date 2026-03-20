@@ -150,6 +150,13 @@
       <div class="nav-links">
       </div>
       <div class="nav-actions">
+        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ru">Русский</option>
+        </select>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
           <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
@@ -184,6 +191,20 @@
       </div>
     </div>
 
+    <!-- Nationality Selector Modal -->
+    <div class="modal" id="nationalityModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Select Nationality</h2>
+          <button class="modal-close" onclick="closeNationalitySelector()">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="search-input" id="nationalitySearch" placeholder="Search nationality..." onkeyup="filterNationalities()">
+          <div id="nationalityList"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- City Selector Modal -->
     <div class="modal" id="cityModal">
       <div class="modal-content">
@@ -210,30 +231,71 @@
           <div class="section-label">Step 1: Basic Information</div>
           <div class="form-grid">
             <div class="form-group">
-              <label for="fullName">Full Name <span class="required">*</span></label>
-              <input type="text" id="fullName" name="fullName" required placeholder="Your full name">
-            </div>
-            <div class="form-group">
               <label for="email">Email Address <span class="required">*</span></label>
               <input type="email" id="email" name="email" required placeholder="you@example.com">
             </div>
             <div class="form-group">
-              <label for="phone">Phone Number <span class="required">*</span></label>
-              <input type="tel" id="phone" name="phone" required placeholder="+82 10-1234-5678">
+              <label for="password">Password <span class="required">*</span></label>
+              <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="fullName">Full Name <span class="required">*</span></label>
+              <input type="text" id="fullName" name="fullName" required placeholder="Your full name">
             </div>
             <div class="form-group">
               <label for="dob">Date of Birth <span class="required">*</span></label>
               <input type="date" id="dob" name="dob" required>
             </div>
             <div class="form-group">
-              <label for="password">Password <span class="required">*</span></label>
-              <input type="password" id="password" name="password" required placeholder="••••••••">
+              <label for="gender">Gender <span class="required">*</span></label>
+              <select id="gender" name="gender" required>
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="phone" name="phone" required placeholder="+82 10-1234-5678">
+            </div>
+            <div class="form-group">
+              <label for="language">Preferred Language <span class="required">*</span></label>
+              <select id="language" name="language" required>
+                <option value="">Select language</option>
+                <option value="english">English</option>
+                <option value="korean">Korean</option>
+                <option value="japanese">Japanese</option>
+                <option value="chinese">Chinese</option>
+                <option value="russian">Russian</option>
+                <option value="spanish">Spanish</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Location & Nationality -->
+          <div>
+            <div class="section-label">Step 2: Location & Nationality</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="nationality">Nationality <span class="required">*</span></label>
+                <input type="text" id="nationality" name="nationality" readonly placeholder="Click to select nationality" style="cursor:pointer;" onclick="openNationalitySelector()">
+              </div>
+              <div class="form-group">
+                <label for="country">Country of Residence <span class="required">*</span></label>
+                <input type="text" id="country" name="country" readonly placeholder="Click to select country" style="cursor:pointer;" onclick="openCountrySelector()">
+              </div>
+              <div class="form-group">
+                <label for="city">City of Residence <span class="required">*</span></label>
+                <input type="text" id="city" name="city" readonly placeholder="Click to select city" style="cursor:pointer;" onclick="openCitySelector()">
+              </div>
             </div>
           </div>
 
           <!-- Account Type -->
           <div>
-            <div class="section-label">Step 2: Account Type</div>
+            <div class="section-label">Step 3: Account Type</div>
             <div class="section-subtitle">What best describes you?</div>
             <div class="form-group">
               <select id="accountType" name="accountType" required style="width:100%;">
@@ -242,21 +304,6 @@
                 <option value="hospital">Hospital / Medical Institution</option>
                 <option value="agency">Medical Tourism Agency</option>
               </select>
-            </div>
-          </div>
-
-          <!-- Location -->
-          <div>
-            <div class="section-label">Step 3: Location</div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="country">Country <span class="required">*</span></label>
-                <input type="text" id="country" name="country" readonly placeholder="Click to select country" style="cursor:pointer;" onclick="openCountrySelector()">
-              </div>
-              <div class="form-group">
-                <label for="city">City <span class="required">*</span></label>
-                <input type="text" id="city" name="city" readonly placeholder="Click to select city" style="cursor:pointer;" onclick="openCitySelector()">
-              </div>
             </div>
           </div>
 
@@ -305,6 +352,17 @@
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
+    // Language change handler
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      console.log('Language changed to:', lang);
+      // Add your translation logic here
+    }
+
+    // Load saved language
+    const savedLang = localStorage.getItem('language') || 'en';
+    document.getElementById('langSelector').value = savedLang;
+
     // Mobile menu toggle
     function toggleMobile() {
       const menu = document.getElementById('mobileMenu');
@@ -315,10 +373,19 @@
     document.getElementById('signupForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const formData = new FormData(this);
-      console.log('Signup:', Object.fromEntries(formData));
-      // Simulate signup
-      alert('Account created successfully! Redirecting to login...');
-      window.location.href = 'login.html';
+      const data = Object.fromEntries(formData);
+      
+      // Save signup data to sessionStorage for success page
+      const signupData = {
+        email: data.email,
+        fullName: data.fullName,
+        accountType: data.accountType
+      };
+      sessionStorage.setItem('signupData', JSON.stringify(signupData));
+      
+      console.log('Signup:', data);
+      // Redirect to success page
+      window.location.href = 'signup-success.html';
     });
 
     // Fade in animation
@@ -379,6 +446,13 @@
       ).join('');
     }
 
+    function initNationalityList() {
+      const nationalityList = document.getElementById('nationalityList');
+      nationalityList.innerHTML = countries.map(country => 
+        `<div class="list-item" onclick="selectNationality('${country}')">${country}</div>`
+      ).join('');
+    }
+
     function initCityList() {
       const selectedCountry = document.getElementById('country').value;
       const cityList = document.getElementById('cityList');
@@ -394,6 +468,15 @@
       countryList.innerHTML = countries
         .filter(country => country.toLowerCase().includes(search))
         .map(country => `<div class="list-item" onclick="selectCountry('${country}')">${country}</div>`)
+        .join('');
+    }
+
+    function filterNationalities() {
+      const search = document.getElementById('nationalitySearch').value.toLowerCase();
+      const nationalityList = document.getElementById('nationalityList');
+      nationalityList.innerHTML = countries
+        .filter(country => country.toLowerCase().includes(search))
+        .map(country => `<div class="list-item" onclick="selectNationality('${country}')">${country}</div>`)
         .join('');
     }
 
@@ -424,6 +507,21 @@
       closeCountrySelector();
     }
 
+    function openNationalitySelector() {
+      document.getElementById('nationalitySearch').value = '';
+      document.getElementById('nationalityModal').classList.add('open');
+      initNationalityList();
+    }
+
+    function closeNationalitySelector() {
+      document.getElementById('nationalityModal').classList.remove('open');
+    }
+
+    function selectNationality(nationality) {
+      document.getElementById('nationality').value = nationality;
+      closeNationalitySelector();
+    }
+
     function openCitySelector() {
       if (!document.getElementById('country').value) {
         alert('Please select a country first');
@@ -446,6 +544,9 @@
     // Close modal when clicking outside
     document.getElementById('countryModal').addEventListener('click', function(e) {
       if (e.target === this) closeCountrySelector();
+    });
+    document.getElementById('nationalityModal').addEventListener('click', function(e) {
+      if (e.target === this) closeNationalitySelector();
     });
     document.getElementById('cityModal').addEventListener('click', function(e) {
       if (e.target === this) closeCitySelector();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In - MediW</title>
+  <title>Welcome to MediW - Sign Up Complete</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -44,17 +44,12 @@
     .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
     .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
     .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
-    .nav-links{display:flex;align-items:center;gap:2rem;font-size:.875rem;color:var(--text-tertiary);}
-    .nav-links a{color:inherit;text-decoration:none;transition:color .2s;}
-    .nav-links a:hover{color:var(--text-primary);}
     .nav-actions{display:flex;align-items:center;gap:.75rem;}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
     .btn-primary{background:#1a6ff5;color:#fff;padding:.625rem 1.25rem;}
     .btn-primary:hover{background:#3391ff;}
     .btn-ghost{background:transparent;color:var(--text-tertiary);padding:.5rem 1rem;}
     .btn-ghost:hover{color:var(--text-primary);}
-    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:.75rem 2rem;}
-    .btn-outline:hover{border-color:var(--border-hover);background:var(--brand-bg);}
     .btn-lg{padding:1rem 2rem;font-size:1rem;border-radius:.75rem;}
 
     /* Theme Toggle */
@@ -68,10 +63,6 @@
 
     /* Mobile Menu */
     .mobile-menu-btn{display:none;width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);align-items:center;justify-content:center;cursor:pointer;color:var(--text-tertiary);}
-    .mobile-menu{display:none;position:fixed;top:4rem;left:0;right:0;background:var(--bg-primary);border-bottom:1px solid var(--border);padding:1rem 1.5rem;z-index:49;}
-    .mobile-menu.open{display:block;}
-    .mobile-menu a{display:block;padding:.75rem 0;color:var(--text-secondary);text-decoration:none;font-size:.875rem;border-bottom:1px solid var(--border);}
-    .mobile-menu a:last-child{border-bottom:none;}
 
     /* Glow */
     .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
@@ -79,66 +70,48 @@
     /* Grid BG */
     .grid-bg{background-image:linear-gradient(rgba(51,145,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(51,145,255,.03) 1px,transparent 1px);background-size:60px 60px;}
 
-    /* Gradient text */
-    .gradient-text{background:linear-gradient(135deg,#1a6ff5,#3391ff,#59b2ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-
-    /* Badge */
-    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem 1rem;border-radius:9999px;border:1px solid var(--brand-border);background:var(--brand-bg);font-size:.875rem;color:#3391ff;}
-    .badge-dot{width:.5rem;height:.5rem;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
-    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
     /* Card */
     .card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:all .25s;padding:2rem;}
 
-    /* Form */
-    .form-group{margin-bottom:1.5rem;}
-    .form-group label{display:block;margin-bottom:.5rem;font-weight:500;color:var(--text-primary);font-size:.875rem;}
-    .form-group input{width:100%;padding:.875rem 1rem;border:1px solid var(--border);border-radius:.5rem;background:var(--bg-primary);color:var(--text-primary);font-size:1rem;transition:border-color .2s ease,box-shadow .2s ease;}
-    .form-group input:focus{outline:none;border-color:#3391ff;box-shadow:0 0 0 3px rgba(51,145,255,.1);}
+    /* Success Container */
+    .success-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;position:relative;overflow:hidden;margin-top:4rem;}
+    .success-card{max-width:600px;width:100%;}
 
-    /* Sections */
-    .section{padding:6rem 1.5rem;}
-    .section-inner{max-width:1280px;margin:0 auto;}
+    .success-icon{width:80px;height:80px;margin:0 auto 2rem;border-radius:50%;background:rgba(52,211,153,.1);display:flex;align-items:center;justify-content:center;animation:scaleIn .6s ease forwards;}
 
-    /* Login Form */
-    .login-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;position:relative;overflow:hidden;margin-top:4rem;}
-    .login-card{max-width:420px;width:100%;}
-    .login-header{text-align:center;margin-bottom:2.5rem;}
-    .login-header h1{font-size:1.875rem;font-weight:700;margin-bottom:.5rem;}
-    .login-header p{color:var(--text-tertiary);font-size:.875rem;}
+    @keyframes scaleIn {
+      from{transform:scale(0);opacity:0;}
+      to{transform:scale(1);opacity:1;}
+    }
 
-    .login-form{margin-bottom:1.5rem;}
-    .form-actions{display:flex;gap:1rem;margin-top:2rem;}
-    .form-actions .btn{flex:1;}
+    .success-icon svg{width:40px;height:40px;color:#34d399;}
 
-    .login-divider{display:flex;align-items:center;gap:1rem;margin:2rem 0;}
-    .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-    .login-divider-text{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;}
+    .success-header{text-align:center;margin-bottom:2rem;}
+    .success-header h1{font-size:2rem;font-weight:700;margin-bottom:.5rem;color:var(--text-primary);}
+    .success-header p{color:var(--text-tertiary);font-size:.95rem;line-height:1.6;}
 
-    .social-login{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-    .social-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.875rem;border:1px solid var(--border);background:var(--bg-secondary);border-radius:.5rem;cursor:pointer;transition:all .2s;font-size:.875rem;font-weight:500;color:var(--text-secondary);}
-    .social-btn:hover{border-color:var(--border-hover);background:var(--brand-bg);}
+    .info-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;margin:2rem 0;}
+    .info-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;font-size:.875rem;}
+    .info-item:last-child{margin-bottom:0;}
+    .info-label{color:var(--text-tertiary);min-width:120px;}
+    .info-value{color:var(--text-primary);word-break:break-word;}
 
-    .login-footer{text-align:center;}
-    .login-footer p{font-size:.875rem;color:var(--text-secondary);margin-bottom:.5rem;}
-    .login-footer a{color:#3391ff;text-decoration:none;font-weight:600;transition:color .2s;}
-    .login-footer a:hover{color:var(--text-primary);}
+    .next-steps{background:rgba(51,145,255,.05);border:1px solid rgba(51,145,255,.2);border-radius:.75rem;padding:1.5rem;margin:2rem 0;}
+    .next-steps h3{font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text-primary);}
+    .steps-list{list-style:none;padding:0;}
+    .steps-list li{padding:.75rem 0;padding-left:1.75rem;position:relative;font-size:.875rem;color:var(--text-secondary);}
+    .steps-list li::before{content:'✓';position:absolute;left:0;color:#34d399;font-weight:700;}
 
-    .checkbox-group{display:flex;align-items:center;gap:.5rem;margin:1.5rem 0;}
-    .checkbox-group input{width:1.125rem;height:1.125rem;cursor:pointer;accent-color:#3391ff;}
-    .checkbox-group label{margin:0;font-size:.875rem;color:var(--text-secondary);cursor:pointer;}
+    .action-buttons{display:flex;gap:1rem;margin-top:2rem;}
+    .action-buttons .btn{flex:1;}
 
-    /* Fade In */
     .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
     .fade-in.visible{opacity:1;transform:translateY(0);}
 
-    /* ===== RESPONSIVE ===== */
     @media(max-width:768px){
-      .nav-links{display:none;}
-      .mobile-menu-btn{display:flex;}
-      .login-container{padding:1rem 1rem;margin-top:2rem;}
-      .login-card{padding:1.5rem;}
-      .section{padding:3rem 1rem;}
+      .success-container{padding:1rem 1rem;margin-top:2rem;}
+      .success-header h1{font-size:1.5rem;}
+      .action-buttons{flex-direction:column;}
     }
   </style>
 </head>
@@ -150,8 +123,6 @@
         <div class="logo-icon">M</div>
         <span class="logo-text">MediW</span>
       </a>
-      <div class="nav-links">
-      </div>
       <div class="nav-actions">
         <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
           <option value="en">English</option>
@@ -164,52 +135,71 @@
           <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
-        <a class="btn btn-ghost" href="signup.html">Sign up</a>
-        <button class="mobile-menu-btn" onclick="toggleMobile()">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
       </div>
     </div>
   </nav>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="signup.html">Sign up</a>
-  </div>
 
-  <!-- Login Form -->
-  <div class="grid-bg login-container">
-    <div class="glow" style="width:500px;height:500px;background:#3391ff;top:10%;left:10%;"></div>
-    <div class="glow" style="width:400px;height:400px;background:#8eceff;bottom:10%;right:10%;"></div>
-    
-    <div class="login-card fade-in" style="position:relative;z-index:1;">
+  <!-- Success Page -->
+  <div class="grid-bg success-container">
+    <div class="glow" style="width:500px;height:500px;background:#34d399;top:10%;left:10%;"></div>
+    <div class="glow" style="width:400px;height:400px;background:#3391ff;bottom:10%;right:10%;"></div>
+
+    <div class="success-card fade-in" style="position:relative;z-index:1;">
       <div class="card">
-        <div class="login-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your MediW account</p>
+        <!-- Success Icon -->
+        <div class="success-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
         </div>
 
-        <form class="login-form" id="loginForm">
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required />
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="••••••••" required />
-          </div>
+        <!-- Success Message -->
+        <div class="success-header">
+          <h1>Welcome to MediW!</h1>
+          <p id="welcomeMessage">Your account has been successfully created. You're now ready to explore Korea's world-class medical training programs.</p>
+        </div>
 
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-            <div class="checkbox-group">
-              <input type="checkbox" id="remember" name="remember" />
-              <label for="remember">Remember me</label>
-            </div>
-            <a href="#" style="font-size:.875rem;color:#3391ff;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='#3391ff'">Forgot password?</a>
+        <!-- Account Information -->
+        <div class="info-box">
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value" id="displayEmail">user@example.com</span>
           </div>
+          <div class="info-item">
+            <span class="info-label">Full Name:</span>
+            <span class="info-value" id="displayName">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Account Type:</span>
+            <span class="info-value" id="displayAccountType">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Status:</span>
+            <span class="info-value" style="color:#34d399;font-weight:600;">✓ Active</span>
+          </div>
+        </div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%;padding:.875rem 1rem;">Sign In</button>
-        </form>
+        <!-- Next Steps -->
+        <div class="next-steps">
+          <h3>What's Next?</h3>
+          <ul class="steps-list" id="nextSteps">
+            <li>Verify your email address</li>
+            <li>Complete your medical profile</li>
+            <li>Browse available training programs</li>
+            <li>Submit your first application</li>
+          </ul>
+        </div>
 
-        <div class="login-footer">
-          <p>Don't have an account? <a href="signup.html">Create one</a></p>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-ghost" onclick="window.location.href='index.html'">Back Home</button>
+          <button class="btn btn-primary" onclick="window.location.href='login.html'">Go to Dashboard</button>
+        </div>
+
+        <!-- Verification Message -->
+        <div style="text-align:center;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border);">
+          <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:.5rem;"><strong>📧 Email Verification Required</strong></p>
+          <p style="font-size:.875rem;color:var(--text-muted);">Check your email for a verification link. Click it to activate your account. This may take a few minutes to arrive.</p>
         </div>
       </div>
     </div>
@@ -232,30 +222,66 @@
     function changeLanguage(lang) {
       localStorage.setItem('language', lang);
       console.log('Language changed to:', lang);
-      // Add your translation logic here
     }
 
     // Load saved language
     const savedLang = localStorage.getItem('language') || 'en';
     document.getElementById('langSelector').value = savedLang;
 
-    // Mobile menu toggle
-    function toggleMobile() {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('open');
-    }
-
-    // Login form handler
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      console.log('Logging in with:', email);
-      // Simulate login
-      window.location.href = 'programs.html';
-    });
-
-    // Fade in animation
+    // Load user data from sessionStorage (passed from signup page)
     window.addEventListener('load', function() {
+      const userData = JSON.parse(sessionStorage.getItem('signupData') || '{}');
+      
+      if (userData.email) {
+        document.getElementById('displayEmail').textContent = userData.email;
+      }
+      if (userData.fullName) {
+        document.getElementById('displayName').textContent = userData.fullName;
+      }
+      if (userData.accountType) {
+        const typeMap = {
+          'doctor': 'Doctor / Medical Professional',
+          'hospital': 'Hospital / Medical Institution',
+          'agency': 'Medical Tourism Agency'
+        };
+        document.getElementById('displayAccountType').textContent = typeMap[userData.accountType] || userData.accountType;
+
+        // Set welcome message based on account type
+        const welcomeMessages = {
+          'doctor': 'Your account has been successfully created. Start connecting with top medical institutions across Korea and advance your medical career.',
+          'hospital': 'Your account has been successfully created. Begin attracting international medical professionals and building global partnerships.',
+          'agency': 'Your account has been successfully created. Unlock new opportunities to provide world-class medical services to your international clients.'
+        };
+        document.getElementById('welcomeMessage').textContent = welcomeMessages[userData.accountType] || welcomeMessages.doctor;
+
+        // Set next steps based on account type
+        const nextStepsMap = {
+          'doctor': [
+            'Verify your email address',
+            'Add medical license and credentials',
+            'Browse hospital network',
+            'Apply to medical programs'
+          ],
+          'hospital': [
+            'Verify your email address',
+            'Complete hospital information and certifications',
+            'Browse available medical professionals',
+            'Create recruitment postings'
+          ],
+          'agency': [
+            'Verify your email address',
+            'Complete agency profile and credentials',
+            'Browse hospital partners and programs',
+            'Connect with international clients'
+          ]
+        };
+
+        const steps = nextStepsMap[userData.accountType] || nextStepsMap.doctor;
+        const stepsList = document.getElementById('nextSteps');
+        stepsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+      }
+
+      // Fade in animation
       document.querySelectorAll('.fade-in').forEach(el => {
         el.classList.add('visible');
       });
