@@ -139,6 +139,47 @@
     .intake-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6875rem 1.5rem;background:#3391ff;color:#fff;border:none;border-radius:.5rem;font-size:.875rem;font-weight:600;cursor:pointer;transition:background .15s;font-family:inherit;}
     .intake-btn:hover{background:#2577e0;}
 
+    /* Professor expand */
+    .dept-wrapper{border-bottom:1px solid #f1f5f9;}
+    .dept-wrapper:last-child{border-bottom:none;}
+    .dept-row-main{display:flex;align-items:center;gap:.75rem;padding:.875rem 0;cursor:pointer;transition:background .15s;}
+    .dept-row-main:hover{background:#f8fbff;margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:.375rem;}
+    .dept-expand-icon{width:1rem;height:1rem;color:#94a3b8;transition:transform .2s;flex-shrink:0;}
+    .dept-wrapper.open .dept-expand-icon{transform:rotate(90deg);color:#3391ff;}
+    .dept-profs-panel{display:none;padding:0 0 .75rem 2.5rem;}
+    .dept-wrapper.open .dept-profs-panel{display:block;}
+    .prof-card{display:flex;align-items:center;gap:.875rem;padding:.75rem;border:1px solid #f1f5f9;border-radius:.625rem;margin-bottom:.5rem;cursor:pointer;transition:all .15s;}
+    .prof-card:hover{border-color:#c5dcf7;background:#f8fbff;}
+    .prof-avatar{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#2563eb;flex-shrink:0;}
+    .prof-info{flex:1;min-width:0;}
+    .prof-name{font-size:.875rem;font-weight:600;color:#1a1a2e;}
+    .prof-sub{font-size:.75rem;color:#94a3b8;margin-top:.125rem;}
+    .prof-arrow{width:.875rem;height:.875rem;color:#cbd5e1;}
+
+    /* Professor Modal */
+    .prof-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center;padding:1rem;}
+    .prof-modal-overlay.show{display:flex;}
+    .prof-modal{background:#fff;border-radius:1rem;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+    .prof-modal-header{padding:1.75rem 1.75rem 0;display:flex;align-items:flex-start;gap:1rem;}
+    .prof-modal-avatar{width:4rem;height:4rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;color:#2563eb;flex-shrink:0;}
+    .prof-modal-name{font-size:1.25rem;font-weight:700;color:#1a1a2e;}
+    .prof-modal-dept{font-size:.875rem;color:#3391ff;font-weight:500;margin-top:.25rem;}
+    .prof-modal-hospital{font-size:.8125rem;color:#94a3b8;margin-top:.25rem;}
+    .prof-modal-close{position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border:none;border-radius:.5rem;background:#f1f5f9;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;}
+    .prof-modal-close:hover{background:#e2e8f0;}
+    .prof-modal-close svg{width:1.125rem;height:1.125rem;color:#64748b;}
+    .prof-modal-body{padding:1.5rem 1.75rem 1.75rem;}
+    .prof-section{margin-bottom:1.25rem;}
+    .prof-section:last-child{margin-bottom:0;}
+    .prof-section-title{font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;}
+    .prof-section-content{font-size:.875rem;color:#475569;line-height:1.6;}
+    .prof-tags{display:flex;flex-wrap:wrap;gap:.375rem;}
+    .prof-tag{padding:.25rem .625rem;background:#f0f7ff;color:#3391ff;border-radius:.375rem;font-size:.75rem;font-weight:500;}
+    .prof-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+    .prof-stat{padding:.75rem;background:#f8fafc;border-radius:.5rem;}
+    .prof-stat-label{font-size:.6875rem;color:#94a3b8;font-weight:500;margin-bottom:.25rem;}
+    .prof-stat-value{font-size:.9375rem;font-weight:700;color:#1a1a2e;}
+
     /* Mobile */
     .mobile-header{display:none;padding:1rem;background:#fff;border-bottom:1px solid #e8ecf1;align-items:center;justify-content:space-between;}
     .mobile-menu-btn{width:2.25rem;height:2.25rem;border:1px solid #e8ecf1;border-radius:.5rem;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
@@ -227,6 +268,64 @@
       {id:12,name:'부산대학교병원',type:'전문병원',region:'부산',addr:'부산광역시 서구 구덕로 179',depts:['종양내과','소화기내과','안과'],langs:['영어'],open:true,jci:false,gov:false,desc:'부산 지역 대표 국립대학병원.',professors:['박광하','이창균'],diseases:['대장암','간암','당뇨망막병증'],doctors:[{dept:'종양내과',count:1,names:['박광하']},{dept:'소화기내과',count:1,names:['이창균']},{dept:'안과',count:1,names:['배정훈']}],whatsapp:'',email:'intl@pnuh.or.kr'},
     ];
 
+    // Professor detail data
+    const profDB = {
+      '박승정':{specialty:'심장내과 (Cardiology)',title:'교수',experience:'35년',education:'서울대학교 의과대학',subspecialty:['관상동맥 중재술','심부전','구조적 심장질환'],research:['경피적 관상동맥 중재술 10,000건 이상','대한심장학회 최우수 연구상'],diseases:['관상동맥질환','심근경색','심부전','판막질환'],langs:['한국어','영어']},
+      '이재성':{specialty:'심장내과 (Cardiology)',title:'부교수',experience:'18년',education:'서울대학교 의과대학',subspecialty:['부정맥','심장 전기생리학'],research:['부정맥 카테터 절제술 전문','심방세동 시술 2,000건 이상'],diseases:['부정맥','심방세동','심실빈맥'],langs:['한국어','영어']},
+      '송재우':{specialty:'신경과 (Neurology)',title:'교수',experience:'22년',education:'연세대학교 의과대학',subspecialty:['뇌졸중','신경혈관질환'],research:['급성 뇌졸중 혈전제거술 전문'],diseases:['뇌졸중','뇌경색','혈관성 치매'],langs:['한국어','영어','일본어']},
+      '김영학':{specialty:'유방외과 (Breast Surgery)',title:'교수',experience:'25년',education:'서울대학교 의과대학',subspecialty:['유방암 수술','유방 재건'],research:['유방보존술 5,000건 이상'],diseases:['유방암','유방 양성종양'],langs:['한국어','영어']},
+      '이상훈':{specialty:'정형외과 (Orthopedic Surgery)',title:'부교수',experience:'15년',education:'고려대학교 의과대학',subspecialty:['관절경 수술','스포츠의학'],research:['전방십자인대 재건술 전문'],diseases:['십자인대 파열','반월상연골 손상','어깨 회전근개 파열'],langs:['한국어','영어']},
+      '한성범':{specialty:'척추외과 (Spine Surgery)',title:'교수',experience:'28년',education:'연세대학교 의과대학',subspecialty:['척추 내시경 수술','최소 침습 척추수술'],research:['척추 내시경 수술 3,000건 이상'],diseases:['디스크','척추관협착증','척추전방전위증'],langs:['한국어','영어','러시아어']},
+      '최동호':{specialty:'척추외과 (Spine Surgery)',title:'부교수',experience:'16년',education:'서울대학교 의과대학',subspecialty:['척추변형 교정','척추종양'],research:['척추측만증 교정술 전문'],diseases:['척추측만증','척추종양','디스크'],langs:['한국어','영어']},
+      '박민수':{specialty:'정형외과 (Orthopedic Surgery)',title:'조교수',experience:'10년',education:'가톨릭대학교 의과대학',subspecialty:['인공관절','관절염'],research:['로봇 인공관절 치환술'],diseases:['골관절염','류마티스 관절염'],langs:['한국어','영어']},
+      '이정훈':{specialty:'재활의학과 (Rehabilitation Medicine)',title:'교수',experience:'20년',education:'연세대학교 의과대학',subspecialty:['뇌손상 재활','척수손상 재활'],research:['로봇 보조 재활치료 연구'],diseases:['뇌졸중 후 재활','척수손상','만성통증'],langs:['한국어','영어']},
+      '김형일':{specialty:'종양내과',title:'교수',experience:'24년',education:'연세대학교 의과대학',subspecialty:['위암','대장암'],research:['위암 항암 임상시험 100건 이상 참여'],diseases:['위암','대장암','식도암'],langs:['한국어','영어']},
+      '이수걸':{specialty:'종양내과',title:'교수',experience:'22년',education:'연세대학교 의과대학',subspecialty:['폐암','희귀암'],research:['폐암 면역치료 연구'],diseases:['폐암','흉선암','중피종'],langs:['한국어','영어']},
+      '정현철':{specialty:'종양내과',title:'교수',experience:'26년',education:'연세대학교 의과대학',subspecialty:['유방암','난소암'],research:['유방암 표적치료 임상시험'],diseases:['유방암','난소암','자궁내막암'],langs:['한국어','영어','러시아어']},
+      '김학선':{specialty:'정형외과',title:'교수',experience:'30년',education:'연세대학교 의과대학',subspecialty:['무릎 인공관절','관절경'],research:['인공관절 10,000건 이상'],diseases:['퇴행성관절염','반월상연골 손상'],langs:['한국어','영어']},
+      '유기형':{specialty:'정형외과',title:'부교수',experience:'14년',education:'연세대학교 의과대학',subspecialty:['척추 수술','골다공증성 골절'],research:['척추 유합술 전문'],diseases:['척추골절','골다공증','척추전방전위증'],langs:['한국어','영어']},
+      '박은실':{specialty:'소아청소년과',title:'교수',experience:'19년',education:'이화여자대학교 의과대학',subspecialty:['소아호흡기','소아알레르기'],research:['소아 천식 국제 공동연구'],diseases:['소아천식','아토피피부염','식품 알레르기'],langs:['한국어','영어']},
+      '안효식':{specialty:'피부과',title:'교수',experience:'28년',education:'서울대학교 의과대학',subspecialty:['아토피','건선','피부암'],research:['아토피 피부염 생물학적 제제 임상시험'],diseases:['아토피','건선','피부암','여드름'],langs:['한국어','영어']},
+      '이주흥':{specialty:'피부과',title:'부교수',experience:'13년',education:'서울대학교 의과대학',subspecialty:['레이저치료','색소질환'],research:['멜라닌 생성 억제 연구'],diseases:['기미','백반증','색소침착'],langs:['한국어','영어']},
+      '김응권':{specialty:'안과',title:'교수',experience:'25년',education:'서울대학교 의과대학',subspecialty:['백내장','굴절수술'],research:['다초점 인공수정체 연구'],diseases:['백내장','녹내장','근시'],langs:['한국어','영어']},
+      '김효수':{specialty:'심장내과 (Cardiology)',title:'석좌교수',experience:'38년',education:'서울대학교 의과대학',subspecialty:['관상동맥 중재술','줄기세포 치료'],research:['줄기세포 심장재생 세계 최초 성공','관상동맥 시술 20,000건 이상'],diseases:['심근경색','협심증','심부전','관상동맥질환'],langs:['한국어','영어']},
+      '구본권':{specialty:'심장내과 (Cardiology)',title:'교수',experience:'22년',education:'서울대학교 의과대학',subspecialty:['심초음파','판막질환'],research:['구조적 심장질환 중재시술 전문'],diseases:['대동맥판막 협착','승모판 폐쇄부전','심낭질환'],langs:['한국어','영어']},
+      '김성환':{specialty:'심장내과 (Cardiology)',title:'부교수',experience:'15년',education:'서울대학교 의과대학',subspecialty:['심부전','심장이식'],research:['좌심실보조장치 임상연구'],diseases:['말기 심부전','심장이식 후 관리','심근병증'],langs:['한국어','영어']},
+      '이해영':{specialty:'심장내과 (Cardiology)',title:'교수',experience:'20년',education:'서울대학교 의과대학',subspecialty:['고혈압','예방심장학'],research:['고혈압 대규모 코호트 연구'],diseases:['고혈압','대사증후군','이상지질혈증'],langs:['한국어','영어']},
+      '백선하':{specialty:'신경외과 (Neurosurgery)',title:'교수',experience:'30년',education:'서울대학교 의과대학',subspecialty:['뇌종양','뇌혈관질환'],research:['뇌교종 수술 2,000건 이상'],diseases:['뇌교종','수막종','뇌동맥류','모야모야병'],langs:['한국어','영어','독일어']},
+      '한정호':{specialty:'신경외과 (Neurosurgery)',title:'교수',experience:'25년',education:'서울대학교 의과대학',subspecialty:['척추신경외과','말초신경'],research:['최소침습 척추수술 전문'],diseases:['경추 디스크','척수종양','삼차신경통'],langs:['한국어','영어']},
+      '김정은':{specialty:'신경외과 (Neurosurgery)',title:'부교수',experience:'14년',education:'서울대학교 의과대학',subspecialty:['소아신경외과','기능신경외과'],research:['소아 뇌전증 수술 연구'],diseases:['뇌전증','수두증','뇌성마비'],langs:['한국어','영어']},
+      '방영주':{specialty:'종양내과 (Oncology)',title:'교수',experience:'28년',education:'서울대학교 의과대학',subspecialty:['위암','소화기암'],research:['위암 표적치료 국제 임상시험 주도'],diseases:['위암','대장암','간암','췌장암'],langs:['한국어','영어']},
+      '이근석':{specialty:'종양내과 (Oncology)',title:'부교수',experience:'16년',education:'서울대학교 의과대학',subspecialty:['폐암','면역항암치료'],research:['면역관문억제제 반응 예측 바이오마커 연구'],diseases:['폐암','두경부암'],langs:['한국어','영어']},
+      '최동훈':{specialty:'심장내과',title:'교수',experience:'27년',education:'연세대학교 의과대학',subspecialty:['부정맥','심방세동 카테터절제술'],research:['심방세동 절제술 아시아 최다'],diseases:['심방세동','심실빈맥','부정맥'],langs:['한국어','영어']},
+      '김중선':{specialty:'심장내과',title:'교수',experience:'23년',education:'연세대학교 의과대학',subspecialty:['관상동맥질환','심혈관 영상'],research:['관상동맥 CT 연구'],diseases:['협심증','관상동맥질환'],langs:['한국어','영어']},
+      '이병권':{specialty:'심장내과',title:'부교수',experience:'15년',education:'연세대학교 의과대학',subspecialty:['심부전','심장재활'],research:['심부전 원격 모니터링 연구'],diseases:['심부전','심근병증'],langs:['한국어','영어']},
+      '조병철':{specialty:'종양내과',title:'교수',experience:'24년',education:'연세대학교 의과대학',subspecialty:['폐암','흉부종양'],research:['폐암 면역치료 국제 공동연구'],diseases:['폐암','중피종','흉선종'],langs:['한국어','영어']},
+      '김영태':{specialty:'산부인과',title:'교수',experience:'26년',education:'연세대학교 의과대학',subspecialty:['부인종양','로봇수술'],research:['부인과 로봇수술 3,000건 이상'],diseases:['자궁경부암','자궁근종','난소낭종'],langs:['한국어','영어']},
+      '장기육':{specialty:'심장내과',title:'교수',experience:'25년',education:'가톨릭대학교 의과대학',subspecialty:['관상동맥 중재술'],research:['복잡 관상동맥 병변 시술 전문'],diseases:['협심증','심근경색'],langs:['한국어','영어']},
+      '황경국':{specialty:'심장내과',title:'부교수',experience:'14년',education:'가톨릭대학교 의과대학',subspecialty:['심초음파','판막질환'],research:['경도관 대동맥판막 치환술'],diseases:['대동맥판막협착','승모판질환'],langs:['한국어','영어']},
+      '이관호':{specialty:'소화기내과',title:'교수',experience:'22년',education:'가톨릭대학교 의과대학',subspecialty:['간질환','내시경'],research:['간섬유화 비침습 진단 연구'],diseases:['간경화','B형간염','지방간'],langs:['한국어','영어']},
+      '송재윤':{specialty:'산부인과',title:'부교수',experience:'12년',education:'가톨릭대학교 의과대학',subspecialty:['고위험 임신','태아의학'],research:['조산 예방 연구'],diseases:['고위험 임신','전치태반','임신중독증'],langs:['한국어','영어']},
+      '한규철':{specialty:'신경외과',title:'교수',experience:'26년',education:'서울대학교 의과대학',subspecialty:['뇌종양','두개저 수술'],research:['내시경 뇌종양 제거술 전문'],diseases:['뇌하수체 종양','두개저 종양','수막종'],langs:['한국어','영어']},
+      '김진영':{specialty:'신경외과',title:'부교수',experience:'14년',education:'서울대학교 의과대학',subspecialty:['뇌혈관','뇌동맥류'],research:['뇌동맥류 코일색전술 전문'],diseases:['뇌동맥류','뇌출혈','모야모야병'],langs:['한국어','영어']},
+      '이건국':{specialty:'이비인후과',title:'교수',experience:'23년',education:'서울대학교 의과대학',subspecialty:['두경부외과','인공와우'],research:['인공와우 이식 1,000건 이상'],diseases:['난청','중이염','인두암','갑상선암'],langs:['한국어','영어']},
+      '윤창환':{specialty:'심장내과',title:'교수',experience:'21년',education:'서울대학교 의과대학',subspecialty:['심부전','심장이식'],research:['심부전 다기관 임상시험'],diseases:['심부전','심근병증','심장이식'],langs:['한국어','영어']},
+      '송수정':{specialty:'안과',title:'교수',experience:'22년',education:'고려대학교 의과대학',subspecialty:['망막','유리체'],research:['당뇨망막병증 항VEGF 치료 연구'],diseases:['망막박리','황반변성','당뇨망막병증'],langs:['한국어','영어']},
+      '유형곤':{specialty:'안과',title:'부교수',experience:'13년',education:'고려대학교 의과대학',subspecialty:['녹내장','시신경'],research:['녹내장 조기진단 AI 연구'],diseases:['녹내장','시신경염','정상안압녹내장'],langs:['한국어','영어']},
+      '조용팔':{specialty:'신경외과',title:'교수',experience:'28년',education:'고려대학교 의과대학',subspecialty:['감마나이프','기능신경외과'],research:['감마나이프 시술 5,000건 이상'],diseases:['전이성 뇌종양','삼차신경통','뇌동정맥기형'],langs:['한국어','영어']},
+      '최철웅':{specialty:'심장내과',title:'부교수',experience:'12년',education:'고려대학교 의과대학',subspecialty:['심혈관 영상','예방심장학'],research:['심혈관 CT 진단 연구'],diseases:['관상동맥질환','고혈압'],langs:['한국어','영어']},
+      '이경희':{specialty:'종양내과',title:'교수',experience:'20년',education:'아주대학교 의과대학',subspecialty:['폐암','두경부암'],research:['폐암 면역치료 임상시험'],diseases:['폐암','후두암','구강암'],langs:['한국어','영어']},
+      '김혜련':{specialty:'종양내과',title:'부교수',experience:'14년',education:'아주대학교 의과대학',subspecialty:['위암','간암'],research:['간암 복합면역치료 연구'],diseases:['위암','간암','담도암'],langs:['한국어','영어']},
+      '조범석':{specialty:'안과',title:'교수',experience:'22년',education:'아주대학교 의과대학',subspecialty:['백내장','굴절수술'],research:['무봉합 백내장 수술 전문'],diseases:['백내장','난시','노안'],langs:['한국어','영어']},
+      '최소연':{specialty:'심장내과',title:'부교수',experience:'11년',education:'아주대학교 의과대학',subspecialty:['여성심장학','심초음파'],research:['임신 중 심장질환 연구'],diseases:['임신 중 심장질환','판막질환'],langs:['한국어','영어']},
+      '이규완':{specialty:'산부인과',title:'교수',experience:'25년',education:'전북대학교 의과대학',subspecialty:['부인종양','복강경 수술'],research:['자궁경부암 복강경 수술 전문'],diseases:['자궁경부암','자궁내막암','난소암'],langs:['한국어','영어']},
+      '최성연':{specialty:'산부인과',title:'부교수',experience:'13년',education:'전북대학교 의과대학',subspecialty:['생식내분비','불임'],research:['난임 치료 성공률 향상 연구'],diseases:['불임','다낭성난소증후군','자궁내막증'],langs:['한국어','영어']},
+      '김상영':{specialty:'종양내과',title:'교수',experience:'21년',education:'전북대학교 의과대학',subspecialty:['간암','소화기암'],research:['간암 항암 병용치료 연구'],diseases:['간암','담낭암','췌장암'],langs:['한국어','영어']},
+      '박광하':{specialty:'종양내과',title:'교수',experience:'24년',education:'부산대학교 의과대학',subspecialty:['대장암','유전성 암'],research:['대장암 유전체 분석 연구'],diseases:['대장암','직장암','유전성 대장암'],langs:['한국어','영어']},
+      '이창균':{specialty:'소화기내과',title:'교수',experience:'22년',education:'부산대학교 의과대학',subspecialty:['내시경','간담도'],research:['치료 내시경 전문'],diseases:['위궤양','역류성 식도염','담석'],langs:['한국어','영어']},
+      '배정훈':{specialty:'안과',title:'부교수',experience:'12년',education:'부산대학교 의과대학',subspecialty:['망막','당뇨안과'],research:['당뇨망막병증 조기진단 연구'],diseases:['당뇨망막병증','황반변성','유리체출혈'],langs:['한국어','영어']},
+    };
+
     let selectedId = null;
     let searchTerm = '';
 
@@ -267,11 +366,27 @@
       if(h.whatsapp) actions.push(`<a href="https://wa.me/${h.whatsapp}" class="detail-btn whatsapp" target="_blank">WhatsApp</a>`);
       if(h.email) actions.push(`<a href="mailto:${h.email}" class="detail-btn">Email</a>`);
 
-      const deptRows = h.doctors.map(d=>`<div class="dept-row" data-dept="${d.dept}">
-        <input type="checkbox" class="dept-check" onchange="updateIntakeBar()" value="${d.dept}">
-        <div class="dept-info"><div class="dept-name">${d.dept}</div><div class="dept-profs">${d.names?d.names.join(', '):''}</div></div>
-        <span class="dept-meta">의사 ${d.count}명 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></span>
-      </div>`).join('');
+      const deptRows = h.doctors.map((d,idx)=>{
+        const profCards = (d.names||[]).map(name=>{
+          const initials = name.slice(0,1);
+          const prof = profDB[name];
+          const sub = prof ? prof.title + ' · ' + prof.experience : '';
+          return `<div class="prof-card" onclick="event.stopPropagation();showProfModal('${name}','${h.name}')">
+            <div class="prof-avatar">${initials}</div>
+            <div class="prof-info"><div class="prof-name">${name}</div><div class="prof-sub">${sub}</div></div>
+            <svg class="prof-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </div>`;
+        }).join('');
+        return `<div class="dept-wrapper" data-dept="${d.dept}">
+          <div class="dept-row-main" onclick="toggleDeptExpand(this.parentElement)">
+            <input type="checkbox" class="dept-check" onchange="event.stopPropagation();updateIntakeBar()" value="${d.dept}" onclick="event.stopPropagation();">
+            <svg class="dept-expand-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            <div class="dept-info"><div class="dept-name">${d.dept}</div><div class="dept-profs">${d.names?d.names.join(', '):''}</div></div>
+            <span class="dept-meta">의사 ${d.count}명</span>
+          </div>
+          <div class="dept-profs-panel">${profCards}</div>
+        </div>`;
+      }).join('');
 
       dp.innerHTML = `<div class="detail-inner">
         <div class="detail-images"><div class="detail-img">병원 외관</div><div class="detail-img">로비</div></div>
@@ -303,10 +418,58 @@
 
     function filterDepts(v) {
       const s = v.toLowerCase();
-      document.querySelectorAll('#deptList .dept-row').forEach(r => {
+      document.querySelectorAll('#deptList .dept-wrapper').forEach(r => {
         const text = r.textContent.toLowerCase();
-        r.style.display = text.includes(s) ? 'flex' : 'none';
+        r.style.display = text.includes(s) ? '' : 'none';
       });
+    }
+
+    function toggleDeptExpand(el) {
+      el.classList.toggle('open');
+    }
+
+    function showProfModal(name, hospitalName) {
+      const prof = profDB[name];
+      if (!prof) return;
+      const overlay = document.getElementById('profModalOverlay');
+      const initials = name.slice(0,1);
+      overlay.querySelector('.prof-modal').innerHTML = `
+        <div class="prof-modal-header" style="position:relative;">
+          <div class="prof-modal-avatar">${initials}</div>
+          <div>
+            <div class="prof-modal-name">${name}</div>
+            <div class="prof-modal-dept">${prof.specialty} · ${prof.title}</div>
+            <div class="prof-modal-hospital">${hospitalName}</div>
+          </div>
+          <button class="prof-modal-close" onclick="closeProfModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="prof-modal-body">
+          <div class="prof-stat-grid">
+            <div class="prof-stat"><div class="prof-stat-label">임상 경력</div><div class="prof-stat-value">${prof.experience}</div></div>
+            <div class="prof-stat"><div class="prof-stat-label">학력</div><div class="prof-stat-value">${prof.education}</div></div>
+          </div>
+          <div class="prof-section" style="margin-top:1.25rem;">
+            <div class="prof-section-title">세부 전공</div>
+            <div class="prof-tags">${prof.subspecialty.map(s=>`<span class="prof-tag">${s}</span>`).join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">주요 진료 질환</div>
+            <div class="prof-tags">${prof.diseases.map(d=>`<span class="prof-tag" style="background:#f0fdf4;color:#16a34a;">${d}</span>`).join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">연구 및 실적</div>
+            <div class="prof-section-content">${prof.research.map(r=>'<div style="margin-bottom:.375rem;">· '+r+'</div>').join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">진료 언어</div>
+            <div class="prof-tags">${prof.langs.map(l=>`<span class="prof-tag" style="background:#fef3c7;color:#d97706;">${l}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      overlay.classList.add('show');
+    }
+
+    function closeProfModal() {
+      document.getElementById('profModalOverlay').classList.remove('show');
     }
 
     function updateIntakeBar() {
@@ -334,6 +497,15 @@
 
     renderList();
     selectHospital(1);
+
+    // Close modal on overlay click (deferred to ensure DOM ready)
+    setTimeout(function(){
+      var ov = document.getElementById('profModalOverlay');
+      if(ov) ov.addEventListener('click', function(e){ if(e.target===this) closeProfModal(); });
+    }, 0);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeProfModal(); });
   </script>
+  <!-- Professor Modal Overlay -->
+  <div class="prof-modal-overlay" id="profModalOverlay"><div class="prof-modal"></div></div>
 </body>
 </html>

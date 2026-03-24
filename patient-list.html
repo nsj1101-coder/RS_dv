@@ -98,6 +98,10 @@
     .status.reviewing{background:#fef3c7;color:#b45309;}
     .status.request{background:#fef2f2;color:#dc2626;}
     .status.approved{background:#d1fae5;color:#047857;}
+    .status.hospital-approved{background:#faf5ff;color:#7c3aed;}
+    .status.confirming{background:#fff7ed;color:#c2410c;}
+    .status.confirmed{background:#d1fae5;color:#047857;}
+    .status.withdrawn{background:#f1f5f9;color:#94a3b8;text-decoration:line-through;}
 
     /* Date */
     .patient-date{font-size:.8125rem;color:#94a3b8;}
@@ -174,12 +178,15 @@
 
         <!-- Status Filter -->
         <div class="stats-row">
-          <div class="stat-pill active" onclick="filterStatus(this,'all')">전체 <span class="count">28</span></div>
-          <div class="stat-pill" onclick="filterStatus(this,'draft')">작성 중 <span class="count">3</span></div>
-          <div class="stat-pill" onclick="filterStatus(this,'submitted')">접수 완료 <span class="count">12</span></div>
-          <div class="stat-pill" onclick="filterStatus(this,'reviewing')">검토 중 <span class="count">5</span></div>
-          <div class="stat-pill" onclick="filterStatus(this,'request')">자료 요청 <span class="count">3</span></div>
-          <div class="stat-pill" onclick="filterStatus(this,'approved')">최종 승인 <span class="count">5</span></div>
+          <div class="stat-pill active" onclick="filterStatus(this,'all')">전체 <span class="count" id="cnt-all">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'draft')">작성 중 <span class="count" id="cnt-draft">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'submitted')">접수 완료 <span class="count" id="cnt-submitted">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'reviewing')">검토 중 <span class="count" id="cnt-reviewing">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'request')">자료 요청 <span class="count" id="cnt-request">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'hospital-approved')">병원 승인 <span class="count" id="cnt-hospital-approved">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'confirming')">최종 확인 대기 <span class="count" id="cnt-confirming">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'confirmed')">최종 확정 <span class="count" id="cnt-confirmed">0</span></div>
+          <div class="stat-pill" onclick="filterStatus(this,'withdrawn')">철회 <span class="count" id="cnt-withdrawn">0</span></div>
         </div>
 
         <!-- Search -->
@@ -206,31 +213,40 @@
   <script>
     const patients = [
       { id:1, name:'Иван Петров', country:'Russia', dept:'Orthopedic Surgery', step:2, stepDone:2, status:'request', statusText:'자료 요청', date:'2026-03-17', avatar:'blue' },
-      { id:2, name:'Мария Иванова', country:'Russia', dept:'Oncology', step:2, stepDone:2, status:'approved', statusText:'최종 승인', date:'2026-03-16', avatar:'green' },
-      { id:3, name:'Алексей Козлов', country:'Kazakhstan', dept:'Cardiology', step:2, stepDone:2, status:'reviewing', statusText:'검토 중', date:'2026-03-15', avatar:'orange' },
+      { id:2, name:'Мария Иванова', country:'Russia', dept:'Oncology', step:2, stepDone:2, status:'confirmed', statusText:'최종 확정', date:'2026-03-16', avatar:'green' },
+      { id:3, name:'Алексей Козлов', country:'Kazakhstan', dept:'Cardiology', step:2, stepDone:2, status:'confirming', statusText:'최종 확인 대기', date:'2026-03-15', avatar:'orange' },
       { id:4, name:'Нурлан Жумабеков', country:'Kazakhstan', dept:'Neurosurgery', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-15', avatar:'purple' },
       { id:5, name:'Айгуль Сатыбалды', country:'Uzbekistan', dept:'Dermatology', step:2, stepDone:1, status:'draft', statusText:'작성 중', date:'2026-03-18', avatar:'gray' },
-      { id:6, name:'田中太郎', country:'Japan', dept:'Plastic Surgery', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-14', avatar:'blue' },
-      { id:7, name:'王小明', country:'China', dept:'Dentistry', step:2, stepDone:2, status:'approved', statusText:'최종 승인', date:'2026-03-13', avatar:'green' },
+      { id:6, name:'田中太郎', country:'Japan', dept:'Plastic Surgery', step:2, stepDone:2, status:'hospital-approved', statusText:'병원 승인', date:'2026-03-14', avatar:'blue' },
+      { id:7, name:'王小明', country:'China', dept:'Dentistry', step:2, stepDone:2, status:'confirmed', statusText:'최종 확정', date:'2026-03-13', avatar:'green' },
       { id:8, name:'Батбаяр Энхбат', country:'Mongolia', dept:'Orthopedic Surgery', step:2, stepDone:2, status:'reviewing', statusText:'검토 중', date:'2026-03-14', avatar:'orange' },
       { id:9, name:'Дмитрий Соколов', country:'Russia', dept:'Cardiology', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-13', avatar:'purple' },
       { id:10, name:'Фатима Алиева', country:'Kazakhstan', dept:'OB/GYN', step:2, stepDone:1, status:'draft', statusText:'작성 중', date:'2026-03-18', avatar:'gray' },
       { id:11, name:'Олег Сидоров', country:'Russia', dept:'Internal Medicine', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-12', avatar:'blue' },
       { id:12, name:'Серик Абдрахманов', country:'Kazakhstan', dept:'Oncology', step:2, stepDone:2, status:'request', statusText:'자료 요청', date:'2026-03-11', avatar:'red' },
-      { id:13, name:'Анна Волкова', country:'Russia', dept:'Ophthalmology', step:2, stepDone:2, status:'approved', statusText:'최종 승인', date:'2026-03-10', avatar:'green' },
+      { id:13, name:'Анна Волкова', country:'Russia', dept:'Ophthalmology', step:2, stepDone:2, status:'confirmed', statusText:'최종 확정', date:'2026-03-10', avatar:'green' },
       { id:14, name:'Бекзат Нурланов', country:'Kazakhstan', dept:'Neurosurgery', step:2, stepDone:2, status:'reviewing', statusText:'검토 중', date:'2026-03-10', avatar:'orange' },
-      { id:15, name:'Сергей Морозов', country:'Russia', dept:'Plastic Surgery', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-09', avatar:'blue' },
+      { id:15, name:'Сергей Морозов', country:'Russia', dept:'Plastic Surgery', step:2, stepDone:2, status:'hospital-approved', statusText:'병원 승인', date:'2026-03-09', avatar:'blue' },
       { id:16, name:'Ержан Касымов', country:'Kazakhstan', dept:'Cardiology', step:2, stepDone:1, status:'draft', statusText:'작성 중', date:'2026-03-18', avatar:'gray' },
-      { id:17, name:'Елена Попова', country:'Russia', dept:'Dermatology', step:2, stepDone:2, status:'submitted', statusText:'접수 완료', date:'2026-03-08', avatar:'purple' },
-      { id:18, name:'Сабит Муканов', country:'Kazakhstan', dept:'Orthopedic Surgery', step:2, stepDone:2, status:'request', statusText:'자료 요청', date:'2026-03-08', avatar:'red' },
+      { id:17, name:'Елена Попова', country:'Russia', dept:'Dermatology', step:2, stepDone:2, status:'withdrawn', statusText:'철회', date:'2026-03-08', avatar:'gray' },
+      { id:18, name:'Сабит Муканов', country:'Kazakhstan', dept:'Orthopedic Surgery', step:2, stepDone:2, status:'confirming', statusText:'최종 확인 대기', date:'2026-03-08', avatar:'orange' },
     ];
 
     let currentFilter = 'all';
     let searchTerm = '';
 
+    function updateCounts() {
+      const statuses = ['draft','submitted','reviewing','request','hospital-approved','confirming','confirmed','withdrawn'];
+      document.getElementById('cnt-all').textContent = patients.length;
+      statuses.forEach(s => {
+        const el = document.getElementById('cnt-'+s);
+        if (el) el.textContent = patients.filter(p=>p.status===s).length;
+      });
+    }
+
     function renderList() {
+      updateCounts();
       const list = document.getElementById('patientList');
-      // Keep header
       const header = list.querySelector('.patient-row-header');
       list.innerHTML = '';
       list.appendChild(header);

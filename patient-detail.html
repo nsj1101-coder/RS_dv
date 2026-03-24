@@ -53,7 +53,44 @@
     .status.submitted{background:#eff6ff;color:#3391ff;}
     .status.reviewing{background:#fef3c7;color:#b45309;}
     .status.request{background:#fef2f2;color:#dc2626;}
-    .status.approved{background:#d1fae5;color:#047857;}
+    .status.hospital-approved{background:#faf5ff;color:#7c3aed;}
+    .status.confirming{background:#fff7ed;color:#c2410c;}
+    .status.confirmed{background:#d1fae5;color:#047857;}
+    .status.withdrawn{background:#f1f5f9;color:#94a3b8;text-decoration:line-through;}
+
+    /* Approval Flow */
+    .approval-flow{margin-bottom:2rem;border:1px solid #f1f5f9;border-radius:.75rem;padding:1.5rem;}
+    .approval-flow-title{font-size:.9375rem;font-weight:700;color:#1a1a2e;margin-bottom:1.25rem;}
+    .flow-steps{display:flex;align-items:flex-start;gap:0;position:relative;}
+    .flow-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;}
+    .flow-dot{width:2rem;height:2rem;border-radius:50%;border:2px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem;transition:all .2s;}
+    .flow-dot svg{width:1rem;height:1rem;color:#cbd5e1;}
+    .flow-step.done .flow-dot{background:#10b981;border-color:#10b981;}
+    .flow-step.done .flow-dot svg{color:#fff;}
+    .flow-step.active .flow-dot{background:#3391ff;border-color:#3391ff;box-shadow:0 0 0 4px rgba(51,145,255,.15);}
+    .flow-step.active .flow-dot svg{color:#fff;}
+    .flow-step.rejected .flow-dot{background:#ef4444;border-color:#ef4444;}
+    .flow-step.rejected .flow-dot svg{color:#fff;}
+    .flow-label{font-size:.6875rem;font-weight:600;color:#94a3b8;line-height:1.3;}
+    .flow-step.done .flow-label{color:#10b981;}
+    .flow-step.active .flow-label{color:#3391ff;}
+    .flow-step.rejected .flow-label{color:#ef4444;}
+    .flow-date{font-size:.625rem;color:#cbd5e1;margin-top:.125rem;}
+    .flow-line{position:absolute;top:1rem;left:0;right:0;height:2px;background:#e2e8f0;z-index:0;}
+    .flow-line-fill{height:100%;background:#10b981;transition:width .3s;}
+
+    /* Action Box */
+    .action-box{border:1px solid #e2e8f0;border-radius:.75rem;padding:1.5rem;margin-bottom:2rem;background:#fafbfc;}
+    .action-box.confirm-box{border-color:#7c3aed;background:#faf5ff;}
+    .action-box-title{font-size:.9375rem;font-weight:700;color:#1a1a2e;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+    .action-box-desc{font-size:.8125rem;color:#64748b;margin-bottom:1rem;line-height:1.5;}
+    .action-btns{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .btn-confirm{background:#7c3aed;color:#fff;padding:.625rem 1.5rem;}
+    .btn-confirm:hover{background:#6d28d9;}
+    .btn-withdraw{background:#fff;color:#ef4444;border:1px solid #fecaca;padding:.625rem 1.5rem;}
+    .btn-withdraw:hover{background:#fef2f2;}
+    .btn-outline{background:#fff;color:#64748b;border:1px solid #e2e8f0;padding:.625rem 1.5rem;}
+    .btn-outline:hover{background:#f8fafc;color:#1a1a2e;}
 
     /* Request Alert */
     .request-alert{background:#fef2f2;border:1px solid #fecaca;border-radius:.75rem;padding:1.25rem 1.5rem;margin-bottom:2rem;}
@@ -150,7 +187,7 @@
   </div>
 
   <script>
-    // Demo patient data (would come from backend)
+    // Demo patient data
     const patients = {
       1: {name:'Иван Петров',country:'Russia',dept:'Orthopedic Surgery',status:'request',statusText:'자료 요청',date:'2026-03-17',hospital:'삼성서울병원',
         step1:{name:'Иван Петров',nationality:'Russia',phone:'+7-915-123-4567',email:'ivan.petrov@mail.ru'},
@@ -158,19 +195,164 @@
         requests:[
           {text:'<strong>MRI 이미지 추가 제출</strong> — 좌측 무릎 MRI 최신본(3개월 이내) 필요합니다. 기존 파일이 2024년 촬영분입니다.',date:'2026-03-17 14:30'},
           {text:'<strong>혈액검사 결과</strong> — CBC, ESR, CRP 포함된 최근 혈액검사 결과가 필요합니다.',date:'2026-03-17 14:30'}
-        ]},
-      2: {name:'Мария Иванова',country:'Russia',dept:'Oncology',status:'approved',statusText:'최종 승인',date:'2026-03-16',hospital:'서울아산병원',
+        ],
+        flow:{submitted:'2026-03-17',reviewing:'2026-03-17',request:'2026-03-17'}},
+      2: {name:'Мария Иванова',country:'Russia',dept:'Oncology',status:'confirmed',statusText:'최종 확정',date:'2026-03-16',hospital:'서울아산병원',
         step1:{name:'Мария Иванова',nationality:'Russia',phone:'+7-916-987-6543',email:'m.ivanova@yandex.ru'},
         step2:{diagnosis:'유방암 2기 (Stage II Breast Cancer)',hospital_local:'National Cancer Center, Moscow',treatment:'항암치료 완료',meds:'Tamoxifen 20mg, 1일 1회',diseases:['없음'],allergies:'Penicillin',visitDate:'2026-04-20',stay:'1~3개월',concierge:['공항 픽업','차량 서비스','숙박 예약','통역 서비스'],files:['Diagnosis_Report.pdf','CT_chest.dcm','Pathology_Report.pdf','Prescription.pdf']},
-        requests:[]},
-      3: {name:'Алексей Козлов',country:'Kazakhstan',dept:'Cardiology',status:'reviewing',statusText:'검토 중',date:'2026-03-15',hospital:'서울대학교병원',
+        requests:[],
+        flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-13',confirmed:'2026-03-16'}},
+      3: {name:'Алексей Козлов',country:'Kazakhstan',dept:'Cardiology',status:'confirming',statusText:'최종 확인 대기',date:'2026-03-15',hospital:'서울대학교병원',
         step1:{name:'Алексей Козлов',nationality:'Kazakhstan',phone:'+7-771-555-0123',email:'a.kozlov@gmail.com'},
         step2:{diagnosis:'관상동맥 협착 (Coronary Artery Stenosis)',hospital_local:'National Research Center, Almaty',treatment:'약물치료 중',meds:'Aspirin 100mg, Atorvastatin 40mg',diseases:['고혈압','당뇨'],allergies:'없음',visitDate:'2026-05-01',stay:'2~4주',concierge:['공항 픽업','통역 서비스'],files:['Diagnosis_Report.pdf','CT_coronary.dcm','Blood_Test.pdf','ECG_Report.pdf']},
-        requests:[]},
+        requests:[],
+        flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-14',confirming:'2026-03-15'}},
+      6: {name:'田中太郎',country:'Japan',dept:'Plastic Surgery',status:'hospital-approved',statusText:'병원 승인',date:'2026-03-14',hospital:'강남세브란스병원',
+        step1:{name:'田中太郎',nationality:'Japan',phone:'+81-90-1234-5678',email:'tanaka@gmail.com'},
+        step2:{diagnosis:'안면 비대칭 교정',hospital_local:'Tokyo University Hospital',treatment:'없음',meds:'없음',diseases:['없음'],allergies:'없음',visitDate:'2026-05-10',stay:'1~2주',concierge:['공항 픽업','숙박 예약'],files:['Diagnosis_Report.pdf','CT_face.dcm']},
+        requests:[],
+        flow:{submitted:'2026-03-08',reviewing:'2026-03-09',hospitalApproved:'2026-03-14'}},
+      17: {name:'Елена Попова',country:'Russia',dept:'Dermatology',status:'withdrawn',statusText:'철회',date:'2026-03-08',hospital:'서울아산병원',
+        step1:{name:'Елена Попова',nationality:'Russia',phone:'+7-916-111-2233',email:'e.popova@mail.ru'},
+        step2:{diagnosis:'만성 피부염',hospital_local:'Dermatology Center, Moscow',treatment:'연고 치료 중',meds:'Hydrocortisone cream',diseases:['없음'],allergies:'없음',visitDate:'2026-04-01',stay:'1주',concierge:['통역 서비스'],files:['Diagnosis_Report.pdf']},
+        requests:[],
+        flow:{submitted:'2026-03-04',reviewing:'2026-03-05',hospitalApproved:'2026-03-07',withdrawn:'2026-03-08'},
+        withdrawReason:'개인 사정으로 방문 일정 취소'},
     };
 
     function getPatientId() {
       return parseInt(new URLSearchParams(location.search).get('id')) || 1;
+    }
+
+    // Flow step definitions
+    const flowDefs = [
+      {key:'submitted', label:'접수 완료'},
+      {key:'reviewing', label:'검토 중'},
+      {key:'hospitalApproved', label:'병원 승인'},
+      {key:'confirming', label:'최종 확인'},
+      {key:'confirmed', label:'최종 확정'},
+    ];
+
+    function buildFlowHtml(p) {
+      const f = p.flow || {};
+      const isWithdrawn = p.status === 'withdrawn';
+      const isRequest = p.status === 'request';
+
+      // Determine which steps are done
+      let activeIdx = -1;
+      flowDefs.forEach((d,i) => { if (f[d.key]) activeIdx = i; });
+
+      // For request status, active is at reviewing (index 1)
+      if (isRequest) activeIdx = 1;
+
+      const fillPct = activeIdx >= 0 ? Math.min(((activeIdx) / (flowDefs.length - 1)) * 100, 100) : 0;
+
+      const steps = flowDefs.map((d,i) => {
+        let cls = '';
+        let icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>`;
+        const date = f[d.key] || '';
+
+        if (isWithdrawn && f.withdrawn && i >= activeIdx) {
+          if (i === activeIdx + 1 || (d.key === 'confirming' && f.hospitalApproved)) {
+            cls = 'rejected';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+          }
+        }
+
+        if (!cls) {
+          if (i < activeIdx || (i === activeIdx && (p.status === 'confirmed' || f[d.key]))) {
+            cls = 'done';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
+          } else if (i === activeIdx) {
+            cls = 'active';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>`;
+          }
+        }
+
+        return `<div class="flow-step ${cls}"><div class="flow-dot">${icon}</div><div class="flow-label">${d.label}</div>${date ? `<div class="flow-date">${date}</div>` : ''}</div>`;
+      }).join('');
+
+      return `<div class="approval-flow">
+        <div class="approval-flow-title">승인 진행 현황</div>
+        <div style="position:relative;">
+          <div class="flow-line"><div class="flow-line-fill" style="width:${fillPct}%"></div></div>
+          <div class="flow-steps">${steps}</div>
+        </div>
+      </div>`;
+    }
+
+    function buildActionHtml(p, id) {
+      // Hospital approved → patient/agency needs to confirm or withdraw
+      if (p.status === 'hospital-approved' || p.status === 'confirming') {
+        return `<div class="action-box confirm-box">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            병원에서 승인하였습니다
+          </div>
+          <div class="action-box-desc">${p.hospital}에서 환자 접수를 승인했습니다. 진행을 원하시면 <strong>최종 확인</strong>을 눌러주세요. 일정 변경이나 취소가 필요하시면 철회할 수 있습니다.</div>
+          <div class="action-btns">
+            <button class="btn btn-confirm" onclick="confirmPatient(${id})">최종 확인</button>
+            <button class="btn btn-withdraw" onclick="withdrawPatient(${id})">접수 철회</button>
+          </div>
+        </div>`;
+      }
+
+      // Confirmed → show success
+      if (p.status === 'confirmed') {
+        return `<div class="action-box" style="border-color:#10b981;background:#f0fdf4;">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            양측 승인 완료 — 최종 확정
+          </div>
+          <div class="action-box-desc">병원과 환자/에이전시 양측 모두 확인이 완료되었습니다. 방문 일정에 따라 컨시어지 서비스가 준비됩니다.</div>
+        </div>`;
+      }
+
+      // Withdrawn → show reason
+      if (p.status === 'withdrawn') {
+        return `<div class="action-box" style="border-color:#fecaca;background:#fef2f2;">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            접수 철회됨
+          </div>
+          <div class="action-box-desc">${p.withdrawReason ? '사유: ' + p.withdrawReason : '환자 또는 에이전시에 의해 접수가 철회되었습니다.'}</div>
+        </div>`;
+      }
+
+      // Reviewing / submitted → can withdraw
+      if (p.status === 'submitted' || p.status === 'reviewing') {
+        return `<div class="action-box">
+          <div class="action-box-title">접수 진행 중</div>
+          <div class="action-box-desc">병원에서 서류를 검토 중입니다. 일정 변경이나 취소가 필요하시면 철회할 수 있습니다.</div>
+          <div class="action-btns">
+            <button class="btn btn-withdraw" onclick="withdrawPatient(${id})">접수 철회</button>
+          </div>
+        </div>`;
+      }
+
+      return '';
+    }
+
+    function confirmPatient(id) {
+      if (confirm('최종 확인하시겠습니까? 병원에 최종 확정 안내가 전달됩니다.')) {
+        const p = patients[id];
+        p.status = 'confirmed';
+        p.statusText = '최종 확정';
+        p.flow.confirmed = new Date().toISOString().split('T')[0];
+        render();
+      }
+    }
+
+    function withdrawPatient(id) {
+      const reason = prompt('철회 사유를 입력해주세요 (선택):');
+      if (reason !== null) {
+        const p = patients[id];
+        p.status = 'withdrawn';
+        p.statusText = '철회';
+        p.flow.withdrawn = new Date().toISOString().split('T')[0];
+        p.withdrawReason = reason || '';
+        render();
+      }
     }
 
     function render() {
@@ -182,7 +364,7 @@
       const statusClass = p.status;
 
       let requestHtml = '';
-      if (p.requests.length > 0) {
+      if (p.requests && p.requests.length > 0) {
         const items = p.requests.map((r,i) => `<div class="request-item"><div class="request-num">${i+1}</div><div><div class="request-text">${r.text}</div><div class="request-date">${r.date}</div></div></div>`).join('');
         requestHtml = `<div class="request-alert">
           <div class="request-alert-title"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>병원 추가 자료 요청 (${p.requests.length}건)</div>
@@ -190,6 +372,9 @@
           <div class="request-actions"><a href="patient-intake.html?id=${id}" class="btn btn-danger">자료 보완하기</a></div>
         </div>`;
       }
+
+      const flowHtml = buildFlowHtml(p);
+      const actionHtml = buildActionHtml(p, id);
 
       const s1 = p.step1;
       const s2 = p.step2;
@@ -212,6 +397,8 @@
           <span class="status ${statusClass}">${p.statusText}</span>
         </div>
 
+        ${flowHtml}
+        ${actionHtml}
         ${requestHtml}
 
         <div class="info-cards">
