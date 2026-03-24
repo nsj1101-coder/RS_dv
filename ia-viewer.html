@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediW IA Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #fff;
+  --card-bg: #fff;
+  --border: #e5e7eb;
+  --primary: #3391ff;
+  --primary-light: #e8f2ff;
+  --heading: #111827;
+  --body: #4b5563;
+  --body-light: #9ca3af;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-w: 240px;
+  --header-h: 56px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--body);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: -0.3px;
+}
+.sidebar-logo span {
+  font-size: 11px;
+  color: var(--body-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sidebar-nav { padding: 12px 0; flex: 1; }
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  color: var(--body);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar-nav a:hover {
+  background: #f3f4f6;
+  color: var(--heading);
+}
+.sidebar-nav a.active {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-left-color: var(--primary);
+  font-weight: 600;
+}
+.sidebar-nav a .nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--header-h);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+.header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--heading);
+}
+.header .meta {
+  font-size: 12px;
+  color: var(--body-light);
+}
+
+/* Main */
+.main {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--header-h);
+  min-height: 100vh;
+}
+.main-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 40px 80px;
+}
+
+/* Sections */
+.section { margin-bottom: 56px; scroll-margin-top: calc(var(--header-h) + 24px); }
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--body-light);
+  margin-bottom: 24px;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1.2;
+}
+.stat-card .label {
+  font-size: 12px;
+  color: var(--body-light);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.stat-card.accent .num { color: var(--primary); }
+.stat-card.green .num { color: var(--success); }
+.stat-card.purple .num { color: var(--purple); }
+
+.info-row {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.info-row .info-label {
+  font-size: 12px;
+  color: var(--body-light);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.info-row .info-value {
+  font-size: 14px;
+  color: var(--heading);
+  font-weight: 500;
+}
+
+/* Subsection */
+.subsection { margin-bottom: 32px; }
+.subsection-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.subsection-title .badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #fff;
+}
+.badge-blue { background: var(--primary); }
+.badge-green { background: var(--success); }
+.badge-purple { background: var(--purple); }
+.badge-orange { background: var(--warning); }
+.badge-red { background: var(--danger); }
+.badge-gray { background: #9ca3af; }
+
+/* Tables */
+.table-wrap {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--body-light);
+  background: #f9fafb;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+tbody td {
+  padding: 10px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f3f4f6;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f9fafb; }
+.mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--body);
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Pill button */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.btn-pill:hover { opacity: 0.85; }
+
+/* Accordion Cards */
+.accordion-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.accordion-card.open { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  gap: 12px;
+  transition: background 0.15s;
+}
+.accordion-header:hover { background: #f9fafb; }
+.accordion-header .chevron {
+  transition: transform 0.2s;
+  color: var(--body-light);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.accordion-card.open .accordion-header .chevron { transform: rotate(90deg); }
+.accordion-header .page-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.accordion-header .page-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--heading);
+  flex: 1;
+}
+.accordion-body {
+  display: none;
+  padding: 0 18px 18px;
+  border-top: 1px solid #f3f4f6;
+}
+.accordion-card.open .accordion-body { display: block; padding-top: 16px; }
+
+.detail-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--body-light);
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+.detail-section-label:first-child { margin-top: 0; }
+
+.info-list { list-style: none; padding: 0; }
+.info-list li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  font-size: 13px;
+  color: var(--body);
+  line-height: 1.5;
+}
+.info-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 5px;
+  height: 5px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+/* Checkboxes */
+.check-list { list-style: none; padding: 0; }
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: var(--body);
+}
+.check-list li.checked { color: var(--body-light); text-decoration: line-through; }
+.check-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.progress-bar-wrap .progress-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  white-space: nowrap;
+}
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.progress-pct {
+  font-size: 12px;
+  color: var(--body-light);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Test Flows */
+.flow-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.flow-card .flow-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-card .flow-num {
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.flow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.flow-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--heading);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
+.flow-step.note {
+  background: transparent;
+  color: var(--body-light);
+  font-style: italic;
+  padding: 6px 4px;
+}
+.flow-arrow {
+  color: var(--body-light);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Status table */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Nav map */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.nav-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.nav-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 12px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--body);
+  transition: background 0.15s;
+}
+.nav-item:hover { background: #f3f4f6; }
+.nav-item a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 12px;
+}
+.nav-item .count-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* Mobile */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--heading);
+}
+@media (max-width: 860px) {
+  .mobile-toggle { display: flex; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.1); }
+  .header { left: 0; padding-left: 56px; }
+  .main { margin-left: 0; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-grid { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; align-items: flex-start; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h2>MediW IA</h2>
+    <span>Information Architecture</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#overview" class="active"><span class="nav-icon">&#9673;</span> Overview</a>
+    <a href="#sitemap"><span class="nav-icon">&#9783;</span> Sitemap</a>
+    <a href="#details"><span class="nav-icon">&#9881;</span> Page Details</a>
+    <a href="#flows"><span class="nav-icon">&#10140;</span> Test Flows</a>
+    <a href="#statuses"><span class="nav-icon">&#9679;</span> Status Definitions</a>
+    <a href="#navigation"><span class="nav-icon">&#9776;</span> Navigation Map</a>
+  </nav>
+</aside>
+
+<header class="header">
+  <h1>MediW IA Document</h1>
+  <span class="meta">Last updated: 2026-03-24</span>
+</header>
+
+<main class="main">
+<div class="main-inner">
+
+<!-- OVERVIEW -->
+<section id="overview" class="section">
+  <h2 class="section-title">Overview</h2>
+  <p class="section-subtitle">MediW 플랫폼 전체 페이지 구성 현황</p>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="num">20</div><div class="label">총 페이지</div></div>
+    <div class="stat-card accent"><div class="num">5</div><div class="label">퍼블릭</div></div>
+    <div class="stat-card green"><div class="num">7</div><div class="label">사용자</div></div>
+    <div class="stat-card purple"><div class="num">8</div><div class="label">관리자</div></div>
+  </div>
+  <div class="info-row">
+    <span class="info-label">배포 URL</span>
+    <span class="info-value" style="color:var(--body-light);">배포 후 업데이트 예정</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">최종 업데이트</span>
+    <span class="info-value">2026-03-24</span>
+  </div>
+</section>
+
+<!-- SITEMAP -->
+<section id="sitemap" class="section">
+  <h2 class="section-title">Sitemap</h2>
+  <p class="section-subtitle">전체 페이지 목록 및 파일 매핑</p>
+
+  <div class="subsection">
+    <div class="subsection-title">퍼블릭 페이지 <span class="badge badge-blue">5</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>페이지명</th><th>파일명</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>P-1</td><td>랜딩페이지</td><td><code class="mono">index.html</code></td><td><a href="index.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>P-2</td><td>로그인</td><td><code class="mono">login.html</code></td><td><a href="login.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>P-3</td><td>회원가입 (4단계)</td><td><code class="mono">signup.html</code></td><td><a href="signup.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>P-4</td><td>가입 완료</td><td><code class="mono">signup-success.html</code></td><td><a href="signup-success.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>P-5</td><td>프로그램 목록</td><td><code class="mono">programs.html</code></td><td><a href="programs.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">사용자 페이지 <span class="badge badge-green">7</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>페이지명</th><th>파일명</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>U-1</td><td>대시보드</td><td><code class="mono">dashboard.html</code></td><td><a href="dashboard.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-2</td><td>내 정보 (프로필)</td><td><code class="mono">profile.html</code></td><td><a href="profile.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-3</td><td>환자 관리 (리스트)</td><td><code class="mono">patient-list.html</code></td><td><a href="patient-list.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-4</td><td>환자 상세</td><td><code class="mono">patient-detail.html?id=1</code></td><td><a href="patient-detail.html?id=1" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-5</td><td>환자 접수 (2단계)</td><td><code class="mono">patient-intake.html</code></td><td><a href="patient-intake.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-6</td><td>병원 검색</td><td><code class="mono">hospitals.html</code></td><td><a href="hospitals.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>U-7</td><td>병원 상세</td><td><code class="mono">hospital-detail.html?id=1</code></td><td><a href="hospital-detail.html?id=1" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">관리자 페이지 <span class="badge badge-purple">8</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>페이지명</th><th>파일명</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>A-1</td><td>어드민 대시보드</td><td><code class="mono">admin.html</code></td><td><a href="admin.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-2</td><td>회원 관리</td><td><code class="mono">admin-users.html</code></td><td><a href="admin-users.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-3</td><td>환자 케이스</td><td><code class="mono">admin-cases.html</code></td><td><a href="admin-cases.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-4</td><td>병원 관리</td><td><code class="mono">admin-hospitals.html</code></td><td><a href="admin-hospitals.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-5</td><td>에이전시 관리</td><td><code class="mono">admin-agencies.html</code></td><td><a href="admin-agencies.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-6</td><td>승인 관리</td><td><code class="mono">admin-approvals.html</code></td><td><a href="admin-approvals.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-7</td><td>시스템 설정</td><td><code class="mono">admin-settings.html</code></td><td><a href="admin-settings.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+          <tr><td>A-8</td><td>병원 등록</td><td><code class="mono">hospital-register.html</code></td><td><a href="hospital-register.html" target="_blank" class="btn-pill">열기 &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE DETAILS -->
+<section id="details" class="section">
+  <h2 class="section-title">Page Details</h2>
+  <p class="section-subtitle">각 페이지의 노출 정보 및 체크리스트</p>
+  <div class="progress-bar-wrap" id="progress-wrap">
+    <span class="progress-text" id="progress-text">0 / 0 checks completed</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+  <div id="accordion-container"></div>
+</section>
+
+<!-- TEST FLOWS -->
+<section id="flows" class="section">
+  <h2 class="section-title">Test Flows</h2>
+  <p class="section-subtitle">주요 사용자 시나리오별 테스트 플로우</p>
+  <div id="flows-container"></div>
+</section>
+
+<!-- STATUS DEFINITIONS -->
+<section id="statuses" class="section">
+  <h2 class="section-title">Status Definitions</h2>
+  <p class="section-subtitle">환자 케이스 상태값 정의</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>상태</th><th>영문</th><th>뱃지</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>작성 중</td><td>Draft</td><td><span class="status-badge" style="background:#9ca3af">작성 중</span></td><td>환자 접수 폼 작성이 진행 중인 상태</td></tr>
+        <tr><td>접수 완료</td><td>Submitted</td><td><span class="status-badge" style="background:var(--primary)">접수 완료</span></td><td>환자 접수가 완료되어 병원 검토 대기 중</td></tr>
+        <tr><td>검토 중</td><td>Under Review</td><td><span class="status-badge" style="background:var(--warning)">검토 중</span></td><td>병원에서 케이스를 검토하고 있는 상태</td></tr>
+        <tr><td>자료 요청</td><td>Docs Requested</td><td><span class="status-badge" style="background:var(--danger)">자료 요청</span></td><td>병원에서 추가 의료 자료를 요청한 상태</td></tr>
+        <tr><td>병원 승인</td><td>Hospital Approved</td><td><span class="status-badge" style="background:var(--purple)">병원 승인</span></td><td>병원에서 진료를 승인한 상태</td></tr>
+        <tr><td>최종 확인 대기</td><td>Pending Confirmation</td><td><span class="status-badge" style="background:var(--warning)">최종 확인 대기</span></td><td>환자 또는 에이전시의 최종 확인을 대기 중</td></tr>
+        <tr><td>최종 확정</td><td>Confirmed</td><td><span class="status-badge" style="background:var(--success)">최종 확정</span></td><td>양측 모두 확인 완료, 진료 확정</td></tr>
+        <tr><td>철회</td><td>Withdrawn</td><td><span class="status-badge" style="background:#9ca3af">철회</span></td><td>환자 또는 에이전시가 케이스를 철회함</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- NAVIGATION MAP -->
+<section id="navigation" class="section">
+  <h2 class="section-title">Navigation Map</h2>
+  <p class="section-subtitle">사이드바 네비게이션 구조</p>
+  <div class="nav-grid">
+    <div class="nav-card">
+      <h4>사용자 사이드바</h4>
+      <div class="nav-item"><span>대시보드</span><a href="dashboard.html" target="_blank">dashboard.html</a></div>
+      <div class="nav-item"><span>내 정보</span><a href="profile.html" target="_blank">profile.html</a></div>
+      <div class="nav-item"><span>환자 관리</span><a href="patient-list.html" target="_blank">patient-list.html</a></div>
+      <div class="nav-item"><span>병원 검색</span><a href="hospitals.html" target="_blank">hospitals.html</a></div>
+      <div class="nav-item"><span>설정</span><span style="color:var(--body-light);font-size:12px">대시보드 내 링크</span></div>
+    </div>
+    <div class="nav-card">
+      <h4>어드민 사이드바</h4>
+      <div class="nav-item"><span>대시보드</span><a href="admin.html" target="_blank">admin.html</a></div>
+      <div class="nav-item"><span>회원 관리</span><span class="count-badge">156</span></div>
+      <div class="nav-item"><span>환자 케이스</span><span class="count-badge">28</span></div>
+      <div class="nav-item"><span>병원 관리</span><span class="count-badge">32</span></div>
+      <div class="nav-item"><span>에이전시 관리</span><span class="count-badge">12</span></div>
+      <div class="nav-item"><span>승인 관리</span><span class="count-badge">7</span></div>
+      <div class="nav-item"><span>시스템 설정</span><a href="admin-settings.html" target="_blank">admin-settings.html</a></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+// Page data
+const pages = [
+  {id:'P-1',name:'랜딩페이지',file:'index.html',
+   info:['히어로 섹션 (타이틀, CTA 버튼 2개)','실시간 연수 스케줄 카드 4개','통계 바 (150+ 파트너 병원, 23개국, 2,400+ 프로그램, 98% 만족도)','How It Works 4단계','Featured Hospitals 3개','전문과 카테고리 8개','컨시어지 서비스 4개 + Trip Dashboard 데모','후기 3개','For Hospitals / For Agencies CTA','Footer'],
+   checks:['다크/라이트 테마 토글 동작','언어 셀렉트 (EN, KO, JA, ZH, RU) 전환','Explore Programs → programs.html 이동','Get Started → signup.html 이동','Log in → login.html 이동','스크롤 시 fade-in 애니메이션','모바일 반응형 (768px 이하 햄버거 메뉴)']},
+  {id:'P-2',name:'로그인',file:'login.html',
+   info:['이메일 / 비밀번호 입력 필드','Remember me 체크박스','소셜 로그인 (Google, Facebook)','비밀번호 찾기 링크','회원가입 링크'],
+   checks:['로그인 폼 제출 → dashboard.html 이동','Sign up 링크 → signup.html 이동','다크/라이트 테마 토글','모바일 반응형']},
+  {id:'P-3',name:'회원가입 (4단계)',file:'signup.html',
+   info:['4단계 스테퍼 (Basic Info → Location → Account Type → Terms)','Step 1: 이름, 이메일, 비밀번호, 생년월일, 성별, 전화번호, 언어','Step 2: 국적, 거주국가, 도시 (모달 검색 팝업)','Step 3: 계정 유형 선택 (Patient, Doctor, Hospital, Agency)','Step 4: 약관 동의 체크박스 3개'],
+   checks:['각 Step 진행/이전 버튼 동작','비밀번호 불일치 시 에러 표시','국가/도시 모달 검색 팝업 열기/닫기/선택','국가 선택 후 도시 목록 업데이트','계정 유형 라디오 버튼 선택 UI','필수 약관 미동의 시 경고','최종 제출 → signup-success.html 이동']},
+  {id:'P-4',name:'가입 완료',file:'signup-success.html',
+   info:['계정 유형별 맞춤 환영 메시지','가입 정보 요약 (이름, 이메일, 계정유형, 위치)','이메일 인증 안내','Next Steps 3개 (유형별 다름)','Go to Dashboard / Back Home 버튼'],
+   checks:['signup.html에서 전달된 sessionStorage 데이터 표시','계정 유형별 콘텐츠 분기','Go to Dashboard → login.html 이동']},
+  {id:'P-5',name:'프로그램 목록',file:'programs.html',
+   info:['캘린더/리스트 뷰 토글','필터 사이드바 (진료과, 병원, 기간)','프로그램 카드 리스트','지원 모달'],
+   checks:['캘린더/리스트 뷰 전환','필터 적용 시 목록 필터링','프로그램 카드 클릭 시 상세 모달']},
+  {id:'U-1',name:'대시보드',file:'dashboard.html',
+   info:['좌측 사이드바 (대시보드, 내 정보, 환자 관리, 병원 검색, 설정)','유저 카드 (이름, 역할)','타입 스위처 (환자 / 의료인 / 에이전시)','배너 (타입별 다른 타이틀/설명)','통계 카드 4개 (타입별)','알림 리스트 (타입별)'],
+   checks:['타입 스위처 전환 시 배너/통계/알림 모두 변경','사이드바 메뉴 → 각 페이지 이동','로그아웃 → login.html 이동','모바일 햄버거 메뉴 토글']},
+  {id:'U-2',name:'내 정보 (프로필)',file:'profile.html',
+   info:['환자: 본인 여부, 보호자 관계, 긴급 연락처, 방문 목적, 여권번호','의료인: 근무병원, 직위, 전공, 경력, 면허정보, 희망 연수, 파일 업로드','에이전시: 회사정보, 담당자, 사업유형, 환자 송출 규모, 파일 업로드, 정산계좌','프로필 완성도 프로그레스 바 (상단 고정)','필수 필드 빨간색 * 표시'],
+   checks:['타입 스위처 전환 시 폼 내용 변경','프로필 완성도 계산','프로그레스 바 스크롤 시 상단 고정 (sticky)','파일 업로드 영역 클릭 → 파일 선택','저장 버튼 → 토스트 알림','필수 값 * 빨간색 표시']},
+  {id:'U-3',name:'환자 관리 (리스트)',file:'patient-list.html',
+   info:['상단 통계 카드 (전체, 작성 중, 접수 완료, 추가 자료 요청)','상태 필터 탭 9개','검색 바','환자 리스트 테이블','새 환자 등록 버튼'],
+   checks:['상태 필터 탭 클릭 시 필터링','검색어 실시간 필터링','작성 중 행 클릭 → patient-intake.html 이동','접수 완료 이상 행 클릭 → patient-detail.html 이동','새 환자 등록 → patient-intake.html 이동','Step 진행 표시 (Step 1/2 또는 완료)']},
+  {id:'U-4',name:'환자 상세',file:'patient-detail.html?id=1',
+   info:['환자 헤더 (이름, 상태, 병원, 진료과)','승인 플로우 타임라인 5단계','추가 자료 요청 알림 (자료 요청 상태)','최종 확인 대기 (승인/철회 버튼)','정보 아코디언 카드 (기본정보, 의료정보, 의료기록, 방문계획)'],
+   checks:['?id=1 → 자료 요청 상태 (알림 노출)','?id=3 → 최종 확인 대기 (승인/철회 버튼)','?id=17 → 철회 상태','아코디언 카드 펼침/접힘','추가 자료 업로드 후 제출','승인/철회 버튼 클릭 시 상태 변경','뒤로가기 → patient-list.html']},
+  {id:'U-5',name:'환자 접수 (2단계)',file:'patient-intake.html',
+   info:['Step 1: 선택 병원/진료과 표시, 이름, 성별, 생년월일, 국적, 전화, 이메일, 희망 진료과 칩, 주요 증상','Step 2: 현지 진단명, 병력, 약물, 의료기록 업로드 8종, 방문 일정, 컨시어지 토글 4개'],
+   checks:['?hospital=서울아산병원&depts=심장내과 파라미터 시 자동 표시','Step 1↔2 전환 애니메이션','진료과 칩 다중 선택','파일 업로드 슬롯별 개별 파일 선택','컨시어지 토글 ON/OFF','접수하기 → patient-list.html 이동','임시 저장 → 작성 중 상태']},
+  {id:'U-6',name:'병원 검색',file:'hospitals.html',
+   info:['3컬럼 레이아웃 (필터 | 목록 | 상세)','필터: 진료과목 칩, 병원 유형, 지역, 언어','병원 목록 12개','병원 상세: 이미지, 이름, 주소, 인증 뱃지, 설명, 지도','진료과 → 교수진 카드 아코디언','교수 클릭 → 상세 모달 (경력, 학력, 전공, 질환, 연구)','진료과 체크박스 → 하단 의료 접수 바'],
+   checks:['병원 목록 12개 노출','검색 (병원명, 진료과, 병명, 교수명) 실시간 필터','필터 칩/체크박스 필터링','초기화 버튼 → 모든 필터 해제','병원 카드 클릭 → 우측 상세 전환','진료과 행 클릭 → 교수진 펼침/접힘','교수 카드 → 모달 프로필 (ESC/배경 닫기)','진료과 체크 → 플로팅 바 + 의료 접수 버튼','의료 접수 → patient-intake.html 이동']},
+  {id:'U-7',name:'병원 상세',file:'hospital-detail.html?id=1',
+   info:['병원 헤더 (이름, 유형, 주소, JCI/보건복지부 뱃지)','WhatsApp, 이메일, 웹사이트 연락 버튼','3개 탭: 기본 정보 | 진료과·의료진 | 국제진료센터','이 병원에 의료 접수 하단 CTA'],
+   checks:['?id=1 (아산), ?id=3 (강남세브란스), ?id=5 (서울대) 각각 정보 표시','탭 전환 동작','WhatsApp/이메일 링크','의료 접수 → patient-intake.html 이동','병원 목록으로 → hospitals.html 이동']},
+  {id:'A-1',name:'어드민 대시보드',file:'admin.html',
+   info:['다크 사이드바 (7개 메뉴)','통계 카드 4개 (회원 156, 케이스 28, 병원 32, 승인 대기 7)','월별 접수 현황 차트','최근 활동 피드','회원 유형 분포','국가별 환자 비율'],
+   checks:['사이드바 각 메뉴 → 해당 admin 페이지 이동','월별 차트 막대 노출','새 병원 등록 → hospital-register.html 이동','모바일 반응형 사이드바 토글']},
+  {id:'A-2',name:'회원 관리',file:'admin-users.html',
+   info:['유형 필터 (전체, 환자, 의료인, 에이전시)','검색 바','회원 테이블 (이름, 이메일, 유형, 국가, 가입일, 상태)'],
+   checks:['유형 필터 클릭 시 테이블 필터링','검색 실시간 필터링','활성/대기 뱃지 표시']},
+  {id:'A-3',name:'환자 케이스',file:'admin-cases.html',
+   info:['상태 필터 9개','검색 바','케이스 테이블 (환자명, 에이전시, 병원, 진료과, 상태, 날짜)'],
+   checks:['상태 필터 클릭 시 필터링','상태별 색상 뱃지 구분']},
+  {id:'A-4',name:'병원 관리',file:'admin-hospitals.html',
+   info:['병원 목록 테이블 (병원명, 유형, 지역, 진료과, 언어, 상태)','병원 등록 버튼','각 행 상세 → 링크'],
+   checks:['검색 실시간 필터링','행 클릭 → hospital-detail.html 이동','상세 → 링크 동작','+ 병원 등록 → hospital-register.html 이동','활성/대기 상태 뱃지']},
+  {id:'A-5',name:'에이전시 관리',file:'admin-agencies.html',
+   info:['에이전시 테이블 (회사명, 국가, 담당자, 환자 수, 등록일, 상태)','검색 바'],
+   checks:['검색 실시간 필터링','상태 뱃지 표시']},
+  {id:'A-6',name:'승인 관리',file:'admin-approvals.html',
+   info:['유형 필터 (전체, 병원 검토 대기, 환자 확인 대기, 자료 보완 대기)','승인 대기 카드 리스트','승인/반려/처리 액션 버튼'],
+   checks:['유형 필터 동작','병원 검토 → 승인/반려 버튼','환자 확인 → 확인 요청 버튼','자료 보완 → 자료 요청 버튼']},
+  {id:'A-7',name:'시스템 설정',file:'admin-settings.html',
+   info:['알림 설정 토글 (이메일, SMS, 푸시)','승인 프로세스 설정 토글','시스템 설정 토글'],
+   checks:['각 토글 ON/OFF 동작','저장 버튼 → 토스트 알림']},
+  {id:'A-8',name:'병원 등록',file:'hospital-register.html',
+   info:['7개 섹션 폼: 기본 정보, 위치, 진료과·의료진, 언어, 인증, 국제진료센터, 업로드','진료과 동적 추가/삭제','파일 업로드 3종','JCI/보건복지부 토글'],
+   checks:['필수 필드 빨간색 * 표시','진료과 + 추가 / 삭제 동작','파일 업로드 슬롯 클릭 → 파일 선택','JCI / 보건복지부 토글 ON/OFF','병원 등록 → 필수 필드 검증 → 에러 시 스크롤','임시 저장 → 토스트 알림','목록으로 → admin-hospitals.html 이동']},
+];
+
+const flows = [
+  {title:'신규 가입 → 대시보드 진입', steps:[
+    {label:'index.html', href:'index.html'},
+    {label:'signup.html', href:'signup.html'},
+    {label:'signup-success.html', href:'signup-success.html'},
+    {label:'login.html', href:'login.html'},
+    {label:'dashboard.html', href:'dashboard.html'}
+  ]},
+  {title:'프로필 작성 (에이전시)', steps:[
+    {label:'dashboard.html', href:'dashboard.html'},
+    {label:'profile.html', href:'profile.html'},
+    {label:'에이전시 타입 선택 → 입력 → 저장', note:true}
+  ]},
+  {title:'병원 검색 → 진료과 선택 → 환자 접수', steps:[
+    {label:'dashboard.html', href:'dashboard.html'},
+    {label:'hospitals.html', href:'hospitals.html'},
+    {label:'필터 → 병원 선택 → 교수 확인 → 진료과 체크 → 의료접수', note:true},
+    {label:'patient-intake.html', href:'patient-intake.html'},
+    {label:'patient-list.html', href:'patient-list.html'}
+  ]},
+  {title:'환자 리스트 → 상세 → 추가 자료 제출', steps:[
+    {label:'patient-list.html (자료 요청 필터)', href:'patient-list.html'},
+    {label:'patient-detail.html?id=1', href:'patient-detail.html?id=1'},
+    {label:'업로드 → 제출', note:true}
+  ]},
+  {title:'양측 승인 플로우', steps:[
+    {label:'patient-detail.html?id=3', href:'patient-detail.html?id=3'},
+    {label:'승인 또는 철회', note:true}
+  ]},
+  {title:'어드민 — 병원 등록 관리', steps:[
+    {label:'admin.html', href:'admin.html'},
+    {label:'admin-hospitals.html', href:'admin-hospitals.html'},
+    {label:'hospital-register.html', href:'hospital-register.html'},
+    {label:'입력 → 등록', note:true},
+    {label:'admin-hospitals.html', href:'admin-hospitals.html'},
+    {label:'hospital-detail.html', href:'hospital-detail.html?id=1'}
+  ]},
+  {title:'어드민 — 승인 처리', steps:[
+    {label:'admin.html', href:'admin.html'},
+    {label:'admin-approvals.html', href:'admin-approvals.html'},
+    {label:'필터 → 승인/반려', note:true}
+  ]}
+];
+
+// LocalStorage
+const STORAGE_KEY = 'mediw-ia-checks';
+function loadChecks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveChecks(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// Build accordion cards
+function buildAccordions() {
+  const container = document.getElementById('accordion-container');
+  let totalChecks = 0;
+  let checkedCount = 0;
+  const saved = loadChecks();
+
+  pages.forEach((page, pi) => {
+    const card = document.createElement('div');
+    card.className = 'accordion-card';
+    card.innerHTML = `
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span class="chevron">&#9654;</span>
+        <span class="page-id">${page.id}</span>
+        <span class="page-name">${page.name}</span>
+        <a href="${page.file}" target="_blank" class="btn-pill" onclick="event.stopPropagation()">열기 &rarr;</a>
+      </div>
+      <div class="accordion-body">
+        <div class="detail-section-label">노출 정보</div>
+        <ul class="info-list">
+          ${page.info.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+        <div class="detail-section-label">체크리스트</div>
+        <ul class="check-list">
+          ${page.checks.map((c, ci) => {
+            const key = `${page.id}-${ci}`;
+            const isChecked = saved[key] === true;
+            totalChecks++;
+            if (isChecked) checkedCount++;
+            return `<li class="${isChecked ? 'checked' : ''}">
+              <input type="checkbox" data-key="${key}" ${isChecked ? 'checked' : ''} onchange="onCheck(this)">
+              <span>${c}</span>
+            </li>`;
+          }).join('')}
+        </ul>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  updateProgress(checkedCount, totalChecks);
+}
+
+function toggleAccordion(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+function onCheck(cb) {
+  const saved = loadChecks();
+  saved[cb.dataset.key] = cb.checked;
+  saveChecks(saved);
+  const li = cb.parentElement;
+  if (cb.checked) li.classList.add('checked');
+  else li.classList.remove('checked');
+
+  // Recount
+  const allCbs = document.querySelectorAll('.check-list input[type="checkbox"]');
+  let total = allCbs.length, checked = 0;
+  allCbs.forEach(c => { if (c.checked) checked++; });
+  updateProgress(checked, total);
+}
+
+function updateProgress(checked, total) {
+  document.getElementById('progress-text').textContent = `${checked} / ${total} checks completed`;
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+// Build flows
+function buildFlows() {
+  const container = document.getElementById('flows-container');
+  flows.forEach((flow, fi) => {
+    const card = document.createElement('div');
+    card.className = 'flow-card';
+    let stepsHtml = '';
+    flow.steps.forEach((step, si) => {
+      if (si > 0) stepsHtml += '<span class="flow-arrow">&#8594;</span>';
+      if (step.note) {
+        stepsHtml += `<span class="flow-step note">${step.label}</span>`;
+      } else {
+        stepsHtml += `<a href="${step.href}" target="_blank" class="flow-step">${step.label}</a>`;
+      }
+    });
+    card.innerHTML = `
+      <div class="flow-title"><span class="flow-num">${fi + 1}</span> ${flow.title}</div>
+      <div class="flow-steps">${stepsHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Sidebar active state with IntersectionObserver
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const link = document.querySelector(`.sidebar-nav a[href="#${id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+// Close mobile sidebar on nav click
+document.querySelectorAll('.sidebar-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Init
+buildAccordions();
+buildFlows();
+initScrollSpy();
+</script>
+</body>
+</html>
