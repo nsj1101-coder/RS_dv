@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="ko" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediW — Training Programs Explorer</title>
+  <title>MediW — 연수 프로그램 탐색</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -233,7 +233,7 @@
           <span style="font-size:1.25rem;font-weight:700;letter-spacing:-.02em;">MediW</span>
         </a>
         <div class="breadcrumb">
-          <a href="index.html">Home</a><span>/</span><span style="color:var(--text2);">Training Programs</span>
+          <a href="index.html">홈</a><span>/</span><span style="color:var(--text2);">연수 프로그램</span>
         </div>
       </div>
       <div class="nav-actions">
@@ -241,7 +241,7 @@
           <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
-        <button class="btn btn-primary">Get Started</button>
+        <button class="btn btn-primary">시작하기</button>
       </div>
     </div>
   </nav>
@@ -249,23 +249,23 @@
   <!-- Header -->
   <div class="page-header" style="padding-top:4rem;">
     <div class="page-header-inner">
-      <h1 style="font-size:2rem;font-weight:700;">Training Programs</h1>
-      <p style="color:var(--text3);margin-top:.375rem;">Browse medical training schedules from Korea's top hospitals. Filter by hospital, department, or professor.</p>
+      <h1 style="font-size:2rem;font-weight:700;">연수 프로그램</h1>
+      <p style="color:var(--text3);margin-top:.375rem;">한국 최고 병원의 의료 연수 일정을 둘러보세요. 병원, 진료과, 교수별로 필터링할 수 있습니다.</p>
       <div class="search-box">
         <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input id="searchInput" type="text" placeholder="Search by hospital, specialty, professor, or keyword...">
+        <input id="searchInput" type="text" placeholder="병원, 전문 분야, 교수 또는 키워드로 검색...">
       </div>
       <div class="search-tags" id="searchTags">
-        <span class="search-tag" data-tag="Cardiac Surgery">Cardiac Surgery</span>
-        <span class="search-tag" data-tag="Robotic Surgery">Robotic Surgery</span>
-        <span class="search-tag" data-tag="Spine">Spine</span>
-        <span class="search-tag" data-tag="Oncology">Oncology</span>
-        <span class="search-tag" data-tag="Dermatology">Dermatology</span>
-        <span class="search-tag" data-tag="Orthopedics">Orthopedics</span>
-        <span class="search-tag" data-tag="Plastic Surgery">Plastic Surgery</span>
-        <span class="search-tag" data-tag="Fellowship">Fellowship</span>
-        <span class="search-tag" data-tag="Observation">Observation</span>
-        <span class="search-tag" data-tag="Hands-on">Hands-on</span>
+        <span class="search-tag" data-tag="Cardiac Surgery">심장외과</span>
+        <span class="search-tag" data-tag="Robotic Surgery">로봇수술</span>
+        <span class="search-tag" data-tag="Spine">척추</span>
+        <span class="search-tag" data-tag="Oncology">종양학</span>
+        <span class="search-tag" data-tag="Dermatology">피부과</span>
+        <span class="search-tag" data-tag="Orthopedics">정형외과</span>
+        <span class="search-tag" data-tag="Plastic Surgery">성형외과</span>
+        <span class="search-tag" data-tag="Fellowship">펠로우십</span>
+        <span class="search-tag" data-tag="Observation">관찰 연수</span>
+        <span class="search-tag" data-tag="Hands-on">실습</span>
       </div>
     </div>
   </div>
@@ -275,21 +275,21 @@
     <!-- Desktop Sidebar -->
     <aside class="sidebar" id="desktopSidebar">
       <div id="hospitalPanel" class="filter-panel">
-        <div class="filter-header"><span class="filter-label">Hospital</span><button id="clearH" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">병원</span><button id="clearH" class="filter-clear" style="display:none;">초기화</button></div>
         <div id="hospitalList"></div>
       </div>
       <div id="deptPanel" class="filter-panel filter-disabled">
-        <div class="filter-header"><span class="filter-label">Department</span><button id="clearD" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">진료과</span><button id="clearD" class="filter-clear" style="display:none;">초기화</button></div>
         <div id="deptList"></div>
       </div>
       <div id="profPanel" class="filter-panel filter-disabled">
-        <div class="filter-header"><span class="filter-label">Professor</span><button id="clearP" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">교수</span><button id="clearP" class="filter-clear" style="display:none;">초기화</button></div>
         <div id="profList"></div>
       </div>
       <div id="activeBox" style="display:none;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
-          <span style="font-size:.75rem;color:var(--text4);">Active Filters</span>
-          <button id="clearAll" style="font-size:.75rem;color:#ef4444;background:none;border:none;cursor:pointer;">Clear all</button>
+          <span style="font-size:.75rem;color:var(--text4);">적용된 필터</span>
+          <button id="clearAll" style="font-size:.75rem;color:#ef4444;background:none;border:none;cursor:pointer;">모두 초기화</button>
         </div>
         <div id="activeTags" class="active-filters"></div>
       </div>
@@ -300,15 +300,15 @@
       <!-- Mobile Filter Button -->
       <button class="mobile-filter-btn" onclick="openMobileFilter()">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-        Filters
+        필터
         <span id="mobileFilterCount" style="display:none;background:#1a6ff5;color:#fff;font-size:.65rem;padding:.125rem .375rem;border-radius:9999px;">0</span>
       </button>
 
       <!-- Tabs -->
       <div class="tabs">
         <div class="tab-btns">
-          <button class="tab-btn active" id="tabCal" onclick="setView('calendar')">Calendar</button>
-          <button class="tab-btn" id="tabList" onclick="setView('list')">List</button>
+          <button class="tab-btn active" id="tabCal" onclick="setView('calendar')">캘린더</button>
+          <button class="tab-btn" id="tabList" onclick="setView('list')">목록</button>
         </div>
         <div class="result-count" id="resultCount"></div>
       </div>
@@ -322,15 +322,15 @@
             <button class="cal-nav" onclick="navMonth(1)"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
           </div>
           <div class="cal-days">
-            <div class="cal-day-header">Sun</div><div class="cal-day-header">Mon</div><div class="cal-day-header">Tue</div><div class="cal-day-header">Wed</div><div class="cal-day-header">Thu</div><div class="cal-day-header">Fri</div><div class="cal-day-header">Sat</div>
+            <div class="cal-day-header">일</div><div class="cal-day-header">월</div><div class="cal-day-header">화</div><div class="cal-day-header">수</div><div class="cal-day-header">목</div><div class="cal-day-header">금</div><div class="cal-day-header">토</div>
           </div>
           <div class="cal-grid" id="calGrid"></div>
         </div>
         <div class="cal-legend">
-          <span><span class="cal-legend-dot" style="background:#3391ff;"></span>Programs available</span>
-          <span><span class="cal-legend-dot" style="background:#34d399;"></span>Open</span>
-          <span><span class="cal-legend-dot" style="background:#f59e0b;"></span>Few spots</span>
-          <span><span class="cal-legend-dot" style="background:#ef4444;"></span>Closed</span>
+          <span><span class="cal-legend-dot" style="background:#3391ff;"></span>프로그램 있음</span>
+          <span><span class="cal-legend-dot" style="background:#34d399;"></span>모집 중</span>
+          <span><span class="cal-legend-dot" style="background:#f59e0b;"></span>잔여 소수</span>
+          <span><span class="cal-legend-dot" style="background:#ef4444;"></span>마감</span>
         </div>
       </div>
 
@@ -338,8 +338,8 @@
       <div id="programList"></div>
       <div id="emptyState" class="empty" style="display:none;">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p>No programs match your filters.</p>
-        <button onclick="clearAllFilters()">Clear all filters</button>
+        <p>필터 조건에 맞는 프로그램이 없습니다.</p>
+        <button onclick="clearAllFilters()">모든 필터 초기화</button>
       </div>
     </div>
   </div>
@@ -348,30 +348,30 @@
   <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileFilter()"></div>
   <div class="sidebar-mobile" id="mobileSidebar">
     <button class="sidebar-close" onclick="closeMobileFilter()"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    <h3 style="font-weight:600;margin-bottom:1rem;">Filters</h3>
+    <h3 style="font-weight:600;margin-bottom:1rem;">필터</h3>
     <div id="mobileFilterContent">
       <div class="filter-panel" style="margin-bottom:.75rem;">
-        <div class="filter-header"><span class="filter-label">Hospital</span><button data-clear="h" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">병원</span><button data-clear="h" class="filter-clear" style="display:none;">초기화</button></div>
         <div data-role="hospitalList"></div>
       </div>
       <div data-role="deptPanel" class="filter-panel filter-disabled" style="margin-bottom:.75rem;">
-        <div class="filter-header"><span class="filter-label">Department</span><button data-clear="d" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">진료과</span><button data-clear="d" class="filter-clear" style="display:none;">초기화</button></div>
         <div data-role="deptList"></div>
       </div>
       <div data-role="profPanel" class="filter-panel filter-disabled" style="margin-bottom:.75rem;">
-        <div class="filter-header"><span class="filter-label">Professor</span><button data-clear="p" class="filter-clear" style="display:none;">Clear</button></div>
+        <div class="filter-header"><span class="filter-label">교수</span><button data-clear="p" class="filter-clear" style="display:none;">초기화</button></div>
         <div data-role="profList"></div>
       </div>
       <div data-role="activeBox" style="display:none;margin-bottom:.75rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
-          <span style="font-size:.75rem;color:var(--text4);">Active Filters</span>
-          <button onclick="clearAllFilters()" style="font-size:.75rem;color:#ef4444;background:none;border:none;cursor:pointer;">Clear all</button>
+          <span style="font-size:.75rem;color:var(--text4);">적용된 필터</span>
+          <button onclick="clearAllFilters()" style="font-size:.75rem;color:#ef4444;background:none;border:none;cursor:pointer;">모두 초기화</button>
         </div>
         <div data-role="activeTags" class="active-filters"></div>
       </div>
     </div>
     <div style="position:fixed;bottom:0;left:0;width:85%;max-width:320px;padding:1rem;background:var(--bg);border-top:1px solid var(--border);z-index:62;">
-      <button onclick="closeMobileFilter()" class="btn btn-primary" style="width:100%;">Apply Filters</button>
+      <button onclick="closeMobileFilter()" class="btn btn-primary" style="width:100%;">필터 적용</button>
     </div>
   </div>
 
@@ -379,37 +379,37 @@
   <div class="modal-overlay" id="applyModal">
     <div class="modal">
       <div class="modal-head">
-        <div><h3 style="font-weight:600;font-size:1.125rem;" id="modalTitle">Apply for Training Program</h3><p style="font-size:.875rem;color:var(--text3);margin-top:.25rem;" id="modalSub"></p></div>
+        <div><h3 style="font-weight:600;font-size:1.125rem;" id="modalTitle">연수 프로그램 지원</h3><p style="font-size:.875rem;color:var(--text3);margin-top:.25rem;" id="modalSub"></p></div>
         <button class="modal-close" onclick="closeModal()"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
       </div>
       <div class="modal-body">
         <div class="program-info" id="modalInfo"></div>
         <form id="applyForm" onsubmit="submitApp(event)">
-          <div class="form-section">Personal Information</div>
-          <div class="form-row"><div class="form-group"><label class="form-label">First Name *</label><input required class="form-input"></div><div class="form-group"><label class="form-label">Last Name *</label><input required class="form-input"></div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Email *</label><input required type="email" class="form-input"></div><div class="form-group"><label class="form-label">Phone *</label><input required type="tel" placeholder="+7 XXX XXX XXXX" class="form-input"></div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Country *</label><select required class="form-input"><option value="">Select</option><option>Kazakhstan</option><option>Russia</option><option>Uzbekistan</option><option>Kyrgyzstan</option><option>Mongolia</option><option>China</option><option>Japan</option><option>Vietnam</option><option>Other</option></select></div><div class="form-group"><label class="form-label">Language</label><select class="form-input"><option>English</option><option>Русский</option><option>Қазақша</option><option>Монгол</option><option>中文</option><option>日本語</option></select></div></div>
+          <div class="form-section">개인 정보</div>
+          <div class="form-row"><div class="form-group"><label class="form-label">이름 *</label><input required class="form-input"></div><div class="form-group"><label class="form-label">성 *</label><input required class="form-input"></div></div>
+          <div class="form-row"><div class="form-group"><label class="form-label">이메일 *</label><input required type="email" class="form-input"></div><div class="form-group"><label class="form-label">전화번호 *</label><input required type="tel" placeholder="+7 XXX XXX XXXX" class="form-input"></div></div>
+          <div class="form-row"><div class="form-group"><label class="form-label">국가 *</label><select required class="form-input"><option value="">선택</option><option>카자흐스탄</option><option>러시아</option><option>우즈베키스탄</option><option>키르기스스탄</option><option>몽골</option><option>중국</option><option>일본</option><option>베트남</option><option>기타</option></select></div><div class="form-group"><label class="form-label">언어</label><select class="form-input"><option>English</option><option>Русский</option><option>Қазақша</option><option>Монгол</option><option>中文</option><option>日本語</option></select></div></div>
           <hr class="form-divider">
-          <div class="form-section">Professional Background</div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Position *</label><input required placeholder="e.g. Attending Surgeon" class="form-input"></div><div class="form-group"><label class="form-label">Specialty *</label><input required class="form-input"></div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Hospital / Institution *</label><input required class="form-input"></div><div class="form-group"><label class="form-label">Years of Experience *</label><select required class="form-input"><option value="">Select</option><option>0-2</option><option>3-5</option><option>6-10</option><option>11-20</option><option>20+</option></select></div></div>
+          <div class="form-section">전문 경력</div>
+          <div class="form-row"><div class="form-group"><label class="form-label">직위 *</label><input required placeholder="예: 전문의" class="form-input"></div><div class="form-group"><label class="form-label">전공 *</label><input required class="form-input"></div></div>
+          <div class="form-row"><div class="form-group"><label class="form-label">소속 병원/기관 *</label><input required class="form-input"></div><div class="form-group"><label class="form-label">경력 연수 *</label><select required class="form-input"><option value="">선택</option><option>0-2</option><option>3-5</option><option>6-10</option><option>11-20</option><option>20+</option></select></div></div>
           <hr class="form-divider">
-          <div class="form-section">Training Details</div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Start Date *</label><input required type="date" id="modalDate" class="form-input"></div><div class="form-group"><label class="form-label">Program Type</label><select class="form-input"><option>Clinical Observation</option><option>Hands-on Training</option><option>Fellowship</option><option>Workshop</option></select></div></div>
-          <div class="form-group"><label class="form-label">Goals</label><textarea rows="3" placeholder="Your goals for this training..." class="form-input" style="resize:none;"></textarea></div>
-          <div class="form-group"><label class="form-label">CV / Resume</label><div class="upload-zone"><svg width="32" height="32" style="margin:0 auto;color:var(--text4);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><div style="font-size:.75rem;color:var(--text4);margin-top:.5rem;">Drop file or click (PDF, max 10MB)</div></div></div>
+          <div class="form-section">연수 세부 사항</div>
+          <div class="form-row"><div class="form-group"><label class="form-label">시작일 *</label><input required type="date" id="modalDate" class="form-input"></div><div class="form-group"><label class="form-label">프로그램 유형</label><select class="form-input"><option>임상 관찰</option><option>실습 연수</option><option>펠로우십</option><option>워크숍</option></select></div></div>
+          <div class="form-group"><label class="form-label">목표</label><textarea rows="3" placeholder="이번 연수의 목표를 입력해 주세요..." class="form-input" style="resize:none;"></textarea></div>
+          <div class="form-group"><label class="form-label">이력서</label><div class="upload-zone"><svg width="32" height="32" style="margin:0 auto;color:var(--text4);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><div style="font-size:.75rem;color:var(--text4);margin-top:.5rem;">파일을 끌어다 놓거나 클릭하세요 (PDF, 최대 10MB)</div></div></div>
           <hr class="form-divider">
-          <div class="form-section">Concierge (Optional)</div>
-          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">Airport Pickup</div><div style="font-size:.75rem;color:var(--text4);">Private car from Incheon/Gimpo</div></div></label>
-          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">Accommodation</div><div style="font-size:.75rem;color:var(--text4);">3-5 star hotel near hospital</div></div></label>
-          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">Translation Support</div><div style="font-size:.75rem;color:var(--text4);">Korean-English / Korean-Russian</div></div></label>
+          <div class="form-section">컨시어지 (선택 사항)</div>
+          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">공항 픽업</div><div style="font-size:.75rem;color:var(--text4);">인천/김포 전용 차량</div></div></label>
+          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">숙소</div><div style="font-size:.75rem;color:var(--text4);">병원 근처 3-5성급 호텔</div></div></label>
+          <label class="form-check"><input type="checkbox"><div><div style="font-size:.875rem;">통역 지원</div><div style="font-size:.75rem;color:var(--text4);">한-영 / 한-러 통역</div></div></label>
         </form>
       </div>
       <div class="modal-foot">
-        <span style="font-size:.75rem;color:var(--text4);">Encrypted & secure</span>
+        <span style="font-size:.75rem;color:var(--text4);">암호화 및 보안 적용</span>
         <div style="display:flex;gap:.5rem;">
-          <button onclick="closeModal()" class="btn btn-ghost">Cancel</button>
-          <button onclick="document.getElementById('applyForm').requestSubmit()" class="btn btn-primary">Submit Application</button>
+          <button onclick="closeModal()" class="btn btn-ghost">취소</button>
+          <button onclick="document.getElementById('applyForm').requestSubmit()" class="btn btn-primary">지원서 제출</button>
         </div>
       </div>
     </div>
@@ -419,7 +419,7 @@
   <div class="toast" id="toast">
     <div class="toast-inner">
       <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-      <div><div style="font-weight:600;font-size:.875rem;">Application Submitted!</div><div style="font-size:.75rem;opacity:.8;">We'll contact you within 2 business days.</div></div>
+      <div><div style="font-weight:600;font-size:.875rem;">지원서가 제출되었습니다!</div><div style="font-size:.75rem;opacity:.8;">영업일 기준 2일 이내에 연락드리겠습니다.</div></div>
     </div>
   </div>
 
@@ -504,11 +504,11 @@
     const dPanel=container.querySelector('#deptPanel')||container.querySelector('[data-role="deptPanel"]');
     const pPanel=container.querySelector('#profPanel')||container.querySelector('[data-role="profPanel"]');
 
-    if(hList)hList.innerHTML=H.map(h=>`<div class="depth-item ${f.h===h.id?'active':''}" onclick="setFilter('h','${h.id}')"><div class="depth-icon" style="background:${h.color}20;color:${h.color}">${h.short}</div><div class="depth-text"><div class="depth-name">${h.name}</div><div class="depth-sub">${h.depts.length} depts</div></div></div>`).join('');
+    if(hList)hList.innerHTML=H.map(h=>`<div class="depth-item ${f.h===h.id?'active':''}" onclick="setFilter('h','${h.id}')"><div class="depth-icon" style="background:${h.color}20;color:${h.color}">${h.short}</div><div class="depth-text"><div class="depth-name">${h.name}</div><div class="depth-sub">${h.depts.length}개 진료과</div></div></div>`).join('');
 
     if(dPanel){
       if(!f.h){dPanel.classList.add('filter-disabled');if(dList)dList.innerHTML='';}
-      else{dPanel.classList.remove('filter-disabled');const hosp=H.find(x=>x.id===f.h);if(dList)dList.innerHTML=hosp.depts.map(d=>`<div class="depth-item ${f.d===d.id?'active':''}" onclick="setFilter('d','${d.id}')"><div class="depth-text"><div class="depth-name">${d.name}</div><div class="depth-sub">${d.profs.length} professors</div></div></div>`).join('');}
+      else{dPanel.classList.remove('filter-disabled');const hosp=H.find(x=>x.id===f.h);if(dList)dList.innerHTML=hosp.depts.map(d=>`<div class="depth-item ${f.d===d.id?'active':''}" onclick="setFilter('d','${d.id}')"><div class="depth-text"><div class="depth-name">${d.name}</div><div class="depth-sub">${d.profs.length}명 교수</div></div></div>`).join('');}
     }
     if(pPanel){
       if(!f.d){pPanel.classList.add('filter-disabled');if(pList)pList.innerHTML='';}
@@ -583,8 +583,8 @@
 
   // ===== CALENDAR =====
   function renderCal(){
-    const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    document.getElementById('calMonth').textContent=`${months[cm]} ${cy}`;
+    const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+    document.getElementById('calMonth').textContent=`${cy}년 ${months[cm]}`;
     const fd=new Date(cy,cm,1).getDay(),dim=new Date(cy,cm+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);
     const filtered=getFiltered(true);
     const evts={};
@@ -612,14 +612,14 @@
   function renderPrograms(){
     const progs=getFiltered();
     const el=document.getElementById('programList'),empty=document.getElementById('emptyState'),cnt=document.getElementById('resultCount');
-    cnt.textContent=`${progs.length} program${progs.length!==1?'s':''} found`;
+    cnt.textContent=`${progs.length}개 프로그램 발견`;
     if(!progs.length){el.innerHTML='';empty.style.display='';return;}
     empty.style.display='none';
-    const stMap={open:{l:'Open',c:'status-open'},few:{l:'Few spots',c:'status-few'},closed:{l:'Closed',c:'status-closed'}};
+    const stMap={open:{l:'모집 중',c:'status-open'},few:{l:'잔여 소수',c:'status-few'},closed:{l:'마감',c:'status-closed'}};
     const tMap={Fellowship:'background:rgba(51,145,255,.1);color:#3391ff;',Observation:'background:rgba(142,68,173,.1);color:#8e44ad;','Hands-on':'background:rgba(52,211,153,.1);color:#34d399;',Workshop:'background:rgba(245,158,11,.1);color:#f59e0b;'};
     el.innerHTML=progs.map(p=>{
-      const s=stMap[p.st],ds=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      return`<div class="program-card"><div class="pc-body"><div class="pc-top"><div class="pc-left"><div class="pc-icon" style="background:${p.h.color}20;color:${p.h.color};">${p.h.short}</div><div><div class="pc-title">${p.title}</div><div class="pc-subtitle">${p.h.name} · ${p.d.name}</div></div></div><span class="pc-status ${s.c}">${s.l}</span></div><div class="pc-meta"><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${p.p.name}</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${ds(p.start)} – ${ds(p.end)}</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${p.wks}w</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${p.fee}</div></div><div class="pc-bottom"><div class="pc-tags"><span class="pc-tag tag-type" style="${tMap[p.type]}">${p.type}</span>${p.tags.slice(0,3).map(t=>`<span class="pc-tag tag-default">${t}</span>`).join('')}</div><button class="pc-apply ${p.st==='closed'?'disabled':'active'}" onclick="${p.st!=='closed'?`openModal(${p.id})`:''}" ${p.st==='closed'?'disabled':''}>${p.st==='closed'?'Closed':'Apply Now'}</button></div></div><div class="pc-prof"><div class="pc-prof-avatar">${p.p.name.split(' ').pop()[0]}</div><div><div style="font-size:.75rem;font-weight:500;">${p.p.name} · ${p.p.title}</div><div style="font-size:.75rem;color:var(--text4);">${p.p.spec}</div></div></div></div>`;
+      const s=stMap[p.st],ds=d=>d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',year:'numeric'});
+      return`<div class="program-card"><div class="pc-body"><div class="pc-top"><div class="pc-left"><div class="pc-icon" style="background:${p.h.color}20;color:${p.h.color};">${p.h.short}</div><div><div class="pc-title">${p.title}</div><div class="pc-subtitle">${p.h.name} · ${p.d.name}</div></div></div><span class="pc-status ${s.c}">${s.l}</span></div><div class="pc-meta"><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${p.p.name}</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${ds(p.start)} – ${ds(p.end)}</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${p.wks}주</div><div class="pc-meta-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${p.fee}</div></div><div class="pc-bottom"><div class="pc-tags"><span class="pc-tag tag-type" style="${tMap[p.type]}">${p.type}</span>${p.tags.slice(0,3).map(t=>`<span class="pc-tag tag-default">${t}</span>`).join('')}</div><button class="pc-apply ${p.st==='closed'?'disabled':'active'}" onclick="${p.st!=='closed'?`openModal(${p.id})`:''}" ${p.st==='closed'?'disabled':''}>${p.st==='closed'?'마감':'지원하기'}</button></div></div><div class="pc-prof"><div class="pc-prof-avatar">${p.p.name.split(' ').pop()[0]}</div><div><div style="font-size:.75rem;font-weight:500;">${p.p.name} · ${p.p.title}</div><div style="font-size:.75rem;color:var(--text4);">${p.p.spec}</div></div></div></div>`;
     }).join('');
   }
 
@@ -636,7 +636,7 @@
   function openModal(id){
     const p=P.find(x=>x.id===id);if(!p)return;
     document.getElementById('modalSub').textContent=p.title;
-    document.getElementById('modalInfo').innerHTML=`<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;"><div class="pc-icon" style="background:${p.h.color}20;color:${p.h.color};width:2.5rem;height:2.5rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:.625rem;font-weight:700;">${p.h.short}</div><div><div style="font-size:.875rem;font-weight:600;">${p.title}</div><div style="font-size:.75rem;color:var(--text3);">${p.h.name}</div></div></div><div class="info-grid"><span>Department</span><span>${p.d.name}</span><span>Professor</span><span>${p.p.name}</span><span>Duration</span><span>${p.wks}w (${p.start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${p.end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})})</span><span>Type</span><span>${p.type}</span><span>Fee</span><span>${p.fee}</span><span>Spots</span><span>${p.spots} remaining</span></div>`;
+    document.getElementById('modalInfo').innerHTML=`<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;"><div class="pc-icon" style="background:${p.h.color}20;color:${p.h.color};width:2.5rem;height:2.5rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:.625rem;font-weight:700;">${p.h.short}</div><div><div style="font-size:.875rem;font-weight:600;">${p.title}</div><div style="font-size:.75rem;color:var(--text3);">${p.h.name}</div></div></div><div class="info-grid"><span>진료과</span><span>${p.d.name}</span><span>교수</span><span>${p.p.name}</span><span>기간</span><span>${p.wks}주 (${p.start.toLocaleDateString('ko-KR',{month:'short',day:'numeric'})} – ${p.end.toLocaleDateString('ko-KR',{month:'short',day:'numeric',year:'numeric'})})</span><span>유형</span><span>${p.type}</span><span>비용</span><span>${p.fee}</span><span>잔여석</span><span>${p.spots}석 남음</span></div>`;
     document.getElementById('modalDate').value=p.start.toISOString().split('T')[0];
     document.getElementById('applyModal').classList.add('open');
   }

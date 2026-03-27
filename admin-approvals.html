@@ -165,7 +165,7 @@
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Overview</div>
+        <div class="sidebar-section-label">개요</div>
       </div>
       <a class="nav-item" href="admin.html">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
@@ -173,7 +173,7 @@
       </a>
 
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Management</div>
+        <div class="sidebar-section-label">관리</div>
       </div>
       <a class="nav-item" href="admin-users.html">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
@@ -196,7 +196,7 @@
       </a>
 
       <div class="sidebar-section">
-        <div class="sidebar-section-label">Workflow</div>
+        <div class="sidebar-section-label">워크플로우</div>
       </div>
       <a class="nav-item active" href="admin-approvals.html">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -212,7 +212,7 @@
         <div class="admin-user">
           <div class="admin-avatar">SA</div>
           <div>
-            <div class="admin-name">Super Admin</div>
+            <div class="admin-name">최고 관리자</div>
             <div class="admin-role">admin@mediw.com</div>
           </div>
         </div>
@@ -243,13 +243,13 @@
     }
 
     const approvals = [
-      {id:1,type:'hospital',patient:'Нурлан Жумабеков',hospital:'서울대학교병원',dept:'Neurosurgery',agency:'Global Health',date:'2026-03-15',desc:'병원 검토 대기 — 접수 서류 확인 필요'},
-      {id:2,type:'hospital',patient:'Дмитрий Соколов',hospital:'서울아산병원',dept:'Cardiology',agency:'MedTravel Agency',date:'2026-03-13',desc:'병원 검토 대기 — 서류 검토 대기 중'},
-      {id:3,type:'hospital',patient:'Батбаяр Энхбат',hospital:'분당서울대병원',dept:'Orthopedic Surgery',agency:'Global Health',date:'2026-03-14',desc:'병원 검토 중 — 담당 교수 배정 대기'},
-      {id:4,type:'patient',patient:'Алексей Козлов',hospital:'서울대학교병원',dept:'Cardiology',agency:'MedTravel Agency',date:'2026-03-15',desc:'환자 최종 확인 대기 — 병원 승인 완료'},
-      {id:5,type:'patient',patient:'田中太郎',hospital:'강남세브란스병원',dept:'Plastic Surgery',agency:'Medical Korea',date:'2026-03-14',desc:'환자 최종 확인 대기 — 병원 승인 완료'},
-      {id:6,type:'document',patient:'Иван Петров',hospital:'삼성서울병원',dept:'Orthopedic Surgery',agency:'MedTravel Agency',date:'2026-03-17',desc:'MRI 최신본 및 혈액검사 결과 추가 제출 필요'},
-      {id:7,type:'document',patient:'Серик Абдрахманов',hospital:'강남세브란스병원',dept:'Oncology',agency:'Global Health',date:'2026-03-11',desc:'조직검사 결과(Pathology Report) 제출 필요'},
+      {id:1,type:'hospital',patient:'Нурлан Жумабеков',hospital:'서울대학교병원',dept:'신경외과',agency:'Global Health',date:'2026-03-15',desc:'병원 검토 대기 — 접수 서류 확인 필요'},
+      {id:2,type:'hospital',patient:'Дмитрий Соколов',hospital:'서울아산병원',dept:'심장내과',agency:'MedTravel Agency',date:'2026-03-13',desc:'병원 검토 대기 — 서류 검토 대기 중'},
+      {id:3,type:'hospital',patient:'Батбаяр Энхбат',hospital:'분당서울대병원',dept:'정형외과',agency:'Global Health',date:'2026-03-14',desc:'병원 검토 중 — 담당 교수 배정 대기'},
+      {id:4,type:'patient',patient:'Алексей Козлов',hospital:'서울대학교병원',dept:'심장내과',agency:'MedTravel Agency',date:'2026-03-15',desc:'환자 최종 확인 대기 — 병원 승인 완료'},
+      {id:5,type:'patient',patient:'田中太郎',hospital:'강남세브란스병원',dept:'성형외과',agency:'Medical Korea',date:'2026-03-14',desc:'환자 최종 확인 대기 — 병원 승인 완료'},
+      {id:6,type:'document',patient:'Иван Петров',hospital:'삼성서울병원',dept:'정형외과',agency:'MedTravel Agency',date:'2026-03-17',desc:'MRI 최신본 및 혈액검사 결과 추가 제출 필요'},
+      {id:7,type:'document',patient:'Серик Абдрахманов',hospital:'강남세브란스병원',dept:'종양학과',agency:'Global Health',date:'2026-03-11',desc:'조직검사 결과(Pathology Report) 제출 필요'},
     ];
 
     let approvalFilter='all';

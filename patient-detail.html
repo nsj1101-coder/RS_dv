@@ -165,7 +165,7 @@
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo"><div class="sidebar-logo-icon">M</div><div class="sidebar-logo-text">MediW</div></div>
-      <div class="user-card"><div class="user-avatar"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><div class="user-name">Kim Minsoo</div><div class="user-role-label">에이전시</div></div></div>
+      <div class="user-card"><div class="user-avatar"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><div class="user-name">김민수</div><div class="user-role-label">에이전시</div></div></div>
       <div class="type-switcher">
         <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>환자</span></button>
         <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg><span>의료인</span></button>
@@ -189,31 +189,31 @@
   <script>
     // Demo patient data
     const patients = {
-      1: {name:'Иван Петров',country:'Russia',dept:'Orthopedic Surgery',status:'request',statusText:'자료 요청',date:'2026-03-17',hospital:'삼성서울병원',
-        step1:{name:'Иван Петров',nationality:'Russia',phone:'+7-915-123-4567',email:'ivan.petrov@mail.ru'},
+      1: {name:'Иван Петров',country:'러시아',dept:'정형외과',status:'request',statusText:'자료 요청',date:'2026-03-17',hospital:'삼성서울병원',
+        step1:{name:'Иван Петров',nationality:'러시아',phone:'+7-915-123-4567',email:'ivan.petrov@mail.ru'},
         step2:{diagnosis:'좌측 무릎 전방십자인대 파열',hospital_local:'Moscow City Hospital #31',treatment:'물리치료 중',meds:'Ibuprofen 400mg, 1일 2회',diseases:['고혈압'],allergies:'없음',visitDate:'2026-04-15',stay:'2~4주',concierge:['공항 픽업','숙박 예약','통역 서비스'],files:['Diagnosis_Report.pdf','MRI_left_knee.dcm','Blood_Test.pdf']},
         requests:[
           {text:'<strong>MRI 이미지 추가 제출</strong> — 좌측 무릎 MRI 최신본(3개월 이내) 필요합니다. 기존 파일이 2024년 촬영분입니다.',date:'2026-03-17 14:30'},
           {text:'<strong>혈액검사 결과</strong> — CBC, ESR, CRP 포함된 최근 혈액검사 결과가 필요합니다.',date:'2026-03-17 14:30'}
         ],
         flow:{submitted:'2026-03-17',reviewing:'2026-03-17',request:'2026-03-17'}},
-      2: {name:'Мария Иванова',country:'Russia',dept:'Oncology',status:'confirmed',statusText:'최종 확정',date:'2026-03-16',hospital:'서울아산병원',
-        step1:{name:'Мария Иванова',nationality:'Russia',phone:'+7-916-987-6543',email:'m.ivanova@yandex.ru'},
-        step2:{diagnosis:'유방암 2기 (Stage II Breast Cancer)',hospital_local:'National Cancer Center, Moscow',treatment:'항암치료 완료',meds:'Tamoxifen 20mg, 1일 1회',diseases:['없음'],allergies:'Penicillin',visitDate:'2026-04-20',stay:'1~3개월',concierge:['공항 픽업','차량 서비스','숙박 예약','통역 서비스'],files:['Diagnosis_Report.pdf','CT_chest.dcm','Pathology_Report.pdf','Prescription.pdf']},
+      2: {name:'Мария Иванова',country:'러시아',dept:'종양내과',status:'confirmed',statusText:'최종 확정',date:'2026-03-16',hospital:'서울아산병원',
+        step1:{name:'Мария Иванова',nationality:'러시아',phone:'+7-916-987-6543',email:'m.ivanova@yandex.ru'},
+        step2:{diagnosis:'유방암 2기 (Stage II Breast Cancer)',hospital_local:'National Cancer Center, Moscow',treatment:'항암치료 완료',meds:'Tamoxifen 20mg, 1일 1회',diseases:['없음'],allergies:'페니실린',visitDate:'2026-04-20',stay:'1~3개월',concierge:['공항 픽업','차량 서비스','숙박 예약','통역 서비스'],files:['Diagnosis_Report.pdf','CT_chest.dcm','Pathology_Report.pdf','Prescription.pdf']},
         requests:[],
         flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-13',confirmed:'2026-03-16'}},
-      3: {name:'Алексей Козлов',country:'Kazakhstan',dept:'Cardiology',status:'confirming',statusText:'최종 확인 대기',date:'2026-03-15',hospital:'서울대학교병원',
-        step1:{name:'Алексей Козлов',nationality:'Kazakhstan',phone:'+7-771-555-0123',email:'a.kozlov@gmail.com'},
+      3: {name:'Алексей Козлов',country:'카자흐스탄',dept:'심장내과',status:'confirming',statusText:'최종 확인 대기',date:'2026-03-15',hospital:'서울대학교병원',
+        step1:{name:'Алексей Козлов',nationality:'카자흐스탄',phone:'+7-771-555-0123',email:'a.kozlov@gmail.com'},
         step2:{diagnosis:'관상동맥 협착 (Coronary Artery Stenosis)',hospital_local:'National Research Center, Almaty',treatment:'약물치료 중',meds:'Aspirin 100mg, Atorvastatin 40mg',diseases:['고혈압','당뇨'],allergies:'없음',visitDate:'2026-05-01',stay:'2~4주',concierge:['공항 픽업','통역 서비스'],files:['Diagnosis_Report.pdf','CT_coronary.dcm','Blood_Test.pdf','ECG_Report.pdf']},
         requests:[],
         flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-14',confirming:'2026-03-15'}},
-      6: {name:'田中太郎',country:'Japan',dept:'Plastic Surgery',status:'hospital-approved',statusText:'병원 승인',date:'2026-03-14',hospital:'강남세브란스병원',
-        step1:{name:'田中太郎',nationality:'Japan',phone:'+81-90-1234-5678',email:'tanaka@gmail.com'},
+      6: {name:'田中太郎',country:'일본',dept:'성형외과',status:'hospital-approved',statusText:'병원 승인',date:'2026-03-14',hospital:'강남세브란스병원',
+        step1:{name:'田中太郎',nationality:'일본',phone:'+81-90-1234-5678',email:'tanaka@gmail.com'},
         step2:{diagnosis:'안면 비대칭 교정',hospital_local:'Tokyo University Hospital',treatment:'없음',meds:'없음',diseases:['없음'],allergies:'없음',visitDate:'2026-05-10',stay:'1~2주',concierge:['공항 픽업','숙박 예약'],files:['Diagnosis_Report.pdf','CT_face.dcm']},
         requests:[],
         flow:{submitted:'2026-03-08',reviewing:'2026-03-09',hospitalApproved:'2026-03-14'}},
-      17: {name:'Елена Попова',country:'Russia',dept:'Dermatology',status:'withdrawn',statusText:'철회',date:'2026-03-08',hospital:'서울아산병원',
-        step1:{name:'Елена Попова',nationality:'Russia',phone:'+7-916-111-2233',email:'e.popova@mail.ru'},
+      17: {name:'Елена Попова',country:'러시아',dept:'피부과',status:'withdrawn',statusText:'철회',date:'2026-03-08',hospital:'서울아산병원',
+        step1:{name:'Елена Попова',nationality:'러시아',phone:'+7-916-111-2233',email:'e.popova@mail.ru'},
         step2:{diagnosis:'만성 피부염',hospital_local:'Dermatology Center, Moscow',treatment:'연고 치료 중',meds:'Hydrocortisone cream',diseases:['없음'],allergies:'없음',visitDate:'2026-04-01',stay:'1주',concierge:['통역 서비스'],files:['Diagnosis_Report.pdf']},
         requests:[],
         flow:{submitted:'2026-03-04',reviewing:'2026-03-05',hospitalApproved:'2026-03-07',withdrawn:'2026-03-08'},

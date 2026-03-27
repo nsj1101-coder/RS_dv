@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="ko" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to MediW - Sign Up Complete</title>
+  <title>MediW에 오신 것을 환영합니다 - 가입 완료</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -131,7 +131,7 @@
           <option value="zh">中文</option>
           <option value="ru">Русский</option>
         </select>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">
           <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
           <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
@@ -155,51 +155,51 @@
 
         <!-- Success Message -->
         <div class="success-header">
-          <h1>Welcome to MediW!</h1>
-          <p id="welcomeMessage">Your account has been successfully created. You're now ready to explore Korea's world-class medical training programs.</p>
+          <h1>MediW에 오신 것을 환영합니다!</h1>
+          <p id="welcomeMessage">계정이 성공적으로 생성되었습니다. 이제 한국의 세계적 수준의 의료 교육 프로그램을 탐색할 준비가 되었습니다.</p>
         </div>
 
         <!-- Account Information -->
         <div class="info-box">
           <div class="info-item">
-            <span class="info-label">Email:</span>
+            <span class="info-label">이메일:</span>
             <span class="info-value" id="displayEmail">user@example.com</span>
           </div>
           <div class="info-item">
-            <span class="info-label">Full Name:</span>
+            <span class="info-label">성명:</span>
             <span class="info-value" id="displayName">-</span>
           </div>
           <div class="info-item">
-            <span class="info-label">Account Type:</span>
+            <span class="info-label">계정 유형:</span>
             <span class="info-value" id="displayAccountType">-</span>
           </div>
           <div class="info-item">
-            <span class="info-label">Status:</span>
-            <span class="info-value" style="color:#34d399;font-weight:600;">✓ Active</span>
+            <span class="info-label">상태:</span>
+            <span class="info-value" style="color:#34d399;font-weight:600;">✓ 활성</span>
           </div>
         </div>
 
         <!-- Next Steps -->
         <div class="next-steps">
-          <h3>What's Next?</h3>
+          <h3>다음 단계는?</h3>
           <ul class="steps-list" id="nextSteps">
-            <li>Verify your email address</li>
-            <li>Complete your medical profile</li>
-            <li>Browse available training programs</li>
-            <li>Submit your first application</li>
+            <li>이메일 주소 인증</li>
+            <li>의료 프로필 작성</li>
+            <li>교육 프로그램 탐색</li>
+            <li>첫 번째 지원서 제출</li>
           </ul>
         </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-          <button class="btn btn-ghost" onclick="window.location.href='index.html'">Back Home</button>
-          <button class="btn btn-primary" onclick="window.location.href='login.html'">Go to Dashboard</button>
+          <button class="btn btn-ghost" onclick="window.location.href='index.html'">홈으로 돌아가기</button>
+          <button class="btn btn-primary" onclick="window.location.href='login.html'">대시보드로 이동</button>
         </div>
 
         <!-- Verification Message -->
         <div style="text-align:center;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border);">
-          <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:.5rem;"><strong>📧 Email Verification Required</strong></p>
-          <p style="font-size:.875rem;color:var(--text-muted);">Check your email for a verification link. Click it to activate your account. This may take a few minutes to arrive.</p>
+          <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:.5rem;"><strong>📧 이메일 인증 필요</strong></p>
+          <p style="font-size:.875rem;color:var(--text-muted);">이메일에서 인증 링크를 확인하세요. 링크를 클릭하여 계정을 활성화하세요. 수신까지 몇 분이 소요될 수 있습니다.</p>
         </div>
       </div>
     </div>
@@ -240,39 +240,39 @@
       }
       if (userData.accountType) {
         const typeMap = {
-          'doctor': 'Doctor / Medical Professional',
-          'hospital': 'Hospital / Medical Institution',
-          'agency': 'Medical Tourism Agency'
+          'doctor': '의사 / 의료 전문가',
+          'hospital': '병원 / 의료 기관',
+          'agency': '의료 관광 에이전시'
         };
         document.getElementById('displayAccountType').textContent = typeMap[userData.accountType] || userData.accountType;
 
         // Set welcome message based on account type
         const welcomeMessages = {
-          'doctor': 'Your account has been successfully created. Start connecting with top medical institutions across Korea and advance your medical career.',
-          'hospital': 'Your account has been successfully created. Begin attracting international medical professionals and building global partnerships.',
-          'agency': 'Your account has been successfully created. Unlock new opportunities to provide world-class medical services to your international clients.'
+          'doctor': '계정이 성공적으로 생성되었습니다. 한국 최고의 의료 기관과 연결하고 의료 경력을 발전시키세요.',
+          'hospital': '계정이 성공적으로 생성되었습니다. 해외 의료 전문가를 유치하고 글로벌 파트너십을 구축하세요.',
+          'agency': '계정이 성공적으로 생성되었습니다. 해외 고객에게 세계적 수준의 의료 서비스를 제공할 새로운 기회를 열어보세요.'
         };
         document.getElementById('welcomeMessage').textContent = welcomeMessages[userData.accountType] || welcomeMessages.doctor;
 
         // Set next steps based on account type
         const nextStepsMap = {
           'doctor': [
-            'Verify your email address',
-            'Add medical license and credentials',
-            'Browse hospital network',
-            'Apply to medical programs'
+            '이메일 주소 인증',
+            '의사 면허 및 자격 증명 추가',
+            '병원 네트워크 탐색',
+            '의료 프로그램 지원'
           ],
           'hospital': [
-            'Verify your email address',
-            'Complete hospital information and certifications',
-            'Browse available medical professionals',
-            'Create recruitment postings'
+            '이메일 주소 인증',
+            '병원 정보 및 인증서 작성',
+            '의료 전문가 탐색',
+            '채용 공고 작성'
           ],
           'agency': [
-            'Verify your email address',
-            'Complete agency profile and credentials',
-            'Browse hospital partners and programs',
-            'Connect with international clients'
+            '이메일 주소 인증',
+            '에이전시 프로필 및 자격 증명 작성',
+            '파트너 병원 및 프로그램 탐색',
+            '해외 고객과 연결'
           ]
         };
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediW IA Document</title>
+<title>MediW IA 문서</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -578,21 +578,21 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 <aside class="sidebar">
   <div class="sidebar-logo">
     <h2>MediW IA</h2>
-    <span>Information Architecture</span>
+    <span>정보 구조</span>
   </div>
   <nav class="sidebar-nav">
-    <a href="#overview" class="active"><span class="nav-icon">&#9673;</span> Overview</a>
-    <a href="#sitemap"><span class="nav-icon">&#9783;</span> Sitemap</a>
-    <a href="#details"><span class="nav-icon">&#9881;</span> Page Details</a>
-    <a href="#flows"><span class="nav-icon">&#10140;</span> Test Flows</a>
-    <a href="#statuses"><span class="nav-icon">&#9679;</span> Status Definitions</a>
-    <a href="#navigation"><span class="nav-icon">&#9776;</span> Navigation Map</a>
+    <a href="#overview" class="active"><span class="nav-icon">&#9673;</span> 개요</a>
+    <a href="#sitemap"><span class="nav-icon">&#9783;</span> 사이트맵</a>
+    <a href="#details"><span class="nav-icon">&#9881;</span> 페이지 상세</a>
+    <a href="#flows"><span class="nav-icon">&#10140;</span> 테스트 플로우</a>
+    <a href="#statuses"><span class="nav-icon">&#9679;</span> 상태 정의</a>
+    <a href="#navigation"><span class="nav-icon">&#9776;</span> 네비게이션 맵</a>
   </nav>
 </aside>
 
 <header class="header">
-  <h1>MediW IA Document</h1>
-  <span class="meta">Last updated: 2026-03-24</span>
+  <h1>MediW IA 문서</h1>
+  <span class="meta">최종 업데이트: 2026-03-24</span>
 </header>
 
 <main class="main">
@@ -600,7 +600,7 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 
 <!-- OVERVIEW -->
 <section id="overview" class="section">
-  <h2 class="section-title">Overview</h2>
+  <h2 class="section-title">개요</h2>
   <p class="section-subtitle">MediW 플랫폼 전체 페이지 구성 현황</p>
   <div class="stats-grid">
     <div class="stat-card"><div class="num">20</div><div class="label">총 페이지</div></div>
@@ -620,7 +620,7 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 
 <!-- SITEMAP -->
 <section id="sitemap" class="section">
-  <h2 class="section-title">Sitemap</h2>
+  <h2 class="section-title">사이트맵</h2>
   <p class="section-subtitle">전체 페이지 목록 및 파일 매핑</p>
 
   <div class="subsection">
@@ -679,10 +679,10 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 
 <!-- PAGE DETAILS -->
 <section id="details" class="section">
-  <h2 class="section-title">Page Details</h2>
+  <h2 class="section-title">페이지 상세</h2>
   <p class="section-subtitle">각 페이지의 노출 정보 및 체크리스트</p>
   <div class="progress-bar-wrap" id="progress-wrap">
-    <span class="progress-text" id="progress-text">0 / 0 checks completed</span>
+    <span class="progress-text" id="progress-text">0 / 0 항목 완료</span>
     <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <span class="progress-pct" id="progress-pct">0%</span>
   </div>
@@ -691,14 +691,14 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 
 <!-- TEST FLOWS -->
 <section id="flows" class="section">
-  <h2 class="section-title">Test Flows</h2>
+  <h2 class="section-title">테스트 플로우</h2>
   <p class="section-subtitle">주요 사용자 시나리오별 테스트 플로우</p>
   <div id="flows-container"></div>
 </section>
 
 <!-- STATUS DEFINITIONS -->
 <section id="statuses" class="section">
-  <h2 class="section-title">Status Definitions</h2>
+  <h2 class="section-title">상태 정의</h2>
   <p class="section-subtitle">환자 케이스 상태값 정의</p>
   <div class="table-wrap">
     <table>
@@ -719,7 +719,7 @@ a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
 
 <!-- NAVIGATION MAP -->
 <section id="navigation" class="section">
-  <h2 class="section-title">Navigation Map</h2>
+  <h2 class="section-title">네비게이션 맵</h2>
   <p class="section-subtitle">사이드바 네비게이션 구조</p>
   <div class="nav-grid">
     <div class="nav-card">
@@ -932,7 +932,7 @@ function onCheck(cb) {
 }
 
 function updateProgress(checked, total) {
-  document.getElementById('progress-text').textContent = `${checked} / ${total} checks completed`;
+  document.getElementById('progress-text').textContent = `${checked} / ${total} 항목 완료`;
   const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
