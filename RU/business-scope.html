@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediW — Распределение обязанностей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+    :root{--transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+    [data-theme="dark"]{
+      --bg-primary:#0a0e1a;--bg-secondary:#0f1629;--bg-tertiary:#161d35;--bg-card:#161d35cc;
+      --bg-card-hover:#1e2744;--bg-elevated:#1e2744;
+      --text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--text-muted:rgba(255,255,255,.2);
+      --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);
+      --brand-bg:rgba(51,145,255,.08);--brand-border:rgba(51,145,255,.2);
+      --glow-opacity:.15;--nav-bg:rgba(10,14,26,.8);
+      --card-shadow:0 4px 24px rgba(0,0,0,.3);--card-hover-shadow:0 20px 60px rgba(51,145,255,.12);
+    }
+    [data-theme="light"]{
+      --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;--bg-card:#ffffff;
+      --bg-card-hover:#f8fafc;--bg-elevated:#ffffff;
+      --text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#64748b;--text-muted:#cbd5e1;
+      --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);
+      --brand-bg:rgba(51,145,255,.06);--brand-border:rgba(51,145,255,.15);
+      --glow-opacity:.06;--nav-bg:rgba(255,255,255,.85);
+      --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--card-hover-shadow:0 12px 40px rgba(51,145,255,.1);
+    }
+    body{background:var(--bg-primary);color:var(--text-primary);}
+
+    /* Nav */
+    .nav{position:fixed;top:0;width:100%;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);transition:var(--transition);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:4rem;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
+    .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
+    .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
+    .nav-actions{display:flex;align-items:center;gap:.75rem;}
+    .theme-toggle{width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-tertiary);}
+    .theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary);}
+    .theme-toggle svg{width:1.125rem;height:1.125rem;}
+    [data-theme="dark"] .icon-sun{display:none;}[data-theme="dark"] .icon-moon{display:block;}
+    [data-theme="light"] .icon-sun{display:block;}[data-theme="light"] .icon-moon{display:none;}
+
+    /* Glow */
+    .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
+
+    /* Hero */
+    .hero{padding:8rem 1.5rem 4rem;text-align:center;position:relative;overflow:hidden;}
+    .hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1;}
+    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem 1rem;border-radius:9999px;border:1px solid var(--brand-border);background:var(--brand-bg);font-size:.875rem;color:#3391ff;margin-bottom:1.5rem;}
+    .badge-dot{width:.5rem;height:.5rem;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+    .hero h1{font-size:2.75rem;font-weight:800;line-height:1.2;margin-bottom:1rem;}
+    .gradient-text{background:linear-gradient(135deg,#1a6ff5,#3391ff,#59b2ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero p{color:var(--text-tertiary);font-size:1.125rem;max-width:600px;margin:0 auto;line-height:1.7;}
+
+    /* Section */
+    .section{padding:4rem 1.5rem;}
+    .section-inner{max-width:1280px;margin:0 auto;}
+
+    /* Summary strip */
+    .summary-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg-secondary);transition:var(--transition);}
+    .summary-grid{max-width:1280px;margin:0 auto;padding:3rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;text-align:center;}
+    .summary-card{padding:1.5rem;border-radius:1rem;border:1px solid var(--border);background:var(--bg-card);transition:all .25s;}
+    .summary-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
+    .summary-icon{width:3.5rem;height:3.5rem;border-radius:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;}
+    .summary-card h3{font-size:1.125rem;font-weight:700;margin-bottom:.375rem;}
+    .summary-card .subtitle{font-size:.8125rem;color:var(--text-tertiary);margin-bottom:.75rem;}
+    .summary-card .tagline{font-size:.875rem;color:#3391ff;font-weight:600;}
+
+    /* Scope Card */
+    .scope-section{margin-bottom:4rem;}
+    .scope-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid;}
+    .scope-header.dev{border-color:#3391ff;}
+    .scope-header.rbg{border-color:#a78bfa;}
+    .scope-header.agency{border-color:#34d399;}
+    .scope-num{width:3rem;height:3rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;color:#fff;flex-shrink:0;}
+    .scope-num.dev{background:linear-gradient(135deg,#1a6ff5,#3391ff);}
+    .scope-num.rbg{background:linear-gradient(135deg,#7c3aed,#a78bfa);}
+    .scope-num.agency{background:linear-gradient(135deg,#059669,#34d399);}
+    .scope-header-text h2{font-size:1.5rem;font-weight:700;}
+    .scope-header-text p{font-size:.875rem;color:var(--text-tertiary);margin-top:.25rem;}
+
+    .scope-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;}
+    .scope-card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:1.75rem;transition:all .25s;}
+    .scope-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
+    .scope-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;}
+    .scope-card-icon{width:2.5rem;height:2.5rem;border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.125rem;}
+    .scope-card-icon.dev{background:rgba(51,145,255,.12);color:#3391ff;}
+    .scope-card-icon.rbg{background:rgba(167,139,250,.12);color:#a78bfa;}
+    .scope-card-icon.agency{background:rgba(52,211,153,.12);color:#34d399;}
+    .scope-card h4{font-size:1rem;font-weight:700;}
+    .scope-card ul{list-style:none;display:flex;flex-direction:column;gap:.625rem;}
+    .scope-card li{display:flex;align-items:flex-start;gap:.5rem;font-size:.875rem;color:var(--text-secondary);line-height:1.6;}
+    .scope-card li::before{content:'';width:6px;height:6px;border-radius:50%;margin-top:.5rem;flex-shrink:0;}
+    .scope-card.dev li::before{background:#3391ff;}
+    .scope-card.rbg li::before{background:#a78bfa;}
+    .scope-card.agency li::before{background:#34d399;}
+
+    /* Flow */
+    .flow-section{background:var(--bg-secondary);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 1.5rem;}
+    .flow-inner{max-width:1000px;margin:0 auto;}
+    .flow-title{text-align:center;margin-bottom:3rem;}
+    .flow-title h2{font-size:1.75rem;font-weight:700;margin-bottom:.5rem;}
+    .flow-title p{color:var(--text-tertiary);font-size:.9375rem;}
+
+    .flow-steps{position:relative;display:flex;flex-direction:column;gap:0;}
+    .flow-step{display:grid;grid-template-columns:1fr 60px 1fr;align-items:center;min-height:5rem;}
+    .flow-left,.flow-right{padding:1rem;}
+    .flow-left{text-align:right;}
+    .flow-right{text-align:left;}
+    .flow-center{display:flex;flex-direction:column;align-items:center;position:relative;}
+    .flow-dot{width:2.5rem;height:2.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;color:#fff;z-index:2;flex-shrink:0;}
+    .flow-dot.dev{background:linear-gradient(135deg,#1a6ff5,#3391ff);}
+    .flow-dot.rbg{background:linear-gradient(135deg,#7c3aed,#a78bfa);}
+    .flow-dot.agency{background:linear-gradient(135deg,#059669,#34d399);}
+    .flow-dot.shared{background:linear-gradient(135deg,#f59e0b,#fbbf24);}
+    .flow-line{width:2px;height:100%;background:var(--border);position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:1;}
+    .flow-step:first-child .flow-line{top:50%;}
+    .flow-step:last-child .flow-line{height:50%;}
+    .flow-label{font-size:.875rem;font-weight:600;margin-bottom:.25rem;}
+    .flow-desc{font-size:.8125rem;color:var(--text-tertiary);line-height:1.5;}
+    .flow-tag{display:inline-block;font-size:.6875rem;font-weight:600;padding:.125rem .5rem;border-radius:9999px;margin-top:.375rem;}
+    .flow-tag.dev{background:rgba(51,145,255,.12);color:#3391ff;}
+    .flow-tag.rbg{background:rgba(167,139,250,.12);color:#a78bfa;}
+    .flow-tag.agency{background:rgba(52,211,153,.12);color:#34d399;}
+
+    /* Revenue Table */
+    .rev-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);border-radius:1rem;overflow:hidden;margin-top:2rem;}
+    .rev-table thead{background:var(--bg-tertiary);}
+    .rev-table th{padding:1rem 1.25rem;font-size:.8125rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-tertiary);text-align:left;}
+    .rev-table td{padding:1rem 1.25rem;font-size:.875rem;color:var(--text-secondary);border-top:1px solid var(--border);}
+    .rev-table tbody tr{transition:background .15s;}
+    .rev-table tbody tr:hover{background:var(--bg-card-hover);}
+    .color-dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.5rem;}
+    .color-dot.dev{background:#3391ff;}
+    .color-dot.rbg{background:#a78bfa;}
+    .color-dot.agency{background:#34d399;}
+
+    /* Platform pages ref */
+    .pages-ref{margin-top:3rem;background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;}
+    .pages-ref h3{font-size:1.125rem;font-weight:700;margin-bottom:1.25rem;}
+    .pages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .pages-col h4{font-size:.8125rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+    .pages-col h4.dev{color:#3391ff;}
+    .pages-col h4.rbg{color:#a78bfa;}
+    .pages-col h4.agency{color:#34d399;}
+    .pages-col ul{list-style:none;display:flex;flex-direction:column;gap:.375rem;}
+    .pages-col li{font-size:.8125rem;color:var(--text-tertiary);display:flex;align-items:center;gap:.375rem;}
+    .pages-col li span{color:var(--text-secondary);}
+
+    /* Footer */
+    .footer{border-top:1px solid var(--border);background:var(--bg-secondary);padding:2rem 1.5rem;text-align:center;}
+    .footer p{font-size:.75rem;color:var(--text-muted);}
+
+    /* Fade in */
+    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+    .fade-in.visible{opacity:1;transform:translateY(0);}
+
+    /* Print */
+    @media print{
+      .nav,.theme-toggle{display:none!important;}
+      .hero{padding-top:2rem;}
+      body{background:#fff;color:#000;}
+      .scope-card,.summary-card{break-inside:avoid;}
+    }
+
+    /* Responsive */
+    @media(max-width:768px){
+      .hero h1{font-size:1.75rem;}
+      .summary-grid{grid-template-columns:1fr;gap:1rem;}
+      .scope-grid{grid-template-columns:1fr;}
+      .flow-step{grid-template-columns:1fr 40px 1fr;}
+      .flow-left,.flow-right{padding:.5rem;}
+      .flow-label{font-size:.75rem;}
+      .flow-desc{font-size:.6875rem;}
+      .rev-table{font-size:.75rem;}
+      .rev-table th,.rev-table td{padding:.75rem;}
+      .pages-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-text">MediW</span>
+    </a>
+    <div class="nav-actions">
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="glow" style="width:600px;height:600px;background:#3391ff;top:-200px;left:50%;transform:translateX(-50%);"></div>
+  <div class="hero-inner fade-in">
+    <div class="badge"><span class="badge-dot"></span> Business Scope Document</div>
+    <h1>Платформа MediW<br><span class="gradient-text">Распределение обязанностей</span></h1>
+    <p>Разработчик (MediW) · Оператор (RBG) · Агентство — определение ролей и зон ответственности между тремя сторонами.</p>
+  </div>
+</section>
+
+<!-- Summary -->
+<div class="summary-strip">
+  <div class="summary-grid">
+    <div class="summary-card fade-in">
+      <div class="summary-icon" style="background:rgba(51,145,255,.12);color:#3391ff;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l2-2-2-2"/><path d="M8 6L6 8l2 2"/><path d="M14.5 4l-5 16"/></svg>
+      </div>
+      <h3>Разработчик (MediW)</h3>
+      <p class="subtitle">Создаёт и поддерживает платформу</p>
+      <p class="tagline">Технологии + маркетинг</p>
+    </div>
+    <div class="summary-card fade-in">
+      <div class="summary-icon" style="background:rgba(167,139,250,.12);color:#a78bfa;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Оператор (RBG)</h3>
+      <p class="subtitle">Ведёт бизнес на платформе</p>
+      <p class="tagline">Больницы + сеть агентств</p>
+    </div>
+    <div class="summary-card fade-in">
+      <div class="summary-icon" style="background:rgba(52,211,153,.12);color:#34d399;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Агентство</h3>
+      <p class="subtitle">Привлекает пациентов</p>
+      <p class="tagline">Контакт с пациентами + консьерж-сервис</p>
+    </div>
+  </div>
+</div>
+
+<!-- Scope: Разработчик -->
+<section class="section">
+  <div class="section-inner">
+
+    <!-- 1. Разработчик -->
+    <div class="scope-section fade-in">
+      <div class="scope-header dev">
+        <div class="scope-num dev">1</div>
+        <div class="scope-header-text">
+          <h2>Разработчик (MediW)</h2>
+          <p>Создаёт платформу, обеспечивает техническую поддержку и маркетинговые материалы</p>
+        </div>
+      </div>
+      <div class="scope-grid">
+        <div class="scope-card dev">
+          <div class="scope-card-header">
+            <div class="scope-card-icon dev">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l2-2-2-2"/><path d="M8 6L6 8l2 2"/><path d="M14.5 4l-5 16"/></svg>
+            </div>
+            <h4>Разработка платформы</h4>
+          </div>
+          <ul>
+            <li>Проектирование, разработка и деплой 20 страниц (Vercel)</li>
+            <li>Мультиязычный интерфейс (EN, KO, JA, ZH, RU)</li>
+            <li>Тёмная/светлая тема, мобильная адаптивность</li>
+            <li>Система 8-этапного пайплайна статусов пациентов</li>
+            <li>Система администрирования (пользователи, кейсы, больницы, агентства, одобрение, настройки)</li>
+          </ul>
+        </div>
+        <div class="scope-card dev">
+          <div class="scope-card-header">
+            <div class="scope-card-icon dev">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <h4>Техническая поддержка</h4>
+          </div>
+          <ul>
+            <li>Исправление ошибок, реагирование на сбои, мониторинг серверов</li>
+            <li>Добавление и улучшение функций по запросу RBG</li>
+            <li>Проектирование схемы БД и миграция данных</li>
+            <li>Обучение операционной команды RBG работе с админ-панелью</li>
+            <li>Поддержка производительности и безопасности платформы</li>
+          </ul>
+        </div>
+        <div class="scope-card dev">
+          <div class="scope-card-header">
+            <div class="scope-card-icon dev">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h4>Маркетинговая поддержка</h4>
+          </div>
+          <ul>
+            <li>Создание контента и дизайна лендинга</li>
+            <li>SEO-оптимизация, настройка поисковой рекламы</li>
+            <li>Управление данными Featured Hospitals, отзывами, статистикой</li>
+            <li>Глобальные брендинговые материалы (баннеры, презентации, видео)</li>
+            <li>Предоставление переводов и изображений для локального маркетинга RBG</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. RBG -->
+    <div class="scope-section fade-in">
+      <div class="scope-header rbg">
+        <div class="scope-num rbg">2</div>
+        <div class="scope-header-text">
+          <h2>Оператор (RBG)</h2>
+          <p>Субъект, ведущий реальный бизнес на платформе — управляет и контролирует все точки контакта: больницы, агентства, пациенты</p>
+        </div>
+      </div>
+      <div class="scope-grid">
+        <div class="scope-card rbg">
+          <div class="scope-card-header">
+            <div class="scope-card-icon rbg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h4>Управление больницами</h4>
+          </div>
+          <ul>
+            <li>Продажи и заключение контрактов с корейскими больницами (Асан, Северанс, Сеульский университет и др.)</li>
+            <li>Заполнение формы регистрации больницы (admin) и ввод данных</li>
+            <li>Сбор и регулярное обновление информации об отделениях и профессорах</li>
+            <li>Поддержание коммуникации с международными медицинскими центрами больниц</li>
+            <li>Руководство и обучение процедуре одобрения со стороны больницы</li>
+          </ul>
+        </div>
+        <div class="scope-card rbg">
+          <div class="scope-card-header">
+            <div class="scope-card-icon rbg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h4>Управление агентствами</h4>
+          </div>
+          <ul>
+            <li>Поиск, привлечение и заключение контрактов с агентствами</li>
+            <li>Привлечение агентств к регистрации на платформе и онбординг</li>
+            <li>Верификация профилей агентств (свидетельство о регистрации, презентация компании)</li>
+            <li>Обучение агентств — методы приёма, использование платформы, требования к документам</li>
+            <li>Мониторинг эффективности агентств (количество пациентов, качество заявок)</li>
+          </ul>
+        </div>
+        <div class="scope-card rbg">
+          <div class="scope-card-header">
+            <div class="scope-card-icon rbg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <h4>Управление кейсами и одобрение</h4>
+          </div>
+          <ul>
+            <li>Мониторинг всех пациентских кейсов в админ-панели</li>
+            <li>Заявка → запрос на рассмотрение больницей → передача запроса документов и контроль сроков</li>
+            <li>После одобрения больницей — запрос окончательного подтверждения у пациента/агентства</li>
+            <li>Посредничество между больницей и агентством при спорах и проблемах</li>
+            <li>Управление пользователями — одобрение регистрации, управление статусом аккаунтов</li>
+          </ul>
+        </div>
+        <div class="scope-card rbg">
+          <div class="scope-card-header">
+            <div class="scope-card-icon rbg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h4>Локальный маркетинг и продажи</h4>
+          </div>
+          <ul>
+            <li>Проведение маркетинга на местном языке с использованием материалов от разработчика</li>
+            <li>Участие в выставках и семинарах по медицинскому туризму</li>
+            <li>Развитие сети агентств при выходе на новые рынки</li>
+          </ul>
+        </div>
+        <div class="scope-card rbg">
+          <div class="scope-card-header">
+            <div class="scope-card-icon rbg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <h4>Расчёты и поддержка клиентов</h4>
+          </div>
+          <ul>
+            <li>Расчёт комиссий по агентствам и сборов по больницам</li>
+            <li>Управление общей выручкой и статистикой кейсов (панель администратора)</li>
+            <li>Обработка обращений от агентств, больниц и пациентов (поддержка)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Агентство -->
+    <div class="scope-section fade-in">
+      <div class="scope-header agency">
+        <div class="scope-num agency">3</div>
+        <div class="scope-header-text">
+          <h2>Агентство</h2>
+          <p>Компании, привлекаемые и управляемые RBG — занимаются поиском пациентов, приёмом заявок и сопровождением</p>
+        </div>
+      </div>
+      <div class="scope-grid">
+        <div class="scope-card agency">
+          <div class="scope-card-header">
+            <div class="scope-card-icon agency">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h4>Привлечение пациентов</h4>
+          </div>
+          <ul>
+            <li>Поиск пациентов через собственную сеть (партнёрство с больницами, сарафанное радио, маркетинг)</li>
+            <li>Консультация пациентов — информирование о медицинском туризме в Корею, рекомендации больниц и отделений</li>
+          </ul>
+        </div>
+        <div class="scope-card agency">
+          <div class="scope-card-header">
+            <div class="scope-card-icon agency">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h4>Работа с заявками на платформе</h4>
+          </div>
+          <ul>
+            <li>Поиск больницы → выбор отделения и врача → выбор отделения</li>
+            <li>Приём пациента: основная информация + медицинские данные + загрузка документов (КТ/МРТ и др.)</li>
+            <li>Управление списком своих пациентов, отслеживание статуса кейсов</li>
+            <li>Сбор и загрузка документов от пациентов по запросу больницы</li>
+            <li>Окончательное одобрение / отзыв после одобрения больницей</li>
+          </ul>
+        </div>
+        <div class="scope-card agency">
+          <div class="scope-card-header">
+            <div class="scope-card-icon agency">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="23 7 16 12 16 2 23 7"/></svg>
+            </div>
+            <h4>Предоставление консьерж-сервиса</h4>
+          </div>
+          <ul>
+            <li>Встреча в аэропорту, трансфер, организация проживания</li>
+            <li>Услуги переводчика (сопровождение на приёме и оформлении)</li>
+            <li>Полный цикл: прибытие в Корею → сопровождение в больницу → уход в стационаре → возвращение домой</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Flow -->
+<section class="flow-section">
+  <div class="flow-inner">
+    <div class="flow-title fade-in">
+      <h2>Общий рабочий процесс</h2>
+      <p>От создания платформы до возвращения пациента — процесс взаимодействия каждой стороны</p>
+    </div>
+    <div class="flow-steps fade-in">
+      <!-- Step 1 -->
+      <div class="flow-step">
+        <div class="flow-left">
+          <div class="flow-label">Создание и деплой платформы</div>
+          <div class="flow-desc">Разработка 20 страниц, система администрирования, мультиязычный UI</div>
+          <span class="flow-tag dev">Разработчик</span>
+        </div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot dev">1</div></div>
+        <div class="flow-right"></div>
+      </div>
+      <!-- Step 2 -->
+      <div class="flow-step">
+        <div class="flow-left"></div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot rbg">2</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Привлечение и регистрация больниц</div>
+          <div class="flow-desc">Контракты с корейскими больницами, ввод данных об отделениях и профессорах</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="flow-step">
+        <div class="flow-left"></div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot rbg">3</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Набор и обучение агентств</div>
+          <div class="flow-desc">Поиск агентств, привлечение к регистрации на платформе, обучение</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+      </div>
+      <!-- Step 4 -->
+      <div class="flow-step">
+        <div class="flow-left">
+          <div class="flow-label">Предоставление маркетинговых материалов</div>
+          <div class="flow-desc">SEO, баннеры, оригиналы переводов, брендинговые материалы</div>
+          <span class="flow-tag dev">Разработчик</span>
+        </div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot dev">4</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Проведение локального маркетинга</div>
+          <div class="flow-desc">Соцсети, реклама, выставки — использование материалов</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+      </div>
+      <!-- Step 5 -->
+      <div class="flow-step">
+        <div class="flow-left"></div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot agency">5</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Привлечение и приём пациентов</div>
+          <div class="flow-desc">Поиск пациентов → выбор больницы → заполнение формы заявки и загрузка документов</div>
+          <span class="flow-tag agency">Агентство</span>
+        </div>
+      </div>
+      <!-- Step 6 -->
+      <div class="flow-step">
+        <div class="flow-left">
+          <div class="flow-label">Мониторинг кейсов и посредничество</div>
+          <div class="flow-desc">Запрос на рассмотрение больницей, передача запросов документов, урегулирование споров</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot rbg">6</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Предоставление дополнительных документов</div>
+          <div class="flow-desc">Сбор и загрузка запрошенных больницей документов</div>
+          <span class="flow-tag agency">Агентство</span>
+        </div>
+      </div>
+      <!-- Step 7 -->
+      <div class="flow-step">
+        <div class="flow-left">
+          <div class="flow-label">Управление одобрением</div>
+          <div class="flow-desc">Подтверждение одобрения больницей → запрос окончательного подтверждения</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot shared">7</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Окончательное одобрение / отзыв</div>
+          <div class="flow-desc">Окончательное решение со стороны пациента</div>
+          <span class="flow-tag agency">Агентство</span>
+        </div>
+      </div>
+      <!-- Step 8 -->
+      <div class="flow-step">
+        <div class="flow-left"></div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot agency">8</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Сопровождение пациента · консьерж-сервис</div>
+          <div class="flow-desc">Встреча в аэропорту → сопровождение в больницу → уход в стационаре → возвращение домой</div>
+          <span class="flow-tag agency">Агентство</span>
+        </div>
+      </div>
+      <!-- Step 9 -->
+      <div class="flow-step">
+        <div class="flow-left">
+          <div class="flow-label">Техническая поддержка и обслуживание</div>
+          <div class="flow-desc">Непрерывная техническая поддержка на протяжении всего процесса</div>
+          <span class="flow-tag dev">Разработчик</span>
+        </div>
+        <div class="flow-center"><div class="flow-line"></div><div class="flow-dot rbg">9</div></div>
+        <div class="flow-right">
+          <div class="flow-label">Проведение расчётов</div>
+          <div class="flow-desc">Расчёт комиссий агентств и сборов больниц</div>
+          <span class="flow-tag rbg">RBG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Revenue & Pages -->
+<section class="section">
+  <div class="section-inner">
+    <div class="fade-in">
+      <h2 style="font-size:1.75rem;font-weight:700;margin-bottom:.5rem;">Сводка ролей</h2>
+      <p style="color:var(--text-tertiary);margin-bottom:0;">Ключевые роли, активы и модели дохода каждой стороны</p>
+      <table class="rev-table">
+        <thead>
+          <tr>
+            <th>Сторона</th>
+            <th>Ключевая роль</th>
+            <th>Ключевые активы</th>
+            <th>Модель дохода</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="color-dot dev"></span><strong>Разработчик (MediW)</strong></td>
+            <td>Создаёт и поддерживает</td>
+            <td>Технологии платформы, маркетинговые компетенции</td>
+            <td>Комиссия платформы / SaaS-лицензия</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot rbg"></span><strong>Оператор (RBG)</strong></td>
+            <td>Управляет и контролирует</td>
+            <td>Сеть больниц, сеть агентств</td>
+            <td>Операционная комиссия за кейс / доля агентства</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot agency"></span><strong>Агентство</strong></td>
+            <td>Привлекает пациентов</td>
+            <td>Контакт с местными пациентами, исполнение консьерж-сервиса</td>
+            <td>Комиссия за пациента / маржа консьерж-сервиса</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pages-ref fade-in">
+      <h3>Страницы платформы — основные пользователи</h3>
+      <div class="pages-grid">
+        <div class="pages-col">
+          <h4 class="dev">Зона управления разработчика</h4>
+          <ul>
+            <li><span>index.html</span> — Лендинг</li>
+            <li><span>login.html</span> — Вход</li>
+            <li><span>signup.html</span> — Регистрация</li>
+            <li><span>signup-success.html</span> — Регистрация завершена</li>
+            <li><span>programs.html</span> — Список программ</li>
+          </ul>
+        </div>
+        <div class="pages-col">
+          <h4 class="rbg">Зона управления RBG (админ)</h4>
+          <ul>
+            <li><span>admin.html</span> — Панель администратора</li>
+            <li><span>admin-users.html</span> — Управление пользователями</li>
+            <li><span>admin-cases.html</span> — Кейсы пациентов</li>
+            <li><span>admin-hospitals.html</span> — Управление больницами</li>
+            <li><span>admin-agencies.html</span> — Управление агентствами</li>
+            <li><span>admin-approvals.html</span> — Управление одобрениями</li>
+            <li><span>admin-settings.html</span> — Системные настройки</li>
+            <li><span>hospital-register.html</span> — Регистрация больницы</li>
+          </ul>
+        </div>
+        <div class="pages-col">
+          <h4 class="agency">Зона использования агентством</h4>
+          <ul>
+            <li><span>dashboard.html</span> — Панель управления</li>
+            <li><span>profile.html</span> — Мой профиль</li>
+            <li><span>hospitals.html</span> — Поиск больниц</li>
+            <li><span>hospital-detail.html</span> — Информация о больнице</li>
+            <li><span>patient-intake.html</span> — Приём пациента</li>
+            <li><span>patient-list.html</span> — Список пациентов</li>
+            <li><span>patient-detail.html</span> — Информация о пациенте</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>&copy; 2026 MediW. Документ распределения обязанностей v2.0 — Последнее обновление: 2026-03-30</p>
+</footer>
+
+<script>
+function toggleTheme(){
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+  localStorage.setItem('theme',html.dataset.theme);
+}
+(()=>{
+  const saved=localStorage.getItem('theme');
+  if(saved)document.documentElement.dataset.theme=saved;
+})();
+
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.15});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

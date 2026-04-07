@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора - MediW</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;background:#f5f7fa;color:#1a1a2e;min-height:100vh;}
+    .app{display:flex;height:100vh;overflow:hidden;}
+
+    /* Sidebar */
+    .sidebar{width:260px;background:#0f172a;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+    .sidebar-logo{padding:1.5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid rgba(255,255,255,.08);}
+    .sidebar-logo-icon{width:2.25rem;height:2.25rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#60a5fa);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;}
+    .sidebar-logo-text{font-size:1.125rem;font-weight:700;color:#fff;}
+    .sidebar-logo-badge{font-size:.625rem;font-weight:700;background:#ef4444;color:#fff;padding:.125rem .5rem;border-radius:2rem;margin-left:.25rem;}
+
+    .sidebar-section{padding:1.25rem 0 .5rem;margin:0 .75rem;}
+    .sidebar-section-label{font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#475569;padding:0 .75rem;margin-bottom:.5rem;}
+
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.625rem 1rem;margin:0 .75rem .125rem;border-radius:.5rem;cursor:pointer;transition:all .15s;color:#94a3b8;font-size:.8125rem;font-weight:500;text-decoration:none;position:relative;}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:#e2e8f0;}
+    .nav-item.active{background:rgba(51,145,255,.15);color:#60a5fa;font-weight:600;}
+    .nav-item svg{width:1.25rem;height:1.25rem;flex-shrink:0;}
+    .nav-badge{margin-left:auto;font-size:.625rem;font-weight:700;background:#ef4444;color:#fff;padding:.125rem .4375rem;border-radius:2rem;min-width:1.25rem;text-align:center;}
+    .nav-badge.blue{background:#3391ff;}
+
+    .sidebar-footer{margin-top:auto;padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.08);}
+    .admin-user{display:flex;align-items:center;gap:.75rem;}
+    .admin-avatar{width:2.25rem;height:2.25rem;border-radius:50%;background:linear-gradient(135deg,#3391ff,#818cf8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
+    .admin-name{font-size:.8125rem;font-weight:600;color:#e2e8f0;}
+    .admin-role{font-size:.6875rem;color:#64748b;}
+
+    /* Main */
+    .main{flex:1;overflow-y:auto;background:#f5f7fa;}
+    .main-header{background:#fff;border-bottom:1px solid #e8ecf1;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+    .main-title{font-size:1.25rem;font-weight:700;color:#1a1a2e;}
+    .main-subtitle{font-size:.8125rem;color:#94a3b8;margin-top:.125rem;}
+    .header-actions{display:flex;align-items:center;gap:.75rem;}
+
+    .main-body{padding:2rem;}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.8125rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .15s;padding:.5625rem 1rem;font-family:inherit;text-decoration:none;}
+    .btn-primary{background:#3391ff;color:#fff;}.btn-primary:hover{background:#2577e0;}
+    .btn-ghost{background:#fff;color:#64748b;border:1px solid #e2e8f0;}.btn-ghost:hover{background:#f8fafc;color:#1a1a2e;}
+
+    /* Stats Grid */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:#fff;border-radius:.75rem;padding:1.25rem 1.5rem;border:1px solid #e8ecf1;}
+    .stat-label{font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.03em;margin-bottom:.5rem;}
+    .stat-value{font-size:1.75rem;font-weight:800;color:#1a1a2e;letter-spacing:-.02em;}
+    .stat-change{display:inline-flex;align-items:center;gap:.25rem;font-size:.6875rem;font-weight:600;margin-top:.375rem;padding:.125rem .5rem;border-radius:2rem;}
+    .stat-change.up{background:#d1fae5;color:#047857;}
+    .stat-change.down{background:#fef2f2;color:#dc2626;}
+    .stat-sub{font-size:.75rem;color:#94a3b8;margin-top:.375rem;}
+
+    /* Cards Grid */
+    .cards-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;}
+    .card{background:#fff;border-radius:.75rem;border:1px solid #e8ecf1;overflow:hidden;}
+    .card-header{padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;}
+    .card-title{font-size:.875rem;font-weight:700;color:#1a1a2e;}
+    .card-body{padding:1.25rem;}
+
+    /* Chart placeholder */
+    .chart-bars{display:flex;align-items:flex-end;gap:.375rem;height:120px;}
+    .chart-bar{width:2rem;border-radius:.25rem .25rem 0 0;transition:height .3s;}
+    .chart-label{font-size:.625rem;color:#94a3b8;text-align:center;margin-top:.25rem;}
+
+    /* Activity Feed */
+    .activity-list{display:flex;flex-direction:column;}
+    .activity-item{display:flex;gap:.75rem;padding:.75rem 0;border-bottom:1px solid #f8fafc;}
+    .activity-item:last-child{border-bottom:none;}
+    .activity-dot{width:.5rem;height:.5rem;border-radius:50%;margin-top:.375rem;flex-shrink:0;}
+    .activity-dot.blue{background:#3391ff;}.activity-dot.green{background:#10b981;}.activity-dot.orange{background:#f59e0b;}.activity-dot.red{background:#ef4444;}.activity-dot.purple{background:#8b5cf6;}
+    .activity-text{font-size:.8125rem;color:#475569;line-height:1.5;}
+    .activity-text strong{color:#1a1a2e;font-weight:600;}
+    .activity-time{font-size:.6875rem;color:#cbd5e1;margin-top:.125rem;}
+
+    /* Mobile */
+    .mobile-header{display:none;padding:1rem;background:#0f172a;align-items:center;justify-content:space-between;}
+    .mobile-menu-btn{width:2.25rem;height:2.25rem;border:1px solid rgba(255,255,255,.15);border-radius:.5rem;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .mobile-menu-btn svg{width:1.25rem;height:1.25rem;color:#94a3b8;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+
+    @media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr);}.cards-row{grid-template-columns:1fr;}}
+    @media(max-width:768px){
+      .sidebar{position:fixed;left:-280px;top:0;bottom:0;z-index:100;transition:left .3s;}.sidebar.open{left:0;}.sidebar-overlay.show{display:block;}
+      .mobile-header{display:flex;}.main-body{padding:1.25rem;}
+      .stats-grid{grid-template-columns:1fr 1fr;gap:.75rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div style="font-weight:700;color:#fff;font-size:1rem;">MediW <span style="font-size:.625rem;background:#ef4444;padding:.125rem .375rem;border-radius:2rem;margin-left:.25rem;">ADMIN</span></div>
+    <div style="width:2.25rem;"></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">M</div>
+        <div class="sidebar-logo-text">MediW</div>
+        <div class="sidebar-logo-badge">ADMIN</div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Обзор</div>
+      </div>
+      <a class="nav-item active" href="admin.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+        Панель управления
+      </a>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Управление</div>
+      </div>
+      <a class="nav-item" href="admin-users.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+        Управление пользователями
+        <span class="nav-badge blue">156</span>
+      </a>
+      <a class="nav-item" href="admin-cases.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+        Случаи пациентов
+        <span class="nav-badge">28</span>
+      </a>
+      <a class="nav-item" href="admin-hospitals.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg>
+        Управление больницами
+        <span class="nav-badge blue">32</span>
+      </a>
+      <a class="nav-item" href="admin-agencies.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+        Управление агентствами
+      </a>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Рабочий процесс</div>
+      </div>
+      <a class="nav-item" href="admin-approvals.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Управление одобрениями
+        <span class="nav-badge">7</span>
+      </a>
+      <a class="nav-item" href="admin-settings.html">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Системные настройки
+      </a>
+
+      <div class="sidebar-footer">
+        <div class="admin-user">
+          <div class="admin-avatar">SA</div>
+          <div>
+            <div class="admin-name">Главный администратор</div>
+            <div class="admin-role">admin@mediw.com</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="main-header">
+        <div><div class="main-title">Панель управления</div><div class="main-subtitle">Общая статистика платформы MediW</div></div>
+        <div class="header-actions">
+          <button class="btn btn-ghost">Экспорт</button>
+          <a href="hospital-register.html" class="btn btn-primary" style="text-decoration:none;">+ Регистрация новой больницы</a>
+        </div>
+      </div>
+      <div class="main-body">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Все пользователи</div>
+            <div class="stat-value">156</div>
+            <div class="stat-change up">↑ 12% за этот месяц</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Активные случаи</div>
+            <div class="stat-value">28</div>
+            <div class="stat-change up">↑ 8 новых</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Зарегистрированные больницы</div>
+            <div class="stat-value">32</div>
+            <div class="stat-sub">Сеул 18 · Кёнги 8 · Другие 6</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ожидание одобрения</div>
+            <div class="stat-value" style="color:#ef4444;">7</div>
+            <div class="stat-change down">Требуется обработка</div>
+          </div>
+        </div>
+
+        <div class="cards-row">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Ежемесячная статистика заявок</div>
+              <select style="font-size:.75rem;border:1px solid #e2e8f0;border-radius:.25rem;padding:.25rem .5rem;color:#64748b;font-family:inherit;">
+                <option>2026</option><option>2025</option>
+              </select>
+            </div>
+            <div class="card-body">
+              <div class="chart-bars" id="monthlyChart"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Последняя активность</div><a style="font-size:.75rem;color:#3391ff;cursor:pointer;">Показать все</a></div>
+            <div class="card-body">
+              <div class="activity-list" id="activityFeed"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cards-row">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Распределение по типам пользователей</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:.75rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">Пациент/Сопровождающий</span><div style="display:flex;align-items:center;gap:.5rem;"><div style="height:.5rem;width:120px;background:#eff6ff;border-radius:2rem;overflow:hidden;"><div style="height:100%;width:65%;background:#3391ff;border-radius:2rem;"></div></div><span style="font-size:.75rem;font-weight:600;color:#1a1a2e;">98</span></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">Медицинский специалист</span><div style="display:flex;align-items:center;gap:.5rem;"><div style="height:.5rem;width:120px;background:#faf5ff;border-radius:2rem;overflow:hidden;"><div style="height:100%;width:25%;background:#8b5cf6;border-radius:2rem;"></div></div><span style="font-size:.75rem;font-weight:600;color:#1a1a2e;">38</span></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">Агентство</span><div style="display:flex;align-items:center;gap:.5rem;"><div style="height:.5rem;width:120px;background:#fff7ed;border-radius:2rem;overflow:hidden;"><div style="height:100%;width:13%;background:#f59e0b;border-radius:2rem;"></div></div><span style="font-size:.75rem;font-weight:600;color:#1a1a2e;">20</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Пациенты по странам</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:.75rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">🇷🇺 Россия</span><span style="font-size:.8125rem;font-weight:700;color:#1a1a2e;">42%</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">🇰🇿 Казахстан</span><span style="font-size:.8125rem;font-weight:700;color:#1a1a2e;">28%</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">🇺🇿 Узбекистан</span><span style="font-size:.8125rem;font-weight:700;color:#1a1a2e;">12%</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">🇲🇳 Монголия</span><span style="font-size:.8125rem;font-weight:700;color:#1a1a2e;">8%</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.8125rem;color:#475569;">Другие</span><span style="font-size:.8125rem;font-weight:700;color:#1a1a2e;">10%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    // Dashboard chart
+    const activities = [
+      {color:'blue',text:'<strong>Иван Петров</strong> по пациенту в Samsung Seoul Hospital <strong>запрос дополнительных документов</strong>',time:'14 мин. назад'},
+      {color:'green',text:'<strong>Мария Иванова</strong> случай <strong>окончательное утверждение</strong> завершено',time:'2 ч. назад'},
+      {color:'purple',text:'<strong>田中太郎</strong> случай из Gangnam Severance <strong>одобрение больницы</strong>',time:'4 ч. назад'},
+      {color:'orange',text:'<strong>MongolMed</strong> новая регистрация агентства — ожидание одобрения',time:'6 ч. назад'},
+      {color:'blue',text:'<strong>Батбаяр Энхбат</strong> Step 2 ввод медицинских данных завершён',time:'8 ч. назад'},
+      {color:'red',text:'<strong>Елена Попова</strong> случай <strong>отзыв</strong> обработано',time:'1 день назад'},
+      {color:'green',text:'<strong>Ajou Univ. Hospital</strong> запрос на регистрацию новой больницы',time:'1 день назад'},
+    ];
+
+    function renderChart(){
+      const data=[8,12,15,11,18,22,28,14,0,0,0,0];
+      const months=['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+      const max=Math.max(...data);
+      const el=document.getElementById('monthlyChart');
+      el.innerHTML=data.map((v,i)=>{
+        const h=v?Math.max((v/max)*140,8):4;
+        const color=i<7?(i===6?'#3391ff':'#93c5fd'):'#e2e8f0';
+        return `<div style="display:flex;flex-direction:column;align-items:center;"><div class="chart-bar" style="height:${h}px;background:${color};"></div><div class="chart-label">${months[i]}</div></div>`;
+      }).join('');
+    }
+
+    function renderActivity(){
+      document.getElementById('activityFeed').innerHTML=activities.slice(0,5).map(a=>`<div class="activity-item"><div class="activity-dot ${a.color}"></div><div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div></div>`).join('');
+    }
+
+    renderChart();
+    renderActivity();
+  </script>
+</body>
+</html>

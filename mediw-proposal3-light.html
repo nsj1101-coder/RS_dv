@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediW — 한국 의료관광 플랫폼 (라이트)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;}
+body{
+  font-family:'Noto Sans','Arial',sans-serif;
+  background:#e8edf5;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ===== SLIDE BASE ===== */
+.slide{
+  width:297mm;height:210mm;
+  position:relative;overflow:hidden;
+  display:flex;margin:0 auto 6mm;
+  page-break-after:always;background:#fff;
+}
+.slide:last-child{page-break-after:avoid;}
+
+/* ===== DECORATIVE ===== */
+.deco{position:absolute;border-radius:50%;pointer-events:none;}
+.deco-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+
+/* ===== COMMON ELEMENTS ===== */
+.logo-wrap{display:flex;align-items:center;gap:9px;}
+.logo-ico{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:15px;flex-shrink:0;
+}
+.logo-txt{font-size:18px;font-weight:800;color:#0f172a;letter-spacing:-.02em;}
+.logo-txt.dark{color:#0f172a;}
+
+.slide-footer{
+  position:absolute;bottom:0;left:0;right:0;height:8mm;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 10mm;
+}
+.sf-brand{font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.sf-brand.light{color:#94a3b8;}
+.sf-brand.dark{color:#cbd5e1;}
+.sf-num{font-size:8px;font-weight:600;}
+.sf-num.light{color:#94a3b8;}
+.sf-num.dark{color:#cbd5e1;}
+
+.slide-tag{
+  font-size:8.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;margin-bottom:5px;
+}
+.slide-tag::before{content:'';width:18px;height:2px;border-radius:1px;}
+.slide-tag.blue{color:#3b82f6;} .slide-tag.blue::before{background:linear-gradient(90deg,#2563eb,#60a5fa);}
+.slide-tag.white{color:rgba(255,255,255,.45);} .slide-tag.white::before{background:rgba(255,255,255,.2);}
+.slide-tag.green{color:#10b981;} .slide-tag.green::before{background:linear-gradient(90deg,#047857,#10b981);}
+.slide-tag.gold{color:#f59e0b;} .slide-tag.gold::before{background:linear-gradient(90deg,#d97706,#fbbf24);}
+
+/* ===== SLIDE 1: COVER ===== */
+.s1{background:linear-gradient(145deg,#e8f0fe,#dbeafe,#eff6ff);}
+.s1-wrap{flex:1;display:flex;position:relative;z-index:2;}
+.s1-left{
+  width:52%;padding:11mm 10mm 10mm 13mm;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.s1-right{
+  width:48%;padding:9mm 11mm 9mm 5mm;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+.s1-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);
+  border-radius:100px;padding:4px 12px;
+  font-size:9px;color:#60a5fa;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:10px;width:fit-content;
+}
+.s1-badge-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.s1-h1{font-size:31px;font-weight:900;color:#0f172a;line-height:1.18;letter-spacing:-.025em;margin-bottom:8px;}
+.s1-h1 em{
+  font-style:normal;
+  background:linear-gradient(130deg,#3b82f6,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s1-sub{font-size:10.5px;color:#64748b;line-height:1.7;max-width:290px;}
+.s1-footer-row{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(0,0,0,.06);padding-top:4mm;
+}
+.s1-footer-l{font-size:9px;color:#94a3b8;}
+.s1-footer-r{font-size:8.5px;color:#94a3b8;text-align:right;}
+.s1-footer-ver{font-size:11px;font-weight:700;color:#64748b;}
+
+/* Dashboard mockup */
+.mock-dash{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;padding:0;}
+.mock-topbar{background:#f8fafc;padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e2e8f0;}
+.mock-dot{width:6px;height:6px;border-radius:50%;}
+.mock-tab{font-size:7px;font-weight:600;padding:3px 8px;border-radius:4px;color:#94a3b8;}
+.mock-tab.act{background:rgba(59,130,246,.2);color:#60a5fa;}
+.mock-body{padding:8px 10px;display:flex;flex-direction:column;gap:6px;}
+.mock-stat-row{display:flex;gap:6px;}
+.mock-stat-card{flex:1;background:#fff;border-radius:8px;padding:6px 8px;border:1px solid #e2e8f0;}
+.mock-stat-num{font-size:13px;font-weight:800;color:#0f172a;}
+.mock-stat-lbl{font-size:7px;color:#94a3b8;margin-top:1px;}
+.mock-list-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;background:#fff;}
+.mock-avatar{width:16px;height:16px;border-radius:50%;font-size:7px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;}
+.mock-name{font-size:8px;color:#64748b;flex:1;}
+.mock-status{font-size:7px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.mock-chart-bar-wrap{display:flex;gap:3px;align-items:flex-end;height:30px;}
+.mock-cbar{border-radius:2px 2px 0 0;flex:1;}
+
+/* ===== SLIDE 2: MARKET ===== */
+.s2{background:#f8fafc;}
+.s2-left{
+  width:40%;background:linear-gradient(155deg,#1d4ed8,#3b82f6);
+  padding:10mm 9mm;display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.s2-right{flex:1;padding:10mm 11mm;display:flex;flex-direction:column;justify-content:center;}
+
+.opp-big{font-size:44px;font-weight:900;color:#fff;line-height:1;letter-spacing:-.04em;margin-bottom:3px;}
+.opp-big-label{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:5mm;text-transform:uppercase;letter-spacing:.06em;}
+.opp-fact{display:flex;flex-direction:column;gap:2.5mm;}
+.opp-fact-item{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:9px;padding:2.5mm 4mm;
+  display:flex;align-items:center;gap:8px;
+}
+.opp-fact-ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.opp-fact-text{font-size:10.5px;color:rgba(255,255,255,.85);line-height:1.5;}
+.opp-fact-text strong{color:#fff;font-weight:700;}
+
+.ring-stats{display:flex;flex-direction:column;gap:3mm;margin-top:4mm;}
+.ring-stat-row{display:flex;align-items:center;gap:8px;padding:3mm 4mm;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:9px;}
+.ring-stat-svg{flex-shrink:0;}
+.ring-stat-info{flex:1;}
+.ring-stat-num{font-size:15px;font-weight:800;color:#fff;line-height:1;}
+.ring-stat-lbl{font-size:9px;color:rgba(255,255,255,.65);margin-top:1px;}
+
+.s2r-title{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:3mm;line-height:1.25;}
+.growth-facts{display:flex;flex-direction:column;gap:3mm;}
+.growth-item{background:#fff;border:1px solid #e2e8f0;border-radius:11px;padding:3.5mm 4.5mm;box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;gap:10px;}
+.growth-num{font-size:28px;font-weight:900;line-height:1;letter-spacing:-.03em;flex-shrink:0;min-width:70px;}
+.growth-body h5{font-size:11.5px;font-weight:700;color:#0f172a;margin-bottom:2px;}
+.growth-body p{font-size:10px;color:#475569;line-height:1.5;}
+
+/* ===== SLIDE 3: WHY KOREA ===== */
+.s3k{background:#f8fafc;}
+.s3k-inner{flex:1;padding:10mm 12mm;display:flex;flex-direction:column;}
+
+.cost-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.cost-country{width:90px;text-align:right;font-size:11px;font-weight:600;color:#0f172a;}
+.cost-bar-outer{flex:1;height:28px;background:rgba(0,0,0,.04);border-radius:6px;overflow:hidden;position:relative;}
+.cost-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;}
+.cost-val{font-size:11px;font-weight:700;color:#fff;}
+.cost-badge{font-size:8px;font-weight:700;background:rgba(255,255,255,.25);color:#fff;padding:1px 7px;border-radius:10px;margin-left:6px;}
+
+.sweet-spot{
+  background:linear-gradient(135deg,rgba(4,120,87,.06),rgba(16,185,129,.04));
+  border:2px solid rgba(16,185,129,.2);border-radius:14px;padding:4mm 5mm;
+  display:flex;align-items:center;gap:12px;margin-top:4mm;
+}
+.ss-badge{background:linear-gradient(135deg,#047857,#10b981);border-radius:10px;padding:4mm 5mm;text-align:center;flex-shrink:0;}
+.ss-badge-title{font-size:9px;font-weight:800;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;}
+.ss-badge-big{font-size:20px;font-weight:900;color:#fff;line-height:1.1;}
+.ss-body h5{font-size:13px;font-weight:800;color:#0f172a;margin-bottom:4px;}
+.ss-body p{font-size:10px;color:#475569;line-height:1.6;}
+
+/* ===== SLIDE 4: PLATFORM 5 STEPS ===== */
+.s4p{background:#f0f4ff;}
+.s4p-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+
+.roadmap-steps{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-top:4mm;position:relative;padding-top:2mm;
+}
+.diag-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;}
+.rm-step-v{display:flex;flex-direction:column;align-items:center;z-index:1;flex:1;}
+.rm-circle{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#fff;
+  box-shadow:0 0 0 6px rgba(0,0,0,.06);
+}
+.rm-card-v{
+  background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;padding:3.5mm 3mm;text-align:center;width:95%;margin-top:3mm;
+}
+.rm-ico{font-size:20px;margin-bottom:4px;}
+.rm-title{font-size:11.5px;font-weight:700;color:#0f172a;margin-bottom:3px;line-height:1.3;}
+.rm-desc{font-size:9px;color:#64748b;line-height:1.55;}
+
+/* ===== SLIDE 5: PARTNER BENEFITS PART 1 ===== */
+.s5b{background:#fff;}
+.s5b-inner{flex:1;padding:8mm 12mm 10mm;display:flex;flex-direction:column;}
+
+.bene-open{display:grid;grid-template-columns:repeat(3,1fr);flex:1;margin-top:5mm;}
+.bene-col{padding:0 9mm;display:flex;flex-direction:column;justify-content:center;position:relative;}
+.bene-col:not(:last-child)::after{content:'';position:absolute;right:0;top:8%;height:84%;width:1px;background:linear-gradient(to bottom,transparent,#e2e8f0,transparent);}
+.bene-emoji{font-size:56px;line-height:1;margin-bottom:5mm;}
+.bene-stat{font-size:58px;font-weight:900;line-height:1;letter-spacing:-.04em;margin-bottom:4mm;}
+.bene-stat.blue{background:linear-gradient(135deg,#1d4ed8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bene-stat.gold{background:linear-gradient(135deg,#d97706,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bene-stat.green{background:linear-gradient(135deg,#047857,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bene-title{font-size:17px;font-weight:800;color:#0f172a;margin-bottom:6px;line-height:1.3;}
+.bene-desc{font-size:12px;color:#64748b;line-height:1.75;}
+
+/* ===== SLIDE 6: PARTNER BENEFITS PART 2 ===== */
+.s6b{background:#fff;}
+.s6b-inner{flex:1;padding:8mm 13mm;display:flex;flex-direction:column;}
+.bene6-list{display:flex;flex-direction:column;gap:0;flex:1;margin-top:4mm;justify-content:center;}
+.bene6-item{display:flex;align-items:center;gap:7mm;padding:5mm 0;position:relative;}
+.bene6-item:not(:last-child)::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#e2e8f0 15%,#e2e8f0 85%,transparent);}
+.bene6-ico{font-size:42px;flex-shrink:0;width:52px;text-align:center;}
+.bene6-body{flex:1;}
+.bene6-title{font-size:18px;font-weight:800;color:#0f172a;margin-bottom:5px;line-height:1.3;}
+.bene6-desc{font-size:13px;color:#64748b;line-height:1.7;}
+.mini-body h5{font-size:12px;font-weight:700;color:#0f172a;margin-bottom:3px;}
+.mini-body p{font-size:10px;color:#475569;line-height:1.55;}
+
+.income-ladder{
+  background:linear-gradient(135deg,#1e3a8a,#1d4ed8);
+  border-radius:14px;padding:4.5mm 6mm;
+  display:flex;align-items:center;gap:0;
+  flex:1;
+}
+.ladder-step{flex:1;text-align:center;padding:0 4mm;position:relative;}
+.ladder-step:not(:last-child)::after{
+  content:'→';position:absolute;right:-2mm;top:50%;transform:translateY(-50%);
+  font-size:18px;color:rgba(255,255,255,.25);
+}
+.ladder-patients{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.ladder-earn{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;}
+.ladder-earn.green{color:#34d399;}
+.ladder-sub{font-size:9px;color:rgba(255,255,255,.5);margin-top:3px;}
+.ladder-divider{width:1px;background:rgba(255,255,255,.2);align-self:stretch;}
+
+/* ===== SLIDE 7: PARTNER HOSPITALS ===== */
+.s7h{background:#f8fafc;}
+.s7h-inner{flex:1;padding:9mm 11mm;display:flex;flex-direction:column;}
+.s7h-body{display:flex;gap:4mm;flex:1;margin-top:4mm;}
+.hosp-col{display:flex;flex-direction:column;gap:3mm;flex:1;}
+.hosp-card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:13px;
+  padding:4mm;box-shadow:0 2px 10px rgba(0,0,0,.05);
+  display:flex;flex-direction:column;flex:1;
+}
+.hosp-rank{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.hosp-name{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:1px;letter-spacing:-.01em;line-height:1.2;}
+.hosp-name-sub{font-size:9.5px;color:#94a3b8;margin-bottom:3.5mm;}
+.hosp-divider{height:1px;background:#f1f5f9;margin-bottom:3mm;}
+.hosp-specs{display:flex;flex-direction:column;gap:2.5px;flex:1;}
+.hosp-spec{display:flex;align-items:center;gap:6px;font-size:10px;color:#475569;}
+.hosp-spec-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.hosp-footer{margin-top:3mm;padding:2.5mm;border-radius:7px;font-size:9.5px;font-weight:700;text-align:center;}
+
+.spec-map{
+  width:42%;background:linear-gradient(155deg,#1d4ed8,#3b82f6);
+  border-radius:14px;padding:4mm 5mm;
+  display:flex;flex-direction:column;
+}
+.spec-map-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.7);margin-bottom:3mm;}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;flex:1;}
+.spec-badge{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:9px;padding:3mm 2mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;
+}
+.spec-ico{font-size:18px;line-height:1;}
+.spec-lbl{font-size:8px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.3;}
+
+/* ===== SLIDE 8: SPECIALTY NETWORK ===== */
+.s8n{background:#f0f4ff;}
+.s8n-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+.specialty-fullgrid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:3mm;flex:1;margin-top:4mm;
+}
+.sp-full-card{
+  background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;padding:4mm 3mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;
+}
+.sp-full-ico{font-size:26px;line-height:1;}
+.sp-full-title{font-size:10px;font-weight:700;color:#0f172a;line-height:1.3;}
+.sp-full-sub{font-size:8.5px;color:#64748b;line-height:1.4;}
+
+.network-stats{
+  display:flex;gap:0;align-items:center;
+  background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;padding:3.5mm 5mm;margin-top:3.5mm;
+}
+.net-stat{flex:1;text-align:center;}
+.net-stat-num{font-size:22px;font-weight:800;color:#0f172a;line-height:1;letter-spacing:-.02em;}
+.net-stat-lbl{font-size:8.5px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+.net-divider{width:1px;height:30px;background:#e2e8f0;align-self:center;}
+
+/* ===== SLIDE 9: HOW TO JOIN (ROADMAP) ===== */
+.s9j{background:#f0f4ff;}
+.s9j-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+
+.roadmap{position:relative;display:flex;gap:0;justify-content:space-between;padding:0 20px;margin-top:8mm;}
+.roadmap::before{content:'';position:absolute;top:24px;left:40px;right:40px;height:3px;background:linear-gradient(90deg,#1d4ed8,#3b82f6,#10b981,#34d399);border-radius:2px;z-index:0;}
+.rm-step{display:flex;flex-direction:column;align-items:center;z-index:1;flex:1;}
+.rm-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;box-shadow:0 0 0 6px rgba(29,78,216,.15);}
+.rm-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px;text-align:center;margin-top:8px;width:85%;}
+.rm-card-ico{font-size:22px;margin-bottom:5px;}
+.rm-card-title{font-size:12px;font-weight:700;color:#0f172a;margin-bottom:4px;line-height:1.3;}
+.rm-card-desc{font-size:9.5px;color:#64748b;line-height:1.55;}
+
+.join-cta-box{
+  background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(59,130,246,.06));
+  border:1px solid rgba(59,130,246,.2);border-radius:12px;
+  padding:3.5mm 6mm;margin-top:4mm;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.join-cta-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#60a5fa;margin-bottom:3px;}
+.join-cta-val{font-size:13px;font-weight:700;color:#0f172a;}
+.join-cta-right{display:flex;gap:9mm;text-align:center;align-items:center;}
+.join-kpi-num{font-size:21px;font-weight:800;color:#0f172a;line-height:1;}
+.join-kpi-label{font-size:8px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* ===== SLIDE 10: BEFORE / AFTER ===== */
+.s10{background:#f8fafc;}
+.s10-left{width:48%;height:100%;background:linear-gradient(150deg,#180404,#2a0808);padding:9mm 9mm;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.s10-right{width:52%;height:100%;background:#f0fdf4;padding:9mm 10mm;display:flex;flex-direction:column;justify-content:center;}
+.ba-label{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:5px;padding:3px 10px;margin-bottom:4mm;}
+.ba-label.before{background:rgba(239,68,68,.15);color:#f87171;}
+.ba-label.after{background:rgba(16,185,129,.15);color:#10b981;}
+.ba-h3{font-size:15px;font-weight:800;line-height:1.3;margin-bottom:4mm;}
+.ba-h3.before{color:#fff;}
+.ba-h3.after{color:#0f172a;}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:2.5mm;}
+.ba-item{display:flex;align-items:flex-start;gap:8px;padding:2.5mm 3.5mm;border-radius:9px;}
+.ba-item.before{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);}
+.ba-item.after{background:#fff;border:1px solid rgba(16,185,129,.2);box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.ba-ico{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;}
+.ba-ico.before{background:rgba(239,68,68,.15);}
+.ba-ico.after{background:rgba(16,185,129,.12);}
+.ba-item-title{font-size:11.5px;font-weight:700;margin-bottom:1px;}
+.ba-item-title.before{color:#fca5a5;}
+.ba-item-title.after{color:#065f46;}
+.ba-item-desc{font-size:10px;line-height:1.5;}
+.ba-item-desc.before{color:rgba(255,255,255,.4);}
+.ba-item-desc.after{color:#475569;}
+.ba-connector{position:absolute;top:50%;left:48%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:16px;z-index:10;box-shadow:0 0 0 6px rgba(37,99,235,.15);}
+.ba-time-row{display:flex;gap:3mm;margin-top:4mm;}
+.ba-time-box{flex:1;padding:3mm 3.5mm;border-radius:9px;display:flex;align-items:center;gap:7px;}
+.ba-time-box.before{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);}
+.ba-time-box.after{background:#fff;border:1px solid rgba(16,185,129,.2);}
+.ba-time-ico{font-size:16px;flex-shrink:0;}
+.ba-time-label{font-size:8.5px;color:rgba(255,255,255,.4);margin-bottom:1px;}
+.ba-time-label.after{color:#94a3b8;}
+.ba-time-val{font-size:14px;font-weight:800;}
+.ba-time-val.before{color:#f87171;}
+.ba-time-val.after{color:#059669;}
+.ba-time-sub{font-size:9px;}
+.ba-time-sub.before{color:rgba(255,255,255,.3);}
+.ba-time-sub.after{color:#94a3b8;}
+
+/* ===== SLIDE 11: COMMISSION & SAVINGS ===== */
+.s11{background:#f0f4ff;}
+.s11-inner{flex:1;padding:9mm 12mm;display:flex;flex-direction:column;}
+.s11-cols{display:grid;grid-template-columns:1fr 1px 1fr;gap:5mm;flex:1;margin-top:4mm;}
+.s11-divider-v{background:#e2e8f0;}
+.s11-col{display:flex;flex-direction:column;gap:3.5mm;}
+.s11-col-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:1mm;}
+.comm-chart{display:flex;flex-direction:column;gap:2.5mm;}
+.comm-row{display:flex;align-items:center;gap:3mm;}
+.comm-lbl{font-size:9.5px;color:#64748b;width:70px;text-align:right;flex-shrink:0;line-height:1.3;}
+.comm-bar-wrap{flex:1;height:24px;background:rgba(0,0,0,.07);border-radius:5px;overflow:hidden;}
+.comm-bar{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.comm-bar-val{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
+.saving-block{display:flex;flex-direction:column;gap:3mm;}
+.saving-item-label{font-size:9.5px;color:#64748b;margin-bottom:2mm;display:flex;justify-content:space-between;align-items:center;}
+.saving-badge{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(16,185,129,.15);color:#34d399;}
+.saving-bars-wrap{display:flex;flex-direction:column;gap:2px;}
+.saving-bar-row{display:flex;align-items:center;gap:3mm;}
+.saving-bar-tag{font-size:8px;font-weight:700;width:38px;text-align:right;flex-shrink:0;}
+.saving-bar-tag.bef{color:rgba(239,68,68,.65);}
+.saving-bar-tag.aft{color:rgba(16,185,129,.75);}
+.saving-bar-outer{flex:1;height:14px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden;}
+.saving-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:5px;}
+.saving-bar-fill.bef{background:rgba(239,68,68,.35);}
+.saving-bar-fill.aft{background:rgba(16,185,129,.45);}
+.saving-bar-num{font-size:8.5px;font-weight:700;color:#fff;}
+.tier-box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:3.5mm;}
+.tier-label{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;margin-bottom:3mm;}
+.tier-rows{display:flex;flex-direction:column;gap:2mm;}
+.tier-row{display:flex;align-items:center;justify-content:space-between;padding:2mm 3mm;border-radius:6px;background:#f8fafc;}
+.tier-left{display:flex;align-items:center;gap:6px;}
+.tier-dot{width:7px;height:7px;border-radius:50%;}
+.tier-pat{font-size:10.5px;color:#334155;font-weight:500;}
+.tier-earn{font-size:14px;font-weight:800;color:#0f172a;}
+.tier-earn small{font-size:9px;color:#94a3b8;font-weight:400;margin-left:2px;}
+.comm-highlight{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.05));border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:3.5mm 4mm;display:flex;align-items:center;gap:9px;}
+.ch-ico{font-size:20px;flex-shrink:0;}
+.ch-label{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#10b981;margin-bottom:2px;}
+.ch-text{font-size:11.5px;color:#0f172a;font-weight:600;line-height:1.5;}
+.comm-big-num{font-size:88px;font-weight:900;line-height:1;letter-spacing:-.04em;color:#10b981;}
+.comm-big-sub{font-size:12px;color:#64748b;margin-top:3px;}
+.comm-flow-row{display:flex;align-items:center;gap:0;padding:3mm 0;}
+.comm-flow-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.comm-flow-step-ico{font-size:22px;line-height:1;}
+.comm-flow-step-lbl{font-size:9px;font-weight:700;color:#334155;text-align:center;}
+.comm-flow-arrow{font-size:18px;color:#94a3b8;flex-shrink:0;padding:0 2mm;margin-bottom:10px;}
+.comm-example-box{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:3.5mm 4.5mm;display:flex;align-items:center;gap:10px;margin-bottom:3mm;}
+.comm-ex-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#10b981;margin-bottom:3px;}
+.comm-ex-calc{font-size:14px;font-weight:700;color:#0f172a;line-height:1.4;}
+.comm-delegate{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12);border-radius:10px;padding:3.5mm 4mm;}
+.comm-del-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#60a5fa;margin-bottom:4px;}
+.comm-del-text{font-size:11px;color:#334155;line-height:1.65;}
+
+/* ===== SLIDE 12: CLOSING ===== */
+.s12{background:linear-gradient(145deg,#1e3a8a,#1d4ed8,#1e40af);}
+.s12-inner{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:10mm 12mm;position:relative;z-index:2;
+}
+.s12-tag{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;margin-bottom:7px;}
+.s12-h1{
+  font-size:34px;font-weight:900;color:#fff;
+  text-align:center;line-height:1.2;letter-spacing:-.025em;margin-bottom:7px;
+}
+.s12-h1 em{
+  font-style:normal;
+  background:linear-gradient(130deg,#3b82f6,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s12-sub{font-size:11px;color:rgba(255,255,255,.4);text-align:center;max-width:340px;line-height:1.7;margin-bottom:5mm;}
+
+.s12-kpi-row{display:flex;align-items:center;gap:0;margin-bottom:5mm;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:4mm 6mm;}
+.s12-kpi{text-align:center;flex:1;padding:0 4mm;}
+.s12-kpi-num{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1;}
+.s12-kpi-num small{font-size:12px;color:rgba(255,255,255,.5);}
+.s12-kpi-label{font-size:8px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin-top:3px;white-space:nowrap;}
+.s12-div{width:1px;height:34px;background:rgba(255,255,255,.2);align-self:center;}
+
+.s12-contact{display:flex;gap:4mm;margin-bottom:5mm;}
+.s12-contact-item{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:10px;padding:3.5mm 5mm;text-align:center;
+}
+.s12-contact-label{font-size:8px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.s12-contact-val{font-size:12.5px;color:rgba(255,255,255,.9);font-weight:600;}
+
+.s12-btn{
+  background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:100px;
+  padding:10px 34px;color:#fff;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(59,130,246,.5),0 0 60px rgba(59,130,246,.15);
+  letter-spacing:.02em;
+}
+.s12-footer{
+  position:absolute;bottom:7mm;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;
+  gap:6mm;font-size:8px;color:rgba(255,255,255,.3);
+}
+.s12-footer-div{width:1px;height:9px;background:rgba(255,255,255,.2);}
+
+/* ===== PRINT ===== */
+@media print{
+  body{background:#fff;}
+  .slide{margin:0;box-shadow:none;}
+  .toolbar{display:none!important;}
+}
+@page{size:A4 landscape;margin:0;}
+
+/* ===== TOOLBAR ===== */
+.toolbar{
+  position:fixed;bottom:20px;right:20px;
+  display:flex;gap:8px;z-index:9999;
+}
+.tb-btn{
+  display:flex;align-items:center;gap:6px;
+  border:none;border-radius:50px;
+  padding:10px 18px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.tb-pdf{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(59,130,246,.4);}
+.tb-pdf:hover{transform:translateY(-2px);}
+.tb-dark{background:rgba(0,0,0,.08);backdrop-filter:blur(10px);color:#0f172a;border:1px solid rgba(0,0,0,.12);}
+@media print{.toolbar{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<div class="slide s1">
+  <div class="deco" style="width:500px;height:500px;top:-150px;right:50px;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);"></div>
+  <div class="deco" style="width:300px;height:300px;bottom:-80px;left:100px;background:radial-gradient(circle,rgba(96,165,250,.09),transparent 70%);"></div>
+  <div class="deco-grid"></div>
+
+  <div class="s1-wrap">
+    <!-- Left -->
+    <div class="s1-left">
+      <div class="logo-wrap">
+        <div class="logo-ico">M</div>
+        <span class="logo-txt">MediW</span>
+        <span style="font-size:11px;color:#94a3b8;margin-left:4px;font-weight:400;">Korea</span>
+      </div>
+      <div>
+        <div class="s1-badge"><span class="s1-badge-dot"></span>파트너 제안 · 2026</div>
+        <h1 class="s1-h1">한국 의료에서<br>당신의 <em>비즈니스를</em><br>성장시키세요</h1>
+        <p class="s1-sub">MediW — 의료관광 디지털 플랫폼. 파트너로 등록하고, 환자를 한국 최고의 병원에 연결하고, 수익을 창출하세요.</p>
+      </div>
+      <div class="s1-footer-row">
+        <span class="s1-footer-l">대외비 · 파트너 전용</span>
+        <span class="s1-footer-r">
+          <span class="s1-footer-ver">2026</span><br>
+          <span>rbglobal.kr · mediw.vercel.app</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Right: Dashboard Mockup -->
+    <div class="s1-right">
+      <div class="mock-dash">
+        <div class="mock-topbar">
+          <div class="mock-dot" style="background:#ef4444;"></div>
+          <div class="mock-dot" style="background:#f59e0b;"></div>
+          <div class="mock-dot" style="background:#22c55e;"></div>
+          <span style="flex:1;font-size:7px;color:#94a3b8;margin-left:6px;">MediW Dashboard</span>
+          <div class="mock-tab act">개요</div>
+          <div class="mock-tab">환자</div>
+          <div class="mock-tab">수익</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-stat-row">
+            <div class="mock-stat-card">
+              <div class="mock-stat-num">24</div>
+              <div class="mock-stat-lbl">이번 달 환자</div>
+            </div>
+            <div class="mock-stat-card">
+              <div class="mock-stat-num" style="color:#34d399;">$9,600</div>
+              <div class="mock-stat-lbl">예상 커미션</div>
+            </div>
+            <div class="mock-stat-card">
+              <div class="mock-stat-num" style="color:#60a5fa;">98%</div>
+              <div class="mock-stat-lbl">만족도</div>
+            </div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#1d4ed8;">K</div>
+            <div class="mock-name">Kim Dmitry · 삼성서울병원</div>
+            <div class="mock-status" style="background:rgba(16,185,129,.2);color:#34d399;">완료</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#047857;">A</div>
+            <div class="mock-name">Anna Petrova · 아산의료원</div>
+            <div class="mock-status" style="background:rgba(245,158,11,.2);color:#fbbf24;">진행중</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#7c3aed;">S</div>
+            <div class="mock-name">Sergei Volkov · 세브란스병원</div>
+            <div class="mock-status" style="background:rgba(59,130,246,.2);color:#60a5fa;">검토중</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#be123c;">M</div>
+            <div class="mock-name">Maria Chen · 강남세브란스</div>
+            <div class="mock-status" style="background:rgba(239,68,68,.2);color:#f87171;">대기</div>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:4px 6px 0;">
+            <span style="font-size:7px;color:#94a3b8;">월별 환자 수</span>
+            <div class="mock-chart-bar-wrap">
+              <div class="mock-cbar" style="height:40%;background:rgba(59,130,246,.5);"></div>
+              <div class="mock-cbar" style="height:55%;background:rgba(59,130,246,.55);"></div>
+              <div class="mock-cbar" style="height:45%;background:rgba(59,130,246,.5);"></div>
+              <div class="mock-cbar" style="height:70%;background:rgba(59,130,246,.6);"></div>
+              <div class="mock-cbar" style="height:80%;background:rgba(16,185,129,.6);"></div>
+              <div class="mock-cbar" style="height:100%;background:rgba(16,185,129,.75);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">01 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 2: MARKET OPPORTUNITY ==================== -->
+<div class="slide s2">
+  <div class="deco" style="width:350px;height:350px;top:-80px;left:-40px;background:radial-gradient(circle,rgba(59,130,246,.2),transparent 70%);"></div>
+
+  <div class="s2-left">
+    <div class="slide-tag white">시장 기회</div>
+
+    <!-- SVG Donut Chart -->
+    <div style="display:flex;justify-content:center;margin-bottom:4mm;">
+      <svg width="160" height="160" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="14"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="url(#g1)" stroke-width="14"
+          stroke-dasharray="95 144" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+        </defs>
+        <text x="50" y="46" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="sans-serif">$21B</text>
+        <text x="50" y="58" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="6" font-family="sans-serif">시장 규모</text>
+      </svg>
+    </div>
+
+    <!-- Mini ring stats -->
+    <div class="ring-stats">
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#10b981" stroke-width="5"
+            stroke-dasharray="66 22" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">+18%</div>
+          <div class="ring-stat-lbl">연간 성장률</div>
+        </div>
+      </div>
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#f59e0b" stroke-width="5"
+            stroke-dasharray="55 33" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">600K+</div>
+          <div class="ring-stat-lbl">연간 외국인 환자</div>
+        </div>
+      </div>
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#8b5cf6" stroke-width="5"
+            stroke-dasharray="44 44" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">Top 5</div>
+          <div class="ring-stat-lbl">러시아·CIS 송출국</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s2-right">
+    <div class="slide-tag blue">성장 데이터</div>
+    <h2 class="s2r-title">아시아 최고의 의료 —<br>이제 당신의 고객에게 연결하세요</h2>
+
+    <div class="growth-facts">
+      <div class="growth-item">
+        <div class="growth-num" style="color:#1d4ed8;">$21B</div>
+        <div class="growth-body">
+          <h5>한국 의료관광 시장 규모</h5>
+          <p>세계에서 가장 빠르게 성장하는 의료관광 목적지 중 하나. 2030년까지 $40B 돌파 예상.</p>
+        </div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-num" style="color:#047857;">18%</div>
+        <div class="growth-body">
+          <h5>연평균 성장률 (CAGR)</h5>
+          <p>글로벌 의료관광 시장 평균(8%)의 2배 이상 성장하며 독보적인 확장세를 유지.</p>
+        </div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-num" style="color:#7c3aed;">600K</div>
+        <div class="growth-body">
+          <h5>연간 외국인 환자 (명)</h5>
+          <p>러시아·CIS·동남아·중동에서 매년 60만 명 이상이 한국 치료를 위해 방문.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">02 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 4: PLATFORM 5 STEPS ==================== -->
+<div class="slide s4p">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;top:-120px;right:-80px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s4p-inner">
+    <div>
+      <div class="slide-tag blue">플랫폼 작동 방식</div>
+      <h2 style="font-size:23px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">접수부터 환자 귀국까지 — 5단계 완전 디지털 프로세스</h2>
+    </div>
+
+    <div class="roadmap-steps">
+      <!-- Diagonal connector SVG -->
+      <svg class="diag-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="diagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1d4ed8"/>
+            <stop offset="25%" stop-color="#10b981"/>
+            <stop offset="50%" stop-color="#f59e0b"/>
+            <stop offset="75%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#f43f5e"/>
+          </linearGradient>
+        </defs>
+        <polyline points="10,93 30,71 50,49 70,27 90,5" fill="none" stroke="url(#diagGrad)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="rm-step-v" style="margin-top:72mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);">1</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">🔍</div>
+          <div class="rm-title">병원 검색</div>
+          <div class="rm-desc">에이전시가 150+ 병원 중 최적의 병원과 진료과를 필터링하여 선택합니다</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:54mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#047857,#10b981);">2</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">📋</div>
+          <div class="rm-title">접수 신청</div>
+          <div class="rm-desc">환자 정보 + 의료 서류를 디지털 폼으로 한 번에 작성합니다</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:36mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#b45309,#f59e0b);">3</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">✅</div>
+          <div class="rm-title">병원 승인</div>
+          <div class="rm-desc">병원이 신청서를 검토하고 2–5일 내에 접수를 확인합니다</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:18mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#6d28d9,#8b5cf6);">4</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">✈️</div>
+          <div class="rm-title">동행 서비스</div>
+          <div class="rm-desc">에이전시가 비자, 교통, 숙박을 준비하고 환자를 현지에서 동행합니다</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:0;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#be123c,#f43f5e);">5</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">💳</div>
+          <div class="rm-title">커미션 지급</div>
+          <div class="rm-desc">치료 완료 후 에이전시는 환자 1인당 커미션을 자동으로 받습니다</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:3.5mm 5mm;margin-top:4mm;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:10.5px;color:#334155;font-weight:500;">전 과정에서 RBG 전담 매니저가 에이전시를 지원합니다</div>
+      <div style="display:flex;gap:6mm;">
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#0f172a;">5분</div><div style="font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">환자 등록</div></div>
+        <div style="width:1px;background:#e2e8f0;"></div>
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#0f172a;">2–5일</div><div style="font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">병원 확인</div></div>
+        <div style="width:1px;background:#e2e8f0;"></div>
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#0f172a;">24/7</div><div style="font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;">플랫폼 운영</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">03 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 5: PARTNER BENEFITS PART 1 ==================== -->
+<div class="slide s5b">
+  <div class="deco" style="width:300px;height:300px;top:-60px;right:-40px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s5b-inner">
+    <div>
+      <div class="slide-tag blue">파트너 혜택 1/2</div>
+      <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;">MediW 파트너로 시작하는 3가지 이유</h2>
+    </div>
+
+    <div class="bene-open">
+      <div class="bene-col">
+        <div class="bene-emoji">💰</div>
+        <div class="bene-stat blue">$0</div>
+        <div class="bene-title">가입비 없음</div>
+        <div class="bene-desc">플랫폼 등록, 온보딩 교육, 전담 매니저 배정 — 모두 무료. 수익이 날 때만 커미션이 발생합니다.</div>
+      </div>
+      <div class="bene-col">
+        <div class="bene-emoji">⚡</div>
+        <div class="bene-stat gold">5분</div>
+        <div class="bene-title">첫 환자 등록까지</div>
+        <div class="bene-desc">디지털 폼 하나로 완료. 기존에 2시간 걸리던 등록이 단 5분으로 단축됩니다.</div>
+      </div>
+      <div class="bene-col">
+        <div class="bene-emoji">🏥</div>
+        <div class="bene-stat green">150+</div>
+        <div class="bene-title">즉시 연결 가능한 병원</div>
+        <div class="bene-desc">삼성서울, 아산, 세브란스 등 한국 최고 병원 150곳 이상이 하나의 계정으로 연결됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">04 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 6: PARTNER BENEFITS PART 2 ==================== -->
+<div class="slide s6b">
+  <div class="deco" style="width:250px;height:250px;bottom:-40px;left:-30px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);"></div>
+
+  <div class="s6b-inner">
+    <div>
+      <div class="slide-tag blue">파트너 혜택 2/2</div>
+      <h2 style="font-size:21px;font-weight:800;color:#0f172a;letter-spacing:-.02em;">운영을 완전히 지원하는 플랫폼</h2>
+    </div>
+
+    <div class="bene6-list">
+      <div class="bene6-item">
+        <div class="bene6-ico">📄</div>
+        <div class="bene6-body">
+          <div class="bene6-title">의료 서류 관리</div>
+          <div class="bene6-desc">CT, MRI, 검사 결과를 플랫폼에서 직접 업로드. 메신저 불필요, 분실 없음.</div>
+        </div>
+      </div>
+      <div class="bene6-item">
+        <div class="bene6-ico">🌐</div>
+        <div class="bene6-body">
+          <div class="bene6-title">5개 언어 인터페이스</div>
+          <div class="bene6-desc">러시아어, 영어, 한국어, 일본어, 중국어. 플랫폼이 당신의 언어로 말합니다.</div>
+        </div>
+      </div>
+      <div class="bene6-item">
+        <div class="bene6-ico">🎓</div>
+        <div class="bene6-body">
+          <div class="bene6-title">전담 지원 & 교육</div>
+          <div class="bene6-desc">온보딩 교육, 전 과정 RBG 지원, 전담 매니저 배정 — 혼자 해결할 필요 없습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Income Ladder -->
+    <div class="income-ladder" style="margin-top:4mm;">
+      <div class="ladder-step">
+        <div class="ladder-patients">수납 $2,000</div>
+        <div class="ladder-earn">$400</div>
+        <div class="ladder-sub">20% 커미션</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">수납 $5,000</div>
+        <div class="ladder-earn">$1,000</div>
+        <div class="ladder-sub">20% 커미션</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">수납 $10,000</div>
+        <div class="ladder-earn green">$2,000</div>
+        <div class="ladder-sub">20% 커미션</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">수납 $20,000</div>
+        <div class="ladder-earn green">$4,000</div>
+        <div class="ladder-sub">20% 커미션</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">05 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 7: PARTNER HOSPITALS ==================== -->
+<div class="slide s7h">
+  <div class="deco" style="width:300px;height:300px;top:-60px;left:-50px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s7h-inner">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="slide-tag blue">파트너 병원</div>
+        <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">한국 최고의 병원들 — 하나의 플랫폼에서</h2>
+      </div>
+      <span style="font-size:10px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;padding:4px 10px;border-radius:6px;font-weight:600;">150+ 병원</span>
+    </div>
+
+    <div class="s7h-body">
+      <div class="hosp-col">
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#f59e0b;"><span style="background:rgba(245,158,11,.1);padding:2px 7px;border-radius:4px;">🏆 한국 1위</span></div>
+          <div class="hosp-name">Samsung Seoul Hospital</div>
+          <div class="hosp-name-sub">삼성서울병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>종양학, 심장내과, 신경외과</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>JCI 인증 · 국제진료센터</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>러시아어 가능 직원 배치</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(59,130,246,.07);color:#1d4ed8;">MediW로 즉시 연결 가능</div>
+        </div>
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#8b5cf6;"><span style="background:rgba(139,92,246,.1);padding:2px 7px;border-radius:4px;">⭐ 연구 분야 최상위</span></div>
+          <div class="hosp-name">Asan Medical Center</div>
+          <div class="hosp-name-sub">서울아산병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>장기이식, 간질환</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>아시아 최대 의료센터 2,700병상</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>80개 이상 진료과</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(139,92,246,.07);color:#6d28d9;">MediW로 즉시 연결 가능</div>
+        </div>
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#10b981;"><span style="background:rgba(16,185,129,.1);padding:2px 7px;border-radius:4px;">🎓 한국 최초의 병원</span></div>
+          <div class="hosp-name">Severance Hospital</div>
+          <div class="hosp-name-sub">세브란스병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>종양학, 생식의학, 로봇수술</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>연세대 — 140년 역사</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>국제진료센터</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(16,185,129,.07);color:#047857;">MediW로 즉시 연결 가능</div>
+        </div>
+      </div>
+
+      <!-- Specialty Map -->
+      <div class="spec-map">
+        <div class="spec-map-title">전문 진료 분야 맵</div>
+        <div class="spec-grid">
+          <div class="spec-badge" style="border-color:rgba(239,68,68,.3);">
+            <div class="spec-ico">🎗️</div>
+            <div class="spec-lbl">종양학</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(239,68,68,.3);">
+            <div class="spec-ico">❤️</div>
+            <div class="spec-lbl">심장내과</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(255,255,255,.3);">
+            <div class="spec-ico">🦴</div>
+            <div class="spec-lbl">정형외과</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(245,158,11,.3);">
+            <div class="spec-ico">🦷</div>
+            <div class="spec-lbl">치과</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(236,72,153,.3);">
+            <div class="spec-ico">💆</div>
+            <div class="spec-lbl">미용성형</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(16,185,129,.3);">
+            <div class="spec-ico">🍼</div>
+            <div class="spec-lbl">생식의학</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(139,92,246,.3);">
+            <div class="spec-ico">🧠</div>
+            <div class="spec-lbl">신경외과</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(6,182,212,.3);">
+            <div class="spec-ico">🫀</div>
+            <div class="spec-lbl">흉부외과</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(245,158,11,.3);">
+            <div class="spec-ico">👁️</div>
+            <div class="spec-lbl">안과</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">06 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 8: SPECIALTY NETWORK ==================== -->
+<div class="slide s8n">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;bottom:-100px;right:-60px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s8n-inner">
+    <div>
+      <div class="slide-tag blue">전문 분야 네트워크</div>
+      <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">모든 분야의 전문의가 대기 중입니다</h2>
+    </div>
+
+    <div class="specialty-fullgrid">
+      <div class="sp-full-card" style="border-color:rgba(239,68,68,.2);">
+        <div class="sp-full-ico">🎗️</div>
+        <div class="sp-full-title">종양학</div>
+        <div class="sp-full-sub">암 진단·치료·방사선</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(239,68,68,.2);">
+        <div class="sp-full-ico">❤️</div>
+        <div class="sp-full-title">심장내과</div>
+        <div class="sp-full-sub">심혈관·스텐트·수술</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(59,130,246,.2);">
+        <div class="sp-full-ico">🦴</div>
+        <div class="sp-full-title">정형외과</div>
+        <div class="sp-full-sub">척추·관절·인공관절</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(245,158,11,.2);">
+        <div class="sp-full-ico">🦷</div>
+        <div class="sp-full-title">치과</div>
+        <div class="sp-full-sub">임플란트·교정·미용</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(236,72,153,.2);">
+        <div class="sp-full-ico">💆</div>
+        <div class="sp-full-title">미용성형</div>
+        <div class="sp-full-sub">성형외과·피부과</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(16,185,129,.2);">
+        <div class="sp-full-ico">🍼</div>
+        <div class="sp-full-title">생식의학</div>
+        <div class="sp-full-sub">IVF·불임치료·산부인과</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(139,92,246,.2);">
+        <div class="sp-full-ico">🧠</div>
+        <div class="sp-full-title">신경외과</div>
+        <div class="sp-full-sub">뇌·척수·신경계 수술</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(6,182,212,.2);">
+        <div class="sp-full-ico">🫀</div>
+        <div class="sp-full-title">흉부외과</div>
+        <div class="sp-full-sub">폐·심장·대동맥 수술</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(245,158,11,.2);">
+        <div class="sp-full-ico">👁️</div>
+        <div class="sp-full-title">안과</div>
+        <div class="sp-full-sub">라식·백내장·망막</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(59,130,246,.2);">
+        <div class="sp-full-ico">🫁</div>
+        <div class="sp-full-title">호흡기내과</div>
+        <div class="sp-full-sub">폐·천식·COPD</div>
+      </div>
+    </div>
+
+    <div class="network-stats">
+      <div class="net-stat">
+        <div class="net-stat-num">80<span style="font-size:14px;color:#64748b;">+</span></div>
+        <div class="net-stat-lbl">전문 진료과</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">150<span style="font-size:14px;color:#64748b;">+</span></div>
+        <div class="net-stat-lbl">파트너 병원</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">3–7<span style="font-size:14px;color:#64748b;">일</span></div>
+        <div class="net-stat-lbl">전문의 예약까지</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">JCI</div>
+        <div class="net-stat-lbl">글로벌 인증 병원</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">98<span style="font-size:14px;color:#64748b;">%</span></div>
+        <div class="net-stat-lbl">환자 만족도</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">07 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 9: HOW TO JOIN (ROADMAP) ==================== -->
+<div class="slide s9j">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;bottom:-100px;left:-60px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);"></div>
+
+  <div class="s9j-inner">
+    <div>
+      <div class="slide-tag green">파트너가 되는 방법</div>
+      <h2 style="font-size:23px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">4단계 무료 등록 로드맵</h2>
+    </div>
+
+    <div class="roadmap">
+      <div class="rm-step">
+        <div class="rm-circle">1</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">📝</div>
+          <div class="rm-card-title">플랫폼 등록</div>
+          <div class="rm-card-desc">mediw.vercel.app에서 에이전시 프로필 작성 — 무료, 10분 소요</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#059669,#10b981);">2</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">📁</div>
+          <div class="rm-card-title">서류 인증</div>
+          <div class="rm-card-desc">사업자등록증 업로드. RBG 검토 후 파트너십 확인</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#047857,#34d399);">3</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">🎓</div>
+          <div class="rm-card-title">교육 & 온보딩</div>
+          <div class="rm-card-desc">전담 매니저가 플랫폼 사용법을 온라인으로 교육합니다</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#065f46,#10b981);">4</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">🚀</div>
+          <div class="rm-card-title">첫 번째 환자</div>
+          <div class="rm-card-desc">첫 신청서 제출 후 RBG 전폭 지원으로 수익 창출 시작</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="join-cta-box">
+      <div>
+        <div class="join-cta-label">지금 바로 시작하세요</div>
+        <div class="join-cta-val">mediw.vercel.app → 회원가입 → 에이전시</div>
+      </div>
+      <div class="join-cta-right">
+        <div style="text-align:center;">
+          <div class="join-kpi-num">$0</div>
+          <div class="join-kpi-label">가입 비용</div>
+        </div>
+        <div style="width:1px;height:30px;background:#e2e8f0;align-self:center;"></div>
+        <div style="text-align:center;">
+          <div class="join-kpi-num">10분</div>
+          <div class="join-kpi-label">등록 시간</div>
+        </div>
+        <div style="width:1px;height:30px;background:#e2e8f0;align-self:center;"></div>
+        <div style="text-align:center;">
+          <div class="join-kpi-num">24/7</div>
+          <div class="join-kpi-label">RBG 지원</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">08 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 10: BEFORE / AFTER ==================== -->
+<div class="slide s10">
+  <div class="deco" style="width:300px;height:300px;top:-60px;right:200px;background:radial-gradient(circle,rgba(239,68,68,.12),transparent 70%);"></div>
+
+  <div class="s10-left">
+    <div class="ba-label before">✕ MediW 이전</div>
+    <h3 class="ba-h3 before">수기 작업, 오류,<br>끝없는 기다림</h3>
+    <ul class="ba-list">
+      <li class="ba-item before">
+        <div class="ba-ico before">📋</div>
+        <div>
+          <div class="ba-item-title before">수기 환자 등록</div>
+          <div class="ba-item-desc before">엑셀, 메신저, 종이 서류로 환자 정보를 일일이 입력</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">📎</div>
+        <div>
+          <div class="ba-item-title before">서류 전달은 카톡·이메일</div>
+          <div class="ba-item-desc before">CT, MRI, 검사 결과를 메신저로 전송 — 파일 분실 잦음</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">📞</div>
+        <div>
+          <div class="ba-item-title before">병원에 반복 연락</div>
+          <div class="ba-item-desc before">접수 상태 확인하려면 전화 또는 이메일로만 가능</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">❓</div>
+        <div>
+          <div class="ba-item-title before">케이스 상태 파악 불가</div>
+          <div class="ba-item-desc before">진행 상황 불투명 — 환자도 에이전시도 답답함</div>
+        </div>
+      </li>
+    </ul>
+    <div class="ba-time-row">
+      <div class="ba-time-box before">
+        <div class="ba-time-ico">⏱️</div>
+        <div>
+          <div class="ba-time-label">평균 처리 기간</div>
+          <div class="ba-time-val before">2–4주</div>
+          <div class="ba-time-sub before">병원 확인까지</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ba-connector">→</div>
+
+  <div class="s10-right">
+    <div class="ba-label after">✓ MediW 도입 후</div>
+    <h3 class="ba-h3 after">디지털 프로세스,<br>최대한 빠르게</h3>
+    <ul class="ba-list">
+      <li class="ba-item after">
+        <div class="ba-ico after">⚡</div>
+        <div>
+          <div class="ba-item-title after">5분 만에 환자 등록 완료</div>
+          <div class="ba-item-desc after">디지털 폼으로 한 번 입력하면 모든 정보가 저장됨</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">☁️</div>
+        <div>
+          <div class="ba-item-title after">플랫폼에서 서류 업로드</div>
+          <div class="ba-item-desc after">CT, MRI, 검사 결과를 케이스에 직접 업로드 — 분실 없음</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">🔔</div>
+        <div>
+          <div class="ba-item-title after">자동 알림으로 상태 확인</div>
+          <div class="ba-item-desc after">케이스 상태가 실시간 업데이트 — 전화 없이도 파악 가능</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">✅</div>
+        <div>
+          <div class="ba-item-title after">완전한 투명성</div>
+          <div class="ba-item-desc after">케이스 이력, 서류, 병원 결정 — 모두 한 화면에서 확인</div>
+        </div>
+      </li>
+    </ul>
+    <div class="ba-time-row">
+      <div class="ba-time-box after">
+        <div class="ba-time-ico">🚀</div>
+        <div>
+          <div class="ba-time-label after">평균 처리 기간</div>
+          <div class="ba-time-val after">2–5일</div>
+          <div class="ba-time-sub after">병원 답변까지</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">09 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 11: COMMISSION & SAVINGS ==================== -->
+<div class="slide s11">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;top:-100px;right:-60px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);"></div>
+
+  <div class="s11-inner">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="slide-tag green">파트너 수익</div>
+        <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">MediW 파트너 커미션 구조</h2>
+      </div>
+      <span style="font-size:9.5px;background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.15);padding:4px 10px;border-radius:6px;font-weight:700;">수납액 MAX 20% · MediW 계약 대행</span>
+    </div>
+
+    <div class="s11-cols">
+      <!-- Left: Commission structure -->
+      <div class="s11-col">
+        <div class="s11-col-title">커미션 구조</div>
+
+        <div style="text-align:center;padding:2mm 0 1mm;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:4px;">최대 커미션</div>
+          <div class="comm-big-num">20%</div>
+          <div class="comm-big-sub">환자 총 수납액 기준</div>
+        </div>
+
+        <div class="comm-flow-row">
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">✈️</div>
+            <div class="comm-flow-step-lbl">입국</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">🏥</div>
+            <div class="comm-flow-step-lbl">진료</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">💳</div>
+            <div class="comm-flow-step-lbl">수납</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">💰</div>
+            <div class="comm-flow-step-lbl">커미션 정산</div>
+          </div>
+        </div>
+
+        <div class="comm-example-box">
+          <div style="font-size:28px;flex-shrink:0;">🧮</div>
+          <div>
+            <div class="comm-ex-lbl">계산 예시</div>
+            <div class="comm-ex-calc">수납 $5,000 → 커미션 <span style="color:#34d399;font-size:16px;">$1,000</span></div>
+          </div>
+        </div>
+
+        <div class="comm-delegate">
+          <div class="comm-del-lbl">MediW 계약 대행</div>
+          <div class="comm-del-text">입국부터 수납까지 MediW가 병원과 계약을 대행합니다. 에이전시는 환자 연결에만 집중하면 됩니다.</div>
+        </div>
+      </div>
+
+      <div class="s11-divider-v"></div>
+
+      <!-- Right: Time & cost savings -->
+      <div class="s11-col">
+        <div class="s11-col-title">시간 및 비용 절감 효과</div>
+        <div class="saving-block">
+          <div>
+            <div class="saving-item-label">환자 등록 시간 <span class="saving-badge">−95% 절감</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">이전</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:90%;"><span class="saving-bar-num">~2시간</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:8%;"></div></div>
+                <span style="font-size:9px;color:rgba(16,185,129,.8);font-weight:700;margin-left:4px;">5분</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">병원 확인까지 소요 기간 <span class="saving-badge">−80% 절감</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">이전</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:100%;"><span class="saving-bar-num">2–4주</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:20%;"><span class="saving-bar-num">2–5일</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">병원 커뮤니케이션 횟수 <span class="saving-badge">−90% 절감</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">이전</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:95%;"><span class="saving-bar-num">50회+ 전화·이메일</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:10%;"><span class="saving-bar-num">자동</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">운영 인력 비용 <span class="saving-badge">대폭 절감</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">이전</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:85%;"><span class="saving-bar-num">담당 직원 N시간/건</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:18%;"><span class="saving-bar-num">플랫폼 24/7</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:3.5mm 4mm;margin-top:auto;">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#60a5fa;margin-bottom:3px;">비즈니스 임팩트</div>
+          <div style="font-size:11.5px;color:#0f172a;font-weight:600;line-height:1.5;">수작업 감소 → 더 많은 환자 처리 → 더 높은 수익. MediW는 추가 비용 없이 비즈니스를 확장시킵니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">10 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 12: CLOSING ==================== -->
+<div class="slide s12">
+  <div class="deco" style="width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(59,130,246,.2),transparent 70%);"></div>
+  <div class="deco" style="width:350px;height:350px;bottom:-120px;left:-60px;background:radial-gradient(circle,rgba(96,165,250,.15),transparent 70%);"></div>
+  <div class="deco-grid"></div>
+
+  <div class="s12-inner">
+    <div class="s12-tag">함께하세요</div>
+    <h1 class="s12-h1">한국 의료와 함께<br><em>성장하세요</em></h1>
+    <p class="s12-sub">당신의 고객은 최고의 치료를 받을 자격이 있습니다. MediW가 도구·병원·지원을 제공합니다 — 당신은 결과를 만들어내면 됩니다.</p>
+
+    <div class="s12-kpi-row">
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">150<small>+</small></div>
+        <div class="s12-kpi-label">파트너 병원</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">23</div>
+        <div class="s12-kpi-label">개국</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">$0</div>
+        <div class="s12-kpi-label">가입 비용</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">98<small>%</small></div>
+        <div class="s12-kpi-label">환자 만족도</div>
+      </div>
+    </div>
+
+    <div class="s12-contact">
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">플랫폼</div>
+        <div class="s12-contact-val">mediw.vercel.app</div>
+      </div>
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">운영사</div>
+        <div class="s12-contact-val">RBG · rbglobal.kr</div>
+      </div>
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">파트너 문의</div>
+        <div class="s12-contact-val">partner@rbglobal.kr</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s12-footer">
+    <span>© 2026 MediW Platform</span>
+    <span class="s12-footer-div"></span>
+    <span>Operated by RBG</span>
+    <span class="s12-footer-div"></span>
+    <span>대외비 · 파트너 전용</span>
+    <span class="s12-footer-div"></span>
+    <span>12 / 12</span>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <button class="tb-btn tb-dark" onclick="document.querySelector('.slide').scrollIntoView()">← 슬라이드 1</button>
+  <button class="tb-btn tb-pdf" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    PDF 저장
+  </button>
+</div>
+</body>
+</html>

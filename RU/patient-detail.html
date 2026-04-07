@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Информация о пациенте - MediW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;background:#f5f7fa;color:#1a1a2e;min-height:100vh;}
+    .app{display:flex;height:100vh;overflow:hidden;}
+    .sidebar{width:240px;background:#fff;border-right:1px solid #e8ecf1;display:flex;flex-direction:column;flex-shrink:0;}
+    .sidebar-logo{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:.625rem;border-bottom:1px solid #e8ecf1;}
+    .sidebar-logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.875rem;}
+    .sidebar-logo-text{font-size:1.125rem;font-weight:700;color:#1a1a2e;}
+    .user-card{margin:1rem 1rem 0;padding:1rem;border:1px solid #e8ecf1;border-radius:.75rem;display:flex;align-items:center;gap:.75rem;}
+    .user-avatar{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;}
+    .user-avatar svg{width:1.25rem;height:1.25rem;color:#2563eb;}
+    .user-name{font-size:.875rem;font-weight:600;color:#1a1a2e;}
+    .user-role-label{font-size:.75rem;color:#3391ff;font-weight:500;}
+    .type-switcher{display:flex;gap:.25rem;margin:1rem 1rem 0;padding:.25rem;background:#f0f4f8;border-radius:.5rem;}
+    .type-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.5rem .25rem;border:none;border-radius:.375rem;background:transparent;cursor:pointer;transition:all .2s;font-size:.625rem;font-weight:500;color:#999;font-family:inherit;}
+    .type-btn svg{width:1.125rem;height:1.125rem;color:#999;transition:color .2s;}
+    .type-btn:hover{background:#e2e8f0;}
+    .type-btn.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#3391ff;}
+    .type-btn.active svg{color:#3391ff;}
+    .nav-menu{flex:1;padding:1rem 0;margin-top:.5rem;}
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;cursor:pointer;transition:all .15s;color:#8896a6;font-size:.875rem;font-weight:500;border-left:3px solid transparent;text-decoration:none;}
+    .nav-item:hover{background:#f5f7fa;color:#1a1a2e;}
+    .nav-item.active{background:rgba(51,145,255,.06);color:#3391ff;border-left-color:#3391ff;font-weight:600;}
+    .nav-item svg{width:1.25rem;height:1.25rem;flex-shrink:0;}
+    .sidebar-footer{padding:1rem 1.5rem;border-top:1px solid #e8ecf1;}
+    .logout-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.625rem 0;border:none;background:none;cursor:pointer;color:#8896a6;font-size:.875rem;font-weight:500;transition:color .15s;font-family:inherit;}
+    .logout-btn:hover{color:#e74c3c;}
+    .logout-btn svg{width:1.25rem;height:1.25rem;}
+
+    .main{flex:1;overflow-y:auto;padding:0;background:#fff;}
+    .main-inner{max-width:860px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+
+    /* Back link */
+    .back-link{display:inline-flex;align-items:center;gap:.375rem;font-size:.8125rem;font-weight:500;color:#94a3b8;text-decoration:none;margin-bottom:1.5rem;transition:color .15s;}
+    .back-link:hover{color:#3391ff;}
+    .back-link svg{width:1rem;height:1rem;}
+
+    /* Patient Header */
+    .patient-header{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:1.5rem;border-bottom:1px solid #f1f5f9;margin-bottom:2rem;}
+    .ph-left{display:flex;align-items:center;gap:1rem;}
+    .ph-avatar{width:3rem;height:3rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;color:#fff;background:#3391ff;flex-shrink:0;}
+    .ph-name{font-size:1.375rem;font-weight:700;color:#1a1a2e;margin-bottom:.25rem;}
+    .ph-meta{font-size:.875rem;color:#94a3b8;}
+    .status{display:inline-flex;align-items:center;padding:.3125rem .75rem;border-radius:2rem;font-size:.75rem;font-weight:600;white-space:nowrap;}
+    .status.submitted{background:#eff6ff;color:#3391ff;}
+    .status.reviewing{background:#fef3c7;color:#b45309;}
+    .status.request{background:#fef2f2;color:#dc2626;}
+    .status.hospital-approved{background:#faf5ff;color:#7c3aed;}
+    .status.confirming{background:#fff7ed;color:#c2410c;}
+    .status.confirmed{background:#d1fae5;color:#047857;}
+    .status.withdrawn{background:#f1f5f9;color:#94a3b8;text-decoration:line-through;}
+
+    /* Approval Flow */
+    .approval-flow{margin-bottom:2rem;border:1px solid #f1f5f9;border-radius:.75rem;padding:1.5rem;}
+    .approval-flow-title{font-size:.9375rem;font-weight:700;color:#1a1a2e;margin-bottom:1.25rem;}
+    .flow-steps{display:flex;align-items:flex-start;gap:0;position:relative;}
+    .flow-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;}
+    .flow-dot{width:2rem;height:2rem;border-radius:50%;border:2px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem;transition:all .2s;}
+    .flow-dot svg{width:1rem;height:1rem;color:#cbd5e1;}
+    .flow-step.done .flow-dot{background:#10b981;border-color:#10b981;}
+    .flow-step.done .flow-dot svg{color:#fff;}
+    .flow-step.active .flow-dot{background:#3391ff;border-color:#3391ff;box-shadow:0 0 0 4px rgba(51,145,255,.15);}
+    .flow-step.active .flow-dot svg{color:#fff;}
+    .flow-step.rejected .flow-dot{background:#ef4444;border-color:#ef4444;}
+    .flow-step.rejected .flow-dot svg{color:#fff;}
+    .flow-label{font-size:.6875rem;font-weight:600;color:#94a3b8;line-height:1.3;}
+    .flow-step.done .flow-label{color:#10b981;}
+    .flow-step.active .flow-label{color:#3391ff;}
+    .flow-step.rejected .flow-label{color:#ef4444;}
+    .flow-date{font-size:.625rem;color:#cbd5e1;margin-top:.125rem;}
+    .flow-line{position:absolute;top:1rem;left:0;right:0;height:2px;background:#e2e8f0;z-index:0;}
+    .flow-line-fill{height:100%;background:#10b981;transition:width .3s;}
+
+    /* Action Box */
+    .action-box{border:1px solid #e2e8f0;border-radius:.75rem;padding:1.5rem;margin-bottom:2rem;background:#fafbfc;}
+    .action-box.confirm-box{border-color:#7c3aed;background:#faf5ff;}
+    .action-box-title{font-size:.9375rem;font-weight:700;color:#1a1a2e;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+    .action-box-desc{font-size:.8125rem;color:#64748b;margin-bottom:1rem;line-height:1.5;}
+    .action-btns{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .btn-confirm{background:#7c3aed;color:#fff;padding:.625rem 1.5rem;}
+    .btn-confirm:hover{background:#6d28d9;}
+    .btn-withdraw{background:#fff;color:#ef4444;border:1px solid #fecaca;padding:.625rem 1.5rem;}
+    .btn-withdraw:hover{background:#fef2f2;}
+    .btn-outline{background:#fff;color:#64748b;border:1px solid #e2e8f0;padding:.625rem 1.5rem;}
+    .btn-outline:hover{background:#f8fafc;color:#1a1a2e;}
+
+    /* Request Alert */
+    .request-alert{background:#fef2f2;border:1px solid #fecaca;border-radius:.75rem;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+    .request-alert-title{display:flex;align-items:center;gap:.5rem;font-size:.9375rem;font-weight:700;color:#dc2626;margin-bottom:.75rem;}
+    .request-alert-title svg{width:1.125rem;height:1.125rem;}
+    .request-item{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 0;border-top:1px solid #fee2e2;}
+    .request-item:first-of-type{border-top:none;padding-top:0;}
+    .request-num{width:1.375rem;height:1.375rem;border-radius:50%;background:#dc2626;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.625rem;font-weight:700;flex-shrink:0;margin-top:.125rem;}
+    .request-text{font-size:.875rem;color:#475569;line-height:1.5;}
+    .request-text strong{color:#1a1a2e;}
+    .request-date{font-size:.75rem;color:#94a3b8;margin-top:.25rem;}
+    .request-actions{margin-top:1rem;display:flex;gap:.75rem;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .15s;padding:.6875rem 1.25rem;font-family:inherit;text-decoration:none;}
+    .btn-danger{background:#dc2626;color:#fff;}
+    .btn-danger:hover{background:#b91c1c;}
+    .btn-ghost{background:none;color:#64748b;padding:.6875rem .75rem;}
+    .btn-ghost:hover{color:#1a1a2e;}
+    .btn-primary{background:#3391ff;color:#fff;}
+    .btn-primary:hover{background:#2577e0;}
+
+    /* Info Cards */
+    .info-cards{display:flex;flex-direction:column;gap:0;}
+    .info-card{border-bottom:1px solid #f1f5f9;}
+    .info-card:last-child{border-bottom:none;}
+    .info-card-header{display:flex;align-items:center;justify-content:space-between;padding:1.125rem 0;cursor:pointer;transition:color .15s;}
+    .info-card-header:hover .ic-title{color:#3391ff;}
+    .ic-title{font-size:.9375rem;font-weight:600;color:#1a1a2e;transition:color .15s;}
+    .ic-toggle{width:1.25rem;height:1.25rem;color:#cbd5e1;transition:transform .2s;}
+    .info-card.open .ic-toggle{transform:rotate(180deg);color:#3391ff;}
+    .ic-body{display:none;padding:0 0 1.25rem;animation:fadeIn .2s ease;}
+    .info-card.open .ic-body{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Detail Grid */
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem 2rem;}
+    .detail-item{display:flex;flex-direction:column;gap:.25rem;padding:.5rem 0;}
+    .detail-item.full{grid-column:1/-1;}
+    .di-label{font-size:.75rem;font-weight:500;color:#94a3b8;}
+    .di-value{font-size:.875rem;font-weight:500;color:#1a1a2e;}
+    .di-value.empty{color:#cbd5e1;font-style:italic;}
+
+    /* Tags */
+    .di-tags{display:flex;flex-wrap:wrap;gap:.375rem;}
+    .di-tag{padding:.25rem .625rem;border-radius:2rem;font-size:.6875rem;font-weight:600;background:#eff6ff;color:#3391ff;}
+    .di-tag.green{background:#d1fae5;color:#047857;}
+
+    /* Upload list */
+    .upload-list{display:flex;flex-direction:column;gap:.5rem;}
+    .upload-file{display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;background:#f8fafc;border-radius:.5rem;font-size:.8125rem;color:#475569;}
+    .upload-file svg{width:1rem;height:1rem;color:#3391ff;flex-shrink:0;}
+
+    /* Mobile */
+    .mobile-header{display:none;padding:1rem;background:#fff;border-bottom:1px solid #e8ecf1;align-items:center;justify-content:space-between;}
+    .mobile-menu-btn{width:2.25rem;height:2.25rem;border:1px solid #e8ecf1;border-radius:.5rem;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .mobile-menu-btn svg{width:1.25rem;height:1.25rem;color:#64748b;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:99;}
+    @media(max-width:768px){
+      .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;transition:left .3s;}
+      .sidebar.open{left:0;}.sidebar-overlay.show{display:block;}
+      .mobile-header{display:flex;}.main-inner{padding:1.5rem 1rem 3rem;}
+      .detail-grid{grid-template-columns:1fr;}.patient-header{flex-direction:column;gap:1rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div style="font-weight:700;color:#3391ff;">MediW</div>
+    <div style="width:2.25rem;"></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-icon">M</div><div class="sidebar-logo-text">MediW</div></div>
+      <div class="user-card"><div class="user-avatar"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><div class="user-name">Ким Минсу</div><div class="user-role-label">Агентство</div></div></div>
+      <div class="type-switcher">
+        <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>Пациент</span></button>
+        <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg><span>Медицинский специалист</span></button>
+        <button class="type-btn active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg><span>Агентство</span></button>
+      </div>
+      <nav class="nav-menu">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg><span>Панель управления</span></a>
+        <a href="profile.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg><span>Мой профиль</span></a>
+        <a href="patient-list.html" class="nav-item active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span>Управление пациентами</span></a>
+        <a href="hospitals.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg><span>Поиск больниц</span></a>
+        <a href="#" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Настройки</span></a>
+      </nav>
+      <div class="sidebar-footer"><button class="logout-btn" onclick="location.href='login.html'"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg><span>Выйти</span></button></div>
+    </aside>
+
+    <main class="main">
+      <div class="main-inner" id="content"></div>
+    </main>
+  </div>
+
+  <script>
+    // Demo patient data
+    const patients = {
+      1: {name:'Иван Петров',country:'Россия',dept:'Ортопедия',status:'request',statusText:'Запрос документов',date:'2026-03-17',hospital:'Больница Самсунг Сеул',
+        step1:{name:'Иван Петров',nationality:'Россия',phone:'+7-915-123-4567',email:'ivan.petrov@mail.ru'},
+        step2:{diagnosis:'Разрыв передней крестообразной связки левого колена',hospital_local:'Moscow City Hospital #31',treatment:'Физиотерапия',meds:'Ibuprofen 400mg, 2 раза в день',diseases:['Гипертония'],allergies:'Нет',visitDate:'2026-04-15',stay:'2-4 недели',concierge:['Трансфер из аэропорта','Бронирование жилья','Услуги переводчика'],files:['Diagnosis_Report.pdf','MRI_left_knee.dcm','Blood_Test.pdf']},
+        requests:[
+          {text:'<strong>Дополнительная загрузка МРТ</strong> — Необходима свежая МРТ левого колена (не старше 3 месяцев). Имеющийся файл датирован 2024 годом.',date:'2026-03-17 14:30'},
+          {text:'<strong>Результаты анализа крови</strong> — Необходимы результаты анализа крови, включая CBC, ESR, CRP.',date:'2026-03-17 14:30'}
+        ],
+        flow:{submitted:'2026-03-17',reviewing:'2026-03-17',request:'2026-03-17'}},
+      2: {name:'Мария Иванова',country:'Россия',dept:'Онкология',status:'confirmed',statusText:'Окончательно подтверждено',date:'2026-03-16',hospital:'Больница Асан Сеул',
+        step1:{name:'Мария Иванова',nationality:'Россия',phone:'+7-916-987-6543',email:'m.ivanova@yandex.ru'},
+        step2:{diagnosis:'Рак молочной железы 2 стадии (Stage II Breast Cancer)',hospital_local:'National Cancer Center, Moscow',treatment:'Химиотерапия завершена',meds:'Tamoxifen 20mg, 1 раз в день',diseases:['Нет'],allergies:'Пенициллин',visitDate:'2026-04-20',stay:'1-3 месяца',concierge:['Трансфер из аэропорта','Транспортный сервис','Бронирование жилья','Услуги переводчика'],files:['Diagnosis_Report.pdf','CT_chest.dcm','Pathology_Report.pdf','Prescription.pdf']},
+        requests:[],
+        flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-13',confirmed:'2026-03-16'}},
+      3: {name:'Алексей Козлов',country:'Казахстан',dept:'Кардиология',status:'confirming',statusText:'Ожидание подтверждения',date:'2026-03-15',hospital:'Больница Сеульского университета',
+        step1:{name:'Алексей Козлов',nationality:'Казахстан',phone:'+7-771-555-0123',email:'a.kozlov@gmail.com'},
+        step2:{diagnosis:'Стеноз коронарных артерий (Coronary Artery Stenosis)',hospital_local:'National Research Center, Almaty',treatment:'Медикаментозная терапия',meds:'Aspirin 100mg, Atorvastatin 40mg',diseases:['Гипертония','Диабет'],allergies:'Нет',visitDate:'2026-05-01',stay:'2-4 недели',concierge:['Трансфер из аэропорта','Услуги переводчика'],files:['Diagnosis_Report.pdf','CT_coronary.dcm','Blood_Test.pdf','ECG_Report.pdf']},
+        requests:[],
+        flow:{submitted:'2026-03-10',reviewing:'2026-03-11',hospitalApproved:'2026-03-14',confirming:'2026-03-15'}},
+      6: {name:'田中太郎',country:'Япония',dept:'Пластическая хирургия',status:'hospital-approved',statusText:'Одобрено больницей',date:'2026-03-14',hospital:'Больница Каннам Северанс',
+        step1:{name:'田中太郎',nationality:'Япония',phone:'+81-90-1234-5678',email:'tanaka@gmail.com'},
+        step2:{diagnosis:'Коррекция асимметрии лица',hospital_local:'Tokyo University Hospital',treatment:'Нет',meds:'Нет',diseases:['Нет'],allergies:'Нет',visitDate:'2026-05-10',stay:'1-2 недели',concierge:['Трансфер из аэропорта','Бронирование жилья'],files:['Diagnosis_Report.pdf','CT_face.dcm']},
+        requests:[],
+        flow:{submitted:'2026-03-08',reviewing:'2026-03-09',hospitalApproved:'2026-03-14'}},
+      17: {name:'Елена Попова',country:'Россия',dept:'Дерматология',status:'withdrawn',statusText:'Отозвано',date:'2026-03-08',hospital:'Больница Асан Сеул',
+        step1:{name:'Елена Попова',nationality:'Россия',phone:'+7-916-111-2233',email:'e.popova@mail.ru'},
+        step2:{diagnosis:'Хронический дерматит',hospital_local:'Dermatology Center, Moscow',treatment:'Лечение мазями',meds:'Hydrocortisone cream',diseases:['Нет'],allergies:'Нет',visitDate:'2026-04-01',stay:'1 неделя',concierge:['Услуги переводчика'],files:['Diagnosis_Report.pdf']},
+        requests:[],
+        flow:{submitted:'2026-03-04',reviewing:'2026-03-05',hospitalApproved:'2026-03-07',withdrawn:'2026-03-08'},
+        withdrawReason:'Отмена визита по личным обстоятельствам'},
+    };
+
+    function getPatientId() {
+      return parseInt(new URLSearchParams(location.search).get('id')) || 1;
+    }
+
+    // Flow step definitions
+    const flowDefs = [
+      {key:'submitted', label:'Приём завершён'},
+      {key:'reviewing', label:'На рассмотрении'},
+      {key:'hospitalApproved', label:'Одобрено больницей'},
+      {key:'confirming', label:'Окончательное подтверждение'},
+      {key:'confirmed', label:'Окончательно подтверждено'},
+    ];
+
+    function buildFlowHtml(p) {
+      const f = p.flow || {};
+      const isWithdrawn = p.status === 'withdrawn';
+      const isRequest = p.status === 'request';
+
+      // Determine which steps are done
+      let activeIdx = -1;
+      flowDefs.forEach((d,i) => { if (f[d.key]) activeIdx = i; });
+
+      // For request status, active is at reviewing (index 1)
+      if (isRequest) activeIdx = 1;
+
+      const fillPct = activeIdx >= 0 ? Math.min(((activeIdx) / (flowDefs.length - 1)) * 100, 100) : 0;
+
+      const steps = flowDefs.map((d,i) => {
+        let cls = '';
+        let icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>`;
+        const date = f[d.key] || '';
+
+        if (isWithdrawn && f.withdrawn && i >= activeIdx) {
+          if (i === activeIdx + 1 || (d.key === 'confirming' && f.hospitalApproved)) {
+            cls = 'rejected';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+          }
+        }
+
+        if (!cls) {
+          if (i < activeIdx || (i === activeIdx && (p.status === 'confirmed' || f[d.key]))) {
+            cls = 'done';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4.5 12.75l6 6 9-13.5"/></svg>`;
+          } else if (i === activeIdx) {
+            cls = 'active';
+            icon = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>`;
+          }
+        }
+
+        return `<div class="flow-step ${cls}"><div class="flow-dot">${icon}</div><div class="flow-label">${d.label}</div>${date ? `<div class="flow-date">${date}</div>` : ''}</div>`;
+      }).join('');
+
+      return `<div class="approval-flow">
+        <div class="approval-flow-title">Ход согласования</div>
+        <div style="position:relative;">
+          <div class="flow-line"><div class="flow-line-fill" style="width:${fillPct}%"></div></div>
+          <div class="flow-steps">${steps}</div>
+        </div>
+      </div>`;
+    }
+
+    function buildActionHtml(p, id) {
+      // Hospital approved -> patient/agency needs to confirm or withdraw
+      if (p.status === 'hospital-approved' || p.status === 'confirming') {
+        return `<div class="action-box confirm-box">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#7c3aed" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Больница одобрила заявку
+          </div>
+          <div class="action-box-desc">${p.hospital} одобрила приём пациента. Если вы хотите продолжить, нажмите <strong>Окончательное подтверждение</strong>. Если необходимо изменить расписание или отменить, вы можете отозвать заявку.</div>
+          <div class="action-btns">
+            <button class="btn btn-confirm" onclick="confirmPatient(${id})">Окончательное подтверждение</button>
+            <button class="btn btn-withdraw" onclick="withdrawPatient(${id})">Отозвать заявку</button>
+          </div>
+        </div>`;
+      }
+
+      // Confirmed -> show success
+      if (p.status === 'confirmed') {
+        return `<div class="action-box" style="border-color:#10b981;background:#f0fdf4;">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Обе стороны подтвердили — Окончательно подтверждено
+          </div>
+          <div class="action-box-desc">Больница и пациент/агентство подтвердили. Консьерж-сервис будет подготовлен в соответствии с графиком визита.</div>
+        </div>`;
+      }
+
+      // Withdrawn -> show reason
+      if (p.status === 'withdrawn') {
+        return `<div class="action-box" style="border-color:#fecaca;background:#fef2f2;">
+          <div class="action-box-title">
+            <svg width="18" height="18" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            Заявка отозвана
+          </div>
+          <div class="action-box-desc">${p.withdrawReason ? 'Причина: ' + p.withdrawReason : 'Заявка была отозвана пациентом или агентством.'}</div>
+        </div>`;
+      }
+
+      // Reviewing / submitted -> can withdraw
+      if (p.status === 'submitted' || p.status === 'reviewing') {
+        return `<div class="action-box">
+          <div class="action-box-title">Приём в процессе</div>
+          <div class="action-box-desc">Больница рассматривает документы. Если необходимо изменить расписание или отменить, вы можете отозвать заявку.</div>
+          <div class="action-btns">
+            <button class="btn btn-withdraw" onclick="withdrawPatient(${id})">Отозвать заявку</button>
+          </div>
+        </div>`;
+      }
+
+      return '';
+    }
+
+    function confirmPatient(id) {
+      if (confirm('Подтвердить окончательно? Больница получит уведомление об окончательном подтверждении.')) {
+        const p = patients[id];
+        p.status = 'confirmed';
+        p.statusText = 'Окончательно подтверждено';
+        p.flow.confirmed = new Date().toISOString().split('T')[0];
+        render();
+      }
+    }
+
+    function withdrawPatient(id) {
+      const reason = prompt('Укажите причину отзыва (необязательно):');
+      if (reason !== null) {
+        const p = patients[id];
+        p.status = 'withdrawn';
+        p.statusText = 'Отозвано';
+        p.flow.withdrawn = new Date().toISOString().split('T')[0];
+        p.withdrawReason = reason || '';
+        render();
+      }
+    }
+
+    function render() {
+      const id = getPatientId();
+      const p = patients[id];
+      if (!p) { document.getElementById('content').innerHTML = '<p>Пациент не найден.</p>'; return; }
+
+      const initials = p.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      const statusClass = p.status;
+
+      let requestHtml = '';
+      if (p.requests && p.requests.length > 0) {
+        const items = p.requests.map((r,i) => `<div class="request-item"><div class="request-num">${i+1}</div><div><div class="request-text">${r.text}</div><div class="request-date">${r.date}</div></div></div>`).join('');
+        requestHtml = `<div class="request-alert">
+          <div class="request-alert-title"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>Запрос дополнительных документов от больницы (${p.requests.length})</div>
+          ${items}
+          <div class="request-actions"><a href="patient-intake.html?id=${id}" class="btn btn-danger">Дополнить документы</a></div>
+        </div>`;
+      }
+
+      const flowHtml = buildFlowHtml(p);
+      const actionHtml = buildActionHtml(p, id);
+
+      const s1 = p.step1;
+      const s2 = p.step2;
+
+      const conciergeHtml = s2.concierge.map(c=>`<span class="di-tag green">${c}</span>`).join('');
+      const filesHtml = s2.files.map(f=>`<div class="upload-file"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>${f}</div>`).join('');
+      const diseaseTags = s2.diseases.map(d=>`<span class="di-tag">${d}</span>`).join('');
+
+      document.getElementById('content').innerHTML = `
+        <a href="patient-list.html" class="back-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>К списку пациентов</a>
+
+        <div class="patient-header">
+          <div class="ph-left">
+            <div class="ph-avatar">${initials}</div>
+            <div>
+              <div class="ph-name">${p.name}</div>
+              <div class="ph-meta">${p.country} · ${p.dept} · ${p.hospital} · ${p.date}</div>
+            </div>
+          </div>
+          <span class="status ${statusClass}">${p.statusText}</span>
+        </div>
+
+        ${flowHtml}
+        ${actionHtml}
+        ${requestHtml}
+
+        <div class="info-cards">
+          <div class="info-card open">
+            <div class="info-card-header" onclick="toggleCard(this)">
+              <span class="ic-title">Основная информация о пациенте</span>
+              <svg class="ic-toggle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </div>
+            <div class="ic-body">
+              <div class="detail-grid">
+                <div class="detail-item"><div class="di-label">Имя</div><div class="di-value">${s1.name}</div></div>
+                <div class="detail-item"><div class="di-label">Гражданство</div><div class="di-value">${s1.nationality}</div></div>
+                <div class="detail-item"><div class="di-label">Телефон</div><div class="di-value">${s1.phone}</div></div>
+                <div class="detail-item"><div class="di-label">Email</div><div class="di-value">${s1.email}</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+              <span class="ic-title">Запрос на лечение / Местный диагноз</span>
+              <svg class="ic-toggle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </div>
+            <div class="ic-body">
+              <div class="detail-grid">
+                <div class="detail-item"><div class="di-label">Желаемая больница</div><div class="di-value">${p.hospital}</div></div>
+                <div class="detail-item"><div class="di-label">Желаемое отделение</div><div class="di-value">${p.dept}</div></div>
+                <div class="detail-item full"><div class="di-label">Местный диагноз</div><div class="di-value">${s2.diagnosis}</div></div>
+                <div class="detail-item"><div class="di-label">Диагностическая больница</div><div class="di-value">${s2.hospital_local}</div></div>
+                <div class="detail-item"><div class="di-label">Текущее лечение</div><div class="di-value">${s2.treatment}</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+              <span class="ic-title">Анамнез / Препараты</span>
+              <svg class="ic-toggle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </div>
+            <div class="ic-body">
+              <div class="detail-grid">
+                <div class="detail-item"><div class="di-label">Сопутствующие заболевания</div><div class="di-tags">${diseaseTags}</div></div>
+                <div class="detail-item"><div class="di-label">Аллергии</div><div class="di-value">${s2.allergies}</div></div>
+                <div class="detail-item full"><div class="di-label">Принимаемые препараты</div><div class="di-value">${s2.meds}</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+              <span class="ic-title">Медицинские документы (${s2.files.length} файлов)</span>
+              <svg class="ic-toggle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </div>
+            <div class="ic-body">
+              <div class="upload-list">${filesHtml}</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+              <span class="ic-title">План визита / Консьерж-сервис</span>
+              <svg class="ic-toggle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+            </div>
+            <div class="ic-body">
+              <div class="detail-grid">
+                <div class="detail-item"><div class="di-label">Желаемая дата визита</div><div class="di-value">${s2.visitDate}</div></div>
+                <div class="detail-item"><div class="di-label">Ожидаемое пребывание</div><div class="di-value">${s2.stay}</div></div>
+                <div class="detail-item full"><div class="di-label">Консьерж-сервис</div><div class="di-tags">${conciergeHtml}</div></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function toggleCard(header) {
+      header.closest('.info-card').classList.toggle('open');
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
+    render();
+  </script>
+</body>
+</html>

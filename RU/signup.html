@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация - MediW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+    /* ===== THEME VARIABLES ===== */
+    :root{
+      --transition:background .3s,color .3s,border-color .3s,box-shadow .3s;
+    }
+    [data-theme="dark"]{
+      --bg-primary:#0a0e1a;--bg-secondary:#0f1629;--bg-tertiary:#161d35;--bg-card:#161d35cc;
+      --bg-card-hover:#1e2744;--bg-elevated:#1e2744;
+      --text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--text-muted:rgba(255,255,255,.2);
+      --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);
+      --brand-bg:rgba(51,145,255,.08);--brand-border:rgba(51,145,255,.2);
+      --glow-opacity:.15;--nav-bg:rgba(10,14,26,.8);
+      --card-shadow:0 4px 24px rgba(0,0,0,.3);--card-hover-shadow:0 20px 60px rgba(51,145,255,.12);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.06),transparent 60%);
+    }
+    [data-theme="light"]{
+      --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;--bg-card:#ffffff;
+      --bg-card-hover:#f8fafc;--bg-elevated:#ffffff;
+      --text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#64748b;--text-muted:#cbd5e1;
+      --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);
+      --brand-bg:rgba(51,145,255,.06);--brand-border:rgba(51,145,255,.15);
+      --glow-opacity:.06;--nav-bg:rgba(255,255,255,.85);
+      --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--card-hover-shadow:0 12px 40px rgba(51,145,255,.1);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.04),transparent 60%);
+    }
+
+    body{background:var(--bg-primary);color:var(--text-primary);}
+
+    /* ===== COMPONENTS ===== */
+    .nav{position:fixed;top:0;width:100%;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);transition:var(--transition);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:4rem;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
+    .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
+    .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
+    .nav-links{display:flex;align-items:center;gap:2rem;font-size:.875rem;color:var(--text-tertiary);}
+    .nav-links a{color:inherit;text-decoration:none;transition:color .2s;}
+    .nav-links a:hover{color:var(--text-primary);}
+    .nav-actions{display:flex;align-items:center;gap:.75rem;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
+    .btn-primary{background:#1a6ff5;color:#fff;padding:.625rem 1.25rem;}
+    .btn-primary:hover{background:#3391ff;}
+    .btn-ghost{background:transparent;color:var(--text-tertiary);padding:.5rem 1rem;}
+    .btn-ghost:hover{color:var(--text-primary);}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:.75rem 2rem;}
+    .btn-outline:hover{border-color:var(--border-hover);background:var(--brand-bg);}
+    .btn-lg{padding:1rem 2rem;font-size:1rem;border-radius:.75rem;}
+
+    /* Theme Toggle */
+    .theme-toggle{width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-tertiary);}
+    .theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary);}
+    .theme-toggle svg{width:1.125rem;height:1.125rem;}
+    [data-theme="dark"] .icon-sun{display:none;}
+    [data-theme="dark"] .icon-moon{display:block;}
+    [data-theme="light"] .icon-sun{display:block;}
+    [data-theme="light"] .icon-moon{display:none;}
+
+    /* Mobile Menu */
+    .mobile-menu-btn{display:none;width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);align-items:center;justify-content:center;cursor:pointer;color:var(--text-tertiary);}
+    .mobile-menu{display:none;position:fixed;top:4rem;left:0;right:0;background:var(--bg-primary);border-bottom:1px solid var(--border);padding:1rem 1.5rem;z-index:49;}
+    .mobile-menu.open{display:block;}
+    .mobile-menu a{display:block;padding:.75rem 0;color:var(--text-secondary);text-decoration:none;font-size:.875rem;border-bottom:1px solid var(--border);}
+    .mobile-menu a:last-child{border-bottom:none;}
+
+    /* Glow */
+    .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
+
+    /* Grid BG */
+    .grid-bg{background-image:linear-gradient(rgba(51,145,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(51,145,255,.03) 1px,transparent 1px);background-size:60px 60px;}
+
+    /* Card */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:all .25s;padding:2rem;}
+
+    /* Form */
+    .form-group{margin-bottom:1.5rem;}
+    .form-group label{display:block;margin-bottom:.5rem;font-weight:500;color:var(--text-primary);font-size:.875rem;}
+    .form-group input,.form-group select{width:100%;padding:.875rem 1rem;border:1px solid var(--border);border-radius:.5rem;background:var(--bg-primary);color:var(--text-primary);font-size:1rem;transition:border-color .2s ease,box-shadow .2s ease;}
+    .form-group input:focus,.form-group select:focus{outline:none;border-color:#3391ff;box-shadow:0 0 0 3px rgba(51,145,255,.1);}
+
+    /* Signup Form */
+    .signup-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;position:relative;overflow:hidden;margin-top:4rem;}
+    .signup-card{max-width:600px;width:100%;}
+    .signup-header{text-align:center;margin-bottom:2.5rem;}
+    .signup-header h1{font-size:1.875rem;font-weight:700;margin-bottom:.5rem;}
+    .signup-header p{color:var(--text-tertiary);font-size:.875rem;}
+
+    .signup-form{margin-bottom:1.5rem;}
+    .form-actions{display:flex;gap:1rem;margin-top:2rem;}
+    .form-actions .btn{flex:1;}
+
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+    .section-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#3391ff;margin-bottom:1rem;margin-top:1.5rem;}
+    .section-subtitle{font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:1rem;}
+
+    .radio-group,.checkbox-group{display:flex;flex-direction:column;gap:.75rem;}
+    .radio-item,.checkbox-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:.5rem;cursor:pointer;transition:all .2s;}
+    .radio-item:hover,.checkbox-item:hover{border-color:var(--border-hover);background:var(--brand-bg);}
+    .radio-item input[type="radio"],.checkbox-item input[type="checkbox"]{cursor:pointer;accent-color:#3391ff;}
+
+    .required{color:#ef4444;font-weight:600;}
+
+    /* Modal */
+    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;}
+    .modal.open{display:flex;}
+    .modal-content{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;width:90%;max-width:400px;max-height:70vh;display:flex;flex-direction:column;box-shadow:var(--card-shadow);}
+    .modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .modal-header h2{font-size:1.125rem;font-weight:600;}
+    .modal-close{background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:1.5rem;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;}
+    .modal-close:hover{color:var(--text-primary);}
+    .modal-body{padding:1.5rem;overflow-y:auto;flex:1;}
+    .search-input{width:100%;padding:.75rem 1rem;border:1px solid var(--border);border-radius:.5rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:1rem;font-size:.875rem;}
+    .search-input:focus{outline:none;border-color:#3391ff;box-shadow:0 0 0 3px rgba(51,145,255,.1);}
+    .list-item{padding:.75rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;font-size:.875rem;}
+    .list-item:hover{background:var(--brand-bg);}
+    .list-item:last-child{border-bottom:none;}
+
+    /* Fade In */
+    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+    .fade-in.visible{opacity:1;transform:translateY(0);}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:768px){
+      .nav-links{display:none;}
+      .mobile-menu-btn{display:flex;}
+      .signup-container{padding:1rem 1rem;margin-top:2rem;}
+      .form-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">M</div>
+        <span class="logo-text">MediW</span>
+      </a>
+      <div class="nav-links">
+      </div>
+      <div class="nav-actions">
+        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
+          <option value="en">English</option>
+          <option value="ko">Корейский</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ru">Русский</option>
+        </select>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">
+          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <a class="btn btn-ghost" href="login.html">Войти</a>
+        <button class="mobile-menu-btn" onclick="toggleMobile()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="login.html">Войти</a>
+  </div>
+
+  <!-- Signup Form -->
+  <div class="grid-bg signup-container">
+    <div class="glow" style="width:500px;height:500px;background:#3391ff;top:10%;left:10%;"></div>
+    <div class="glow" style="width:400px;height:400px;background:#8eceff;bottom:10%;right:10%;"></div>
+    
+    <!-- Country Selector Modal -->
+    <div class="modal" id="countryModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Выбор страны</h2>
+          <button class="modal-close" onclick="closeCountrySelector()">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="search-input" id="countrySearch" placeholder="Поиск страны..." onkeyup="filterCountries()">
+          <div id="countryList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nationality Selector Modal -->
+    <div class="modal" id="nationalityModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Выбор гражданства</h2>
+          <button class="modal-close" onclick="closeNationalitySelector()">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="search-input" id="nationalitySearch" placeholder="Поиск гражданства..." onkeyup="filterNationalities()">
+          <div id="nationalityList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- City Selector Modal -->
+    <div class="modal" id="cityModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Выбор города</h2>
+          <button class="modal-close" onclick="closeCitySelector()">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="search-input" id="citySearch" placeholder="Поиск города..." onkeyup="filterCities()">
+          <div id="cityList"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="signup-card fade-in" style="position:relative;z-index:1;">
+      <div class="card">
+        <div class="signup-header">
+          <h1>Создать аккаунт</h1>
+          <p>Зарегистрируйтесь в MediW и откройте для себя медицинский опыт Кореи</p>
+        </div>
+
+        <form class="signup-form" id="signupForm">
+          <!-- Basic Information -->
+          <div class="section-label">Шаг 1: Основная информация</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="email">Электронная почта <span class="required">*</span></label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+              <label for="password">Пароль <span class="required">*</span></label>
+              <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="fullName">ФИО <span class="required">*</span></label>
+              <input type="text" id="fullName" name="fullName" required placeholder="Введите ФИО">
+            </div>
+            <div class="form-group">
+              <label for="dob">Дата рождения <span class="required">*</span></label>
+              <input type="date" id="dob" name="dob" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Пол <span class="required">*</span></label>
+              <select id="gender" name="gender" required>
+                <option value="">Выбор пола</option>
+                <option value="male">Мужской</option>
+                <option value="female">Женский</option>
+                <option value="other">Другое</option>
+                <option value="prefer-not-to-say">Предпочитаю не указывать</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="phone">Номер телефона <span class="required">*</span></label>
+              <input type="tel" id="phone" name="phone" required placeholder="+82 10-1234-5678">
+            </div>
+            <div class="form-group">
+              <label for="language">Предпочитаемый язык <span class="required">*</span></label>
+              <select id="language" name="language" required>
+                <option value="">Выбор языка</option>
+                <option value="english">Английский</option>
+                <option value="korean">Корейский</option>
+                <option value="japanese">Японский</option>
+                <option value="chinese">Китайский</option>
+                <option value="russian">Русский</option>
+                <option value="spanish">Испанский</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Location & Nationality -->
+          <div>
+            <div class="section-label">Шаг 2: Место проживания и гражданство</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="nationality">Гражданство <span class="required">*</span></label>
+                <input type="text" id="nationality" name="nationality" readonly placeholder="Нажмите для выбора гражданства" style="cursor:pointer;" onclick="openNationalitySelector()">
+              </div>
+              <div class="form-group">
+                <label for="country">Страна проживания <span class="required">*</span></label>
+                <input type="text" id="country" name="country" readonly placeholder="Нажмите для выбора страны" style="cursor:pointer;" onclick="openCountrySelector()">
+              </div>
+              <div class="form-group">
+                <label for="city">Город проживания <span class="required">*</span></label>
+                <input type="text" id="city" name="city" readonly placeholder="Нажмите для выбора города" style="cursor:pointer;" onclick="openCitySelector()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Type -->
+          <div>
+            <div class="section-label">Шаг 3: Тип аккаунта</div>
+            <div class="section-subtitle">Выберите подходящий тип аккаунта</div>
+            <div class="form-group">
+              <select id="accountType" name="accountType" required style="width:100%;">
+                <option value="">Выбор типа аккаунта</option>
+                <option value="doctor">Врач / Медицинский специалист</option>
+                <option value="hospital">Больница / Медицинское учреждение</option>
+                <option value="agency">Агентство медицинского туризма</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Terms & Agreements -->
+          <div>
+            <div class="section-label">Шаг 4: Согласие с условиями</div>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" id="terms" name="terms" required>
+                <span><a href="#" style="color:#3391ff;text-decoration:none;font-weight:600;">Условия использования сервиса</a> Согласен <span class="required">*</span></span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="privacy" name="privacy" required>
+                <span><a href="#" style="color:#3391ff;text-decoration:none;font-weight:600;">Политика конфиденциальности</a> Согласен <span class="required">*</span></span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="marketing" name="marketing">
+                <span>Согласен на получение обновлений и акций</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a href="login.html" class="btn btn-outline">Вернуться к входу</a>
+            <button type="submit" class="btn btn-primary">Создать аккаунт</button>
+          </div>
+        </form>
+
+        <div style="text-align:center;margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.5rem;">
+          <p style="font-size:.875rem;color:var(--text-secondary);">Уже есть аккаунт? <a href="login.html" style="color:#3391ff;text-decoration:none;font-weight:600;transition:color .2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='#3391ff'">Войти</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Language change handler
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      console.log('Language changed to:', lang);
+      // Add your translation logic here
+    }
+
+    // Load saved language
+    const savedLang = localStorage.getItem('language') || 'en';
+    document.getElementById('langSelector').value = savedLang;
+
+    // Mobile menu toggle
+    function toggleMobile() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+    }
+
+    // Signup form handler
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+      
+      // Save signup data to sessionStorage for success page
+      const signupData = {
+        email: data.email,
+        fullName: data.fullName,
+        accountType: data.accountType
+      };
+      sessionStorage.setItem('signupData', JSON.stringify(signupData));
+      
+      console.log('Signup:', data);
+      // Redirect to success page
+      window.location.href = 'signup-success.html';
+    });
+
+    // Fade in animation
+    window.addEventListener('load', function() {
+      document.querySelectorAll('.fade-in').forEach(el => {
+        el.classList.add('visible');
+      });
+      initCountryList();
+      initCityList();
+    });
+
+    // Country data
+    const countries = [
+      'Afghanistan','Albania','Algeria','Andorra','Angola','Argentina','Armenia','Australia','Austria','Azerbaijan',
+      'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
+      'Cambodia','Cameroon','Canada','Cape Verde','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic',
+      'Côte d\'Ivoire','Denmark','Djibouti','Dominica','Dominican Republic',
+      'East Timor','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
+      'Fiji','Finland','France','French Guiana','French Polynesia',
+      'Gabon','Gambia','Georgia','Germany','Ghana','Gibraltar','Greece','Grenada','Guadeloupe','Guam','Guatemala','Guinea','Guinea-Bissau','Guyana',
+      'Haiti','Honduras','Hong Kong','Hungary',
+      'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy',
+      'Jamaica','Japan','Jordan',
+      'Kazakhstan','Kenya','Kiribati','North Korea','South Korea','Kosovo','Kuwait','Kyrgyzstan',
+      'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+      'Macao','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Martinique','Mauritania','Mauritius','Mayotte','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+      'Namibia','Nauru','Nepal','Netherlands','New Caledonia','New Zealand','Nicaragua','Niger','Nigeria','Niue','North Macedonia','Norway',
+      'Oman',
+      'Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Puerto Rico',
+      'Qatar',
+      'Romania','Russia','Rwanda','Réunion',
+      'Saint Kitts and Nevis','Saint Lucia','Saint Martin','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Sint Maarten','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+      'Taiwan','Tajikistan','Tanzania','Thailand','Togo','Tokelau','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Turks and Caicos Islands','Tuvalu',
+      'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
+      'Vanuatu','Vatican City','Venezuela','Vietnam','Virgin Islands',
+      'Wallis and Futuna','Western Sahara',
+      'Yemen',
+      'Zambia','Zimbabwe'
+    ];
+
+    const cityMap = {
+      'South Korea': ['Seoul','Busan','Incheon','Daegu','Daejeon','Gwangju','Ulsan','Gyeonggi','Gangwon','Chungbuk','Chungnam','Jeonbuk','Jeonnam','Gyeongbuk','Gyeongnam','Jeju'],
+      'United States': ['New York','Los Angeles','Chicago','Houston','Phoenix','Philadelphia','San Antonio','San Diego','Dallas','San Jose'],
+      'United Kingdom': ['London','Manchester','Birmingham','Leeds','Glasgow','Sheffield','Bristol','Edinburgh','Liverpool','Leicester'],
+      'Japan': ['Tokyo','Yokohama','Osaka','Kobe','Kyoto','Kawasaki','Saitama','Hiroshima','Yono','Fukuoka'],
+      'China': ['Shanghai','Beijing','Shenzhen','Guangzhou','Chengdu','Chongqing','Hangzhou','Wuhan','Xi\'an','Tianjin'],
+      'Germany': ['Berlin','Hamburg','Munich','Cologne','Frankfurt','Stuttgart','Düsseldorf','Dortmund','Essen','Leipzig'],
+      'France': ['Paris','Marseille','Lyon','Toulouse','Nice','Nantes','Strasbourg','Montpellier','Bordeaux','Lille'],
+      'Australia': ['Sydney','Melbourne','Brisbane','Perth','Adelaide','Gold Coast','Canberra','Newcastle','Wollongong','Logan City'],
+      'Canada': ['Toronto','Montreal','Vancouver','Calgary','Edmonton','Ottawa','Winnipeg','Quebec City','Hamilton','Kitchener'],
+      'India': ['Mumbai','Delhi','Bangalore','Hyderabad','Chennai','Kolkata','Pune','Ahmedabad','Jaipur','Lucknow']
+    };
+
+    function initCountryList() {
+      const countryList = document.getElementById('countryList');
+      countryList.innerHTML = countries.map(country => 
+        `<div class="list-item" onclick="selectCountry('${country}')">${country}</div>`
+      ).join('');
+    }
+
+    function initNationalityList() {
+      const nationalityList = document.getElementById('nationalityList');
+      nationalityList.innerHTML = countries.map(country => 
+        `<div class="list-item" onclick="selectNationality('${country}')">${country}</div>`
+      ).join('');
+    }
+
+    function initCityList() {
+      const selectedCountry = document.getElementById('country').value;
+      const cityList = document.getElementById('cityList');
+      const cities = cityMap[selectedCountry] || [];
+      cityList.innerHTML = cities.length > 0 
+        ? cities.map(city => `<div class="list-item" onclick="selectCity('${city}')">${city}</div>`).join('')
+        : '<div style="padding:1rem;text-align:center;color:var(--text-muted);">Информация о городах для этой страны отсутствует</div>';
+    }
+
+    function filterCountries() {
+      const search = document.getElementById('countrySearch').value.toLowerCase();
+      const countryList = document.getElementById('countryList');
+      countryList.innerHTML = countries
+        .filter(country => country.toLowerCase().includes(search))
+        .map(country => `<div class="list-item" onclick="selectCountry('${country}')">${country}</div>`)
+        .join('');
+    }
+
+    function filterNationalities() {
+      const search = document.getElementById('nationalitySearch').value.toLowerCase();
+      const nationalityList = document.getElementById('nationalityList');
+      nationalityList.innerHTML = countries
+        .filter(country => country.toLowerCase().includes(search))
+        .map(country => `<div class="list-item" onclick="selectNationality('${country}')">${country}</div>`)
+        .join('');
+    }
+
+    function filterCities() {
+      const search = document.getElementById('citySearch').value.toLowerCase();
+      const selectedCountry = document.getElementById('country').value;
+      const cities = cityMap[selectedCountry] || [];
+      const cityList = document.getElementById('cityList');
+      cityList.innerHTML = cities
+        .filter(city => city.toLowerCase().includes(search))
+        .map(city => `<div class="list-item" onclick="selectCity('${city}')">${city}</div>`)
+        .join('');
+    }
+
+    function openCountrySelector() {
+      document.getElementById('countrySearch').value = '';
+      document.getElementById('countryModal').classList.add('open');
+      initCountryList();
+    }
+
+    function closeCountrySelector() {
+      document.getElementById('countryModal').classList.remove('open');
+    }
+
+    function selectCountry(country) {
+      document.getElementById('country').value = country;
+      document.getElementById('city').value = '';
+      closeCountrySelector();
+    }
+
+    function openNationalitySelector() {
+      document.getElementById('nationalitySearch').value = '';
+      document.getElementById('nationalityModal').classList.add('open');
+      initNationalityList();
+    }
+
+    function closeNationalitySelector() {
+      document.getElementById('nationalityModal').classList.remove('open');
+    }
+
+    function selectNationality(nationality) {
+      document.getElementById('nationality').value = nationality;
+      closeNationalitySelector();
+    }
+
+    function openCitySelector() {
+      if (!document.getElementById('country').value) {
+        alert('Сначала выберите страну');
+        return;
+      }
+      document.getElementById('citySearch').value = '';
+      document.getElementById('cityModal').classList.add('open');
+      initCityList();
+    }
+
+    function closeCitySelector() {
+      document.getElementById('cityModal').classList.remove('open');
+    }
+
+    function selectCity(city) {
+      document.getElementById('city').value = city;
+      closeCitySelector();
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('countryModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCountrySelector();
+    });
+    document.getElementById('nationalityModal').addEventListener('click', function(e) {
+      if (e.target === this) closeNationalitySelector();
+    });
+    document.getElementById('cityModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCitySelector();
+    });
+  </script>
+</body>
+</html>

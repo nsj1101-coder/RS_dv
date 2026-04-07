@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediW — Глобальная медицинская хаб-платформа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+    /* ===== THEME VARIABLES ===== */
+    :root{
+      --transition:background .3s,color .3s,border-color .3s,box-shadow .3s;
+    }
+    [data-theme="dark"]{
+      --bg-primary:#0a0e1a;--bg-secondary:#0f1629;--bg-tertiary:#161d35;--bg-card:#161d35cc;
+      --bg-card-hover:#1e2744;--bg-elevated:#1e2744;
+      --text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--text-muted:rgba(255,255,255,.2);
+      --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);
+      --brand-bg:rgba(51,145,255,.08);--brand-border:rgba(51,145,255,.2);
+      --glow-opacity:.15;--nav-bg:rgba(10,14,26,.8);
+      --card-shadow:0 4px 24px rgba(0,0,0,.3);--card-hover-shadow:0 20px 60px rgba(51,145,255,.12);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.06),transparent 60%);
+    }
+    [data-theme="light"]{
+      --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;--bg-card:#ffffff;
+      --bg-card-hover:#f8fafc;--bg-elevated:#ffffff;
+      --text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#64748b;--text-muted:#cbd5e1;
+      --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);
+      --brand-bg:rgba(51,145,255,.06);--brand-border:rgba(51,145,255,.15);
+      --glow-opacity:.06;--nav-bg:rgba(255,255,255,.85);
+      --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--card-hover-shadow:0 12px 40px rgba(51,145,255,.1);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.04),transparent 60%);
+    }
+
+    body{background:var(--bg-primary);color:var(--text-primary);}
+
+    /* ===== COMPONENTS ===== */
+    .nav{position:fixed;top:0;width:100%;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);transition:var(--transition);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:4rem;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
+    .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
+    .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
+    .nav-links{display:flex;align-items:center;gap:2rem;font-size:.875rem;color:var(--text-tertiary);}
+    .nav-links a{color:inherit;text-decoration:none;transition:color .2s;}
+    .nav-links a:hover{color:var(--text-primary);}
+    .nav-actions{display:flex;align-items:center;gap:.75rem;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
+    .btn-primary{background:#1a6ff5;color:#fff;padding:.625rem 1.25rem;}
+    .btn-primary:hover{background:#3391ff;}
+    .btn-ghost{background:transparent;color:var(--text-tertiary);padding:.5rem 1rem;}
+    .btn-ghost:hover{color:var(--text-primary);}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:.75rem 2rem;}
+    .btn-outline:hover{border-color:var(--border-hover);background:var(--brand-bg);}
+    .btn-lg{padding:1rem 2rem;font-size:1rem;border-radius:.75rem;}
+
+    /* Theme Toggle */
+    .theme-toggle{width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-tertiary);}
+    .theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary);}
+    .theme-toggle svg{width:1.125rem;height:1.125rem;}
+    [data-theme="dark"] .icon-sun{display:none;}
+    [data-theme="dark"] .icon-moon{display:block;}
+    [data-theme="light"] .icon-sun{display:block;}
+    [data-theme="light"] .icon-moon{display:none;}
+
+    /* Mobile Menu */
+    .mobile-menu-btn{display:none;width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);align-items:center;justify-content:center;cursor:pointer;color:var(--text-tertiary);}
+    .mobile-menu{display:none;position:fixed;top:4rem;left:0;right:0;background:var(--bg-primary);border-bottom:1px solid var(--border);padding:1rem 1.5rem;z-index:49;}
+    .mobile-menu.open{display:block;}
+    .mobile-menu a{display:block;padding:.75rem 0;color:var(--text-secondary);text-decoration:none;font-size:.875rem;border-bottom:1px solid var(--border);}
+    .mobile-menu a:last-child{border-bottom:none;}
+
+    /* Glow */
+    .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
+
+    /* Grid BG */
+    .grid-bg{background-image:linear-gradient(rgba(51,145,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(51,145,255,.03) 1px,transparent 1px);background-size:60px 60px;}
+
+    /* Gradient text */
+    .gradient-text{background:linear-gradient(135deg,#1a6ff5,#3391ff,#59b2ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+    /* Badge */
+    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem 1rem;border-radius:9999px;border:1px solid var(--brand-border);background:var(--brand-bg);font-size:.875rem;color:#3391ff;}
+    .badge-dot{width:.5rem;height:.5rem;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+    /* Sections */
+    .section{padding:6rem 1.5rem;}
+    .section-inner{max-width:1280px;margin:0 auto;}
+    .section-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#3391ff;}
+    .section-title{font-size:2rem;font-weight:700;margin-top:.75rem;line-height:1.2;color:var(--text-primary);}
+    .section-desc{color:var(--text-tertiary);margin-top:.75rem;max-width:32rem;}
+
+    /* Cards */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:all .25s;}
+    .card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
+
+    /* Stats */
+    .stats-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg-secondary);transition:var(--transition);}
+    .stats-grid{max-width:1280px;margin:0 auto;padding:3rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;}
+    .stat-num{font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;}
+    .stat-label{font-size:.875rem;color:var(--text-tertiary);margin-top:.25rem;}
+
+    /* Schedule Preview */
+    .schedule-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:var(--transition);}
+    .schedule-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .schedule-row{padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+    .schedule-row:hover{background:var(--brand-bg);}
+    .schedule-row:last-child{border-bottom:none;}
+
+    /* Step Cards */
+    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+    .step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;transition:all .25s;}
+    .step-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
+    .step-icon{width:3rem;height:3rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+
+    /* Hospital Cards */
+    .hosp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .hosp-card-top{height:12rem;display:flex;align-items:center;justify-content:center;position:relative;}
+    .hosp-logo{width:5rem;height:5rem;border-radius:1rem;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;}
+    .hosp-rating{position:absolute;top:1rem;right:1rem;display:flex;align-items:center;gap:.375rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(255,255,255,.1);font-size:.75rem;color:var(--text-secondary);}
+    .tag{display:inline-block;font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;}
+
+    /* Specialty Grid */
+    .spec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .spec-card{background:var(--bg-card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;text-align:center;transition:all .2s;cursor:pointer;}
+    .spec-card:hover{transform:translateY(-2px);box-shadow:var(--card-hover-shadow);}
+    .spec-icon{width:3.5rem;height:3.5rem;margin:0 auto .75rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+
+    /* Concierge */
+    .conc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+    .conc-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:var(--bg-card);border-radius:.75rem;border:1px solid var(--border);}
+    .conc-icon{width:2.5rem;height:2.5rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+    /* Trip Dashboard */
+    .trip-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;transition:var(--transition);}
+    .trip-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:.75rem;padding:1rem;margin-top:1rem;transition:var(--transition);}
+
+    /* Testimonials */
+    .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .test-card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;}
+    .stars{display:flex;gap:.125rem;margin-bottom:1rem;}
+    .star{width:1rem;height:1rem;color:#f59e0b;}
+    .avatar{width:2.5rem;height:2.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;color:#fff;}
+
+    /* Partner Cards */
+    .partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .partner-card{border-radius:1rem;padding:2.5rem;position:relative;overflow:hidden;}
+    .partner-card ul{list-style:none;margin:1.5rem 0 2rem;}
+    .partner-card li{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--text-secondary);margin-bottom:.5rem;}
+
+    /* CTA */
+    .cta-section{text-align:center;position:relative;overflow:hidden;}
+    .cta-section h2{font-size:2.5rem;font-weight:700;}
+
+    /* Footer */
+    .footer{border-top:1px solid var(--border);background:var(--bg-secondary);transition:var(--transition);}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:2rem;max-width:1280px;margin:0 auto;padding:4rem 1.5rem;}
+    .footer-col-title{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-tertiary);margin-bottom:1rem;}
+    .footer-col a{display:block;font-size:.875rem;color:var(--text-tertiary);text-decoration:none;margin-bottom:.625rem;transition:color .2s;}
+    .footer-col a:hover{color:var(--text-primary);}
+    .footer-bottom{max-width:1280px;margin:0 auto;padding:2rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--text-muted);}
+    .footer-bottom a{color:inherit;text-decoration:none;margin-left:1.5rem;transition:color .2s;}
+    .footer-bottom a:hover{color:var(--text-tertiary);}
+
+    /* Fade In */
+    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+    .fade-in.visible{opacity:1;transform:translateY(0);}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:1024px){
+      .steps-grid{grid-template-columns:repeat(2,1fr);}
+      .hosp-grid{grid-template-columns:repeat(2,1fr);}
+      .spec-grid{grid-template-columns:repeat(3,1fr);}
+      .conc-grid{grid-template-columns:1fr;}
+      .test-grid{grid-template-columns:1fr 1fr;}
+      .footer-grid{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:768px){
+      .nav-links{display:none;}
+      .mobile-menu-btn{display:flex;}
+      .section{padding:3rem 1rem;}
+      .section-title{font-size:1.5rem;}
+      .hero-title{font-size:2rem !important;}
+      .hero-sub{font-size:1rem !important;}
+      .stats-grid{grid-template-columns:repeat(2,1fr);padding:2rem 1rem;gap:1.5rem;}
+      .stat-num{font-size:1.5rem;}
+      .steps-grid{grid-template-columns:1fr;gap:1rem;}
+      .hosp-grid{grid-template-columns:1fr;}
+      .spec-grid{grid-template-columns:repeat(2,1fr);gap:.75rem;}
+      .spec-card{padding:1rem;}
+      .conc-grid{gap:2rem;}
+      .test-grid{grid-template-columns:1fr;}
+      .partner-grid{grid-template-columns:1fr;}
+      .cta-section h2{font-size:1.75rem;}
+      .footer-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem;padding:2rem 1rem;}
+      .footer-bottom{flex-direction:column;gap:.75rem;text-align:center;}
+      .hero-btns{flex-direction:column;width:100%;}
+      .hero-btns .btn{width:100%;}
+      .schedule-row{flex-direction:column;align-items:flex-start;gap:.5rem;}
+      .schedule-meta{display:flex;gap:.5rem;margin-top:.25rem;}
+    }
+    @media(max-width:480px){
+      .spec-grid{grid-template-columns:1fr 1fr;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">M</div>
+        <span class="logo-text">MediW</span>
+      </a>
+      <div class="nav-links">
+        <a href="programs.html">Программы</a>
+        <a href="#hospitals">Больницы</a>
+        <a href="#how-it-works">Как это работает</a>
+        <a href="#concierge">Консьерж</a>
+      </div>
+      <div class="nav-actions">
+        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ru">Русский</option>
+        </select>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">
+          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <a class="btn btn-ghost" href="login.html">Войти</a>
+        <a class="btn btn-primary" href="signup.html">Начать</a>
+        <button class="mobile-menu-btn" onclick="toggleMobile()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="programs.html">Программы</a>
+    <a href="#hospitals">Больницы</a>
+    <a href="#how-it-works">Как это работает</a>
+    <a href="#concierge">Консьерж</a>
+    <a href="login.html">Войти</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="grid-bg" style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-top:4rem;">
+    <div class="glow" style="width:600px;height:600px;background:#3391ff;top:20%;left:20%;"></div>
+    <div class="glow" style="width:500px;height:500px;background:#8eceff;bottom:20%;right:20%;"></div>
+    <div style="position:relative;z-index:1;max-width:64rem;margin:0 auto;text-align:center;padding:4rem 1.5rem;">
+      <div class="badge" style="margin-bottom:2rem;">
+        <span class="badge-dot"></span>
+        Набор в более чем 120 больничных программ
+      </div>
+      <h1 class="hero-title" style="font-size:3.5rem;font-weight:800;line-height:1.1;letter-spacing:-.02em;">
+        <span class="gradient-text">Ваш путь к передовой</span><br>корейской медицине
+      </h1>
+      <p class="hero-sub" style="font-size:1.25rem;color:var(--text-tertiary);max-width:40rem;margin:1.5rem auto 2.5rem;line-height:1.6;">
+        Ознакомьтесь с расписанием обучения в лучших больницах Кореи. Подайте заявку на фелловшип, клиническое наблюдение и продвинутые программы — всё на одной платформе.
+      </p>
+      <div class="hero-btns" style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:4rem;">
+        <a href="programs.html" class="btn btn-primary btn-lg" style="text-decoration:none;">
+          Обзор программ
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <button class="btn btn-outline btn-lg">Для больниц</button>
+      </div>
+
+      <!-- Live Schedule -->
+      <div style="max-width:48rem;margin:0 auto;position:relative;">
+        <div style="position:absolute;inset:-4px;background:linear-gradient(135deg,rgba(51,145,255,.15),rgba(142,206,255,.08));border-radius:1.25rem;filter:blur(12px);"></div>
+        <div class="schedule-box" style="position:relative;">
+          <div class="schedule-header">
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div style="width:.5rem;height:.5rem;border-radius:50%;background:#34d399;"></div>
+              <span style="font-size:.875rem;font-weight:500;color:var(--text-secondary);">Расписание обучения в реальном времени</span>
+            </div>
+            <span style="font-size:.75rem;color:var(--text-muted);">Обновлено 2 мин. назад</span>
+          </div>
+          <div class="schedule-row">
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(41,128,185,.15);display:flex;align-items:center;justify-content:center;color:#2980b9;font-size:.7rem;font-weight:700;">SNU</div>
+              <div style="text-align:left;">
+                <div style="font-size:.875rem;font-weight:500;">Продвинутый фелловшип по кардиохирургии</div>
+                <div style="font-size:.75rem;color:var(--text-tertiary);">Госпиталь Сеульского нац. ун-та · 12 нед.</div>
+              </div>
+            </div>
+            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
+              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(52,211,153,.1);color:#34d399;">3 места</span>
+              <span style="font-size:.75rem;color:var(--text-muted);">Апр. 2026</span>
+            </div>
+          </div>
+          <div class="schedule-row">
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(142,68,173,.15);display:flex;align-items:center;justify-content:center;color:#8e44ad;font-size:.7rem;font-weight:700;">AMC</div>
+              <div style="text-align:left;">
+                <div style="font-size:.875rem;font-weight:500;">Программа наблюдения за робот-хирургией</div>
+                <div style="font-size:.75rem;color:var(--text-tertiary);">Госпиталь Асан Сеул · 4 нед.</div>
+              </div>
+            </div>
+
+            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
+              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(245,158,11,.1);color:#f59e0b;">5 мест</span>
+              <span style="font-size:.75rem;color:var(--text-muted);">Май 2026</span>
+            </div>
+          </div>
+          <div class="schedule-row">
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(231,76,60,.15);display:flex;align-items:center;justify-content:center;color:#e74c3c;font-size:.7rem;font-weight:700;">KUA</div>
+              <div style="text-align:left;">
+                <div style="font-size:.875rem;font-weight:500;">Практическое обучение хирургии основания черепа</div>
+                <div style="font-size:.75rem;color:var(--text-tertiary);">Госпиталь Корё ун-та Анам · 2 нед.</div>
+              </div>
+            </div>
+            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
+              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(52,211,153,.1);color:#34d399;">Набор открыт</span>
+              <span style="font-size:.75rem;color:var(--text-muted);">Май 2026</span>
+            </div>
+          </div>
+          <div class="schedule-row">
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(22,160,133,.15);display:flex;align-items:center;justify-content:center;color:#16a085;font-size:.7rem;font-weight:700;">SEV</div>
+              <div style="text-align:left;">
+                <div style="font-size:.875rem;font-weight:500;">Фелловшип по эндоскопической хирургии позвоночника</div>
+                <div style="font-size:.75rem;color:var(--text-tertiary);">Госпиталь Северанс · 8 нед.</div>
+              </div>
+            </div>
+            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
+              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(239,68,68,.1);color:#ef4444;">2 места</span>
+              <span style="font-size:.75rem;color:var(--text-muted);">Апр. 2026</span>
+            </div>
+          </div>
+          <a href="programs.html" style="display:block;padding:.75rem;text-align:center;font-size:.75rem;color:#3391ff;text-decoration:none;border-top:1px solid var(--border);transition:background .2s;">
+            Смотреть все 47 открытых программ →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div><div class="stat-num gradient-text">150+</div><div class="stat-label">Партнёрских больниц</div></div>
+      <div><div class="stat-num gradient-text">23</div><div class="stat-label">Стран обслуживания</div></div>
+      <div><div class="stat-num gradient-text">2,400+</div><div class="stat-label">Завершённых программ</div></div>
+      <div><div class="stat-num gradient-text">98%</div><div class="stat-label">Удовлетворённость</div></div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
+        <div class="section-label">Как это работает</div>
+        <h2 class="section-title" style="font-size:2.5rem;">От поиска до прибытия в Корею</h2>
+        <p class="section-desc" style="margin-left:auto;margin-right:auto;">Мы берём на себя все сложности взаимодействия с лучшими больницами Кореи. Сосредоточьтесь на обучении — обо всём остальном позаботимся мы.</p>
+      </div>
+      <div class="steps-grid fade-in">
+        <div class="step-card">
+          <div class="step-icon" style="background:rgba(51,145,255,.1);">
+            <svg width="24" height="24" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <div style="font-size:.75rem;color:#3391ff;font-weight:600;margin-bottom:.375rem;">Шаг 1</div>
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">Поиск и фильтрация</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">Ищите по специализации, больнице, продолжительности или дате. Проверяйте наличие мест и подробности программ в реальном времени.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon" style="background:rgba(142,68,173,.1);">
+            <svg width="24" height="24" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div style="font-size:.75rem;color:#8e44ad;font-weight:600;margin-bottom:.375rem;">Шаг 2</div>
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">Онлайн-заявка</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">Отправьте свои квалификации и предпочтения. Безопасно загрузите документы. Мы проверим и передадим их в больницу.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon" style="background:rgba(52,211,153,.1);">
+            <svg width="24" height="24" fill="none" stroke="#34d399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div style="font-size:.75rem;color:#34d399;font-weight:600;margin-bottom:.375rem;">Шаг 3</div>
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">Получение подтверждения</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">Наша команда напрямую координирует с больницей. Получите уведомление о зачислении и подробное расписание программы.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon" style="background:rgba(245,158,11,.1);">
+            <svg width="24" height="24" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+          </div>
+          <div style="font-size:.75rem;color:#f59e0b;font-weight:600;margin-bottom:.375rem;">Шаг 4</div>
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">Прибытие и обучение</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">Трансфер из аэропорта, проживание, транспорт — всё организовано. Сосредоточьтесь на медицинском обучении.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Hospitals -->
+  <section id="hospitals" class="section" style="background:var(--bg-secondary);transition:var(--transition);">
+    <div class="section-inner">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;" class="fade-in">
+        <div>
+          <div class="section-label">Ведущие больницы</div>
+          <h2 class="section-title">Ведущие медицинские учреждения Кореи</h2>
+        </div>
+        <a href="programs.html" style="display:none;font-size:.875rem;color:#3391ff;text-decoration:none;" class="desktop-only-link">Все больницы →</a>
+      </div>
+      <div class="hosp-grid fade-in">
+        <div class="card">
+          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(41,128,185,.2),var(--bg-tertiary));">
+            <div class="hosp-logo" style="color:#2980b9;">SNU</div>
+            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.9</div>
+          </div>
+          <div style="padding:1.5rem;">
+            <h3 style="font-size:1.125rem;font-weight:600;">Госпиталь Сеульского нац. ун-та</h3>
+            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">Сеул, Чонно-гу</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">Кардиохирургия</span>
+              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">Онкология</span>
+              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">Ортопедия</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
+              <span style="font-size:.75rem;color:var(--text-muted);">Набор в 12 программ</span>
+              <a href="programs.html" style="font-size:.875rem;color:#3391ff;text-decoration:none;">Подробнее →</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(142,68,173,.2),var(--bg-tertiary));">
+            <div class="hosp-logo" style="color:#8e44ad;">AMC</div>
+            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.8</div>
+          </div>
+          <div style="padding:1.5rem;">
+            <h3 style="font-size:1.125rem;font-weight:600;">Госпиталь Асан Сеул</h3>
+            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">Сеул, Сонпха-гу</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">Робот-хирургия</span>
+              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">Трансплантация</span>
+              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">Гастроэнтерология</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
+              <span style="font-size:.75rem;color:var(--text-muted);">Набор в 8 программ</span>
+              <a href="programs.html" style="font-size:.875rem;color:#8e44ad;text-decoration:none;">Подробнее →</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(22,160,133,.2),var(--bg-tertiary));">
+            <div class="hosp-logo" style="color:#16a085;">SEV</div>
+            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.9</div>
+          </div>
+          <div style="padding:1.5rem;">
+            <h3 style="font-size:1.125rem;font-weight:600;">Госпиталь Северанс (Ёнсе)</h3>
+            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">Сеул, Содэмун-гу</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
+              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">Позвоночник</span>
+              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">Пластическая хирургия</span>
+              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">Дерматология</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
+              <span style="font-size:.75rem;color:var(--text-muted);">Набор в 6 программ</span>
+              <a href="programs.html" style="font-size:.875rem;color:#16a085;text-decoration:none;">Подробнее →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Specialties -->
+  <section class="section">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
+        <div class="section-label">Специализации</div>
+        <h2 class="section-title" style="font-size:2.5rem;">Найдите свою специализацию</h2>
+        <p class="section-desc" style="margin-left:auto;margin-right:auto;">Ознакомьтесь с программами обучения по более чем 20 медицинским специализациям в лучших учебных больницах Кореи.</p>
+      </div>
+      <div class="spec-grid fade-in">
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(239,68,68,.1);"><svg width="28" height="28" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">Кардиология</div><div style="font-size:.75rem;color:var(--text-muted);">18 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(59,130,246,.1);"><svg width="28" height="28" fill="none" stroke="#3b82f6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div style="font-weight:500;font-size:.875rem;">Робот-хирургия</div><div style="font-size:.75rem;color:var(--text-muted);">12 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(139,92,246,.1);"><svg width="28" height="28" fill="none" stroke="#8b5cf6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg></div><div style="font-weight:500;font-size:.875rem;">Дерматология</div><div style="font-size:.75rem;color:var(--text-muted);">15 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(6,182,212,.1);"><svg width="28" height="28" fill="none" stroke="#06b6d4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></div><div style="font-weight:500;font-size:.875rem;">Офтальмология</div><div style="font-size:.75rem;color:var(--text-muted);">9 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(34,197,94,.1);"><svg width="28" height="28" fill="none" stroke="#22c55e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div><div style="font-weight:500;font-size:.875rem;">Онкология</div><div style="font-size:.75rem;color:var(--text-muted);">14 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(249,115,22,.1);"><svg width="28" height="28" fill="none" stroke="#f97316" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg></div><div style="font-weight:500;font-size:.875rem;">Ортопедия</div><div style="font-size:.75rem;color:var(--text-muted);">11 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(236,72,153,.1);"><svg width="28" height="28" fill="none" stroke="#ec4899" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">Пластическая хирургия</div><div style="font-size:.75rem;color:var(--text-muted);">20 программ</div></div>
+        <div class="spec-card"><div class="spec-icon" style="background:rgba(20,184,166,.1);"><svg width="28" height="28" fill="none" stroke="#14b8a6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">+ ещё 13</div><div style="font-size:.75rem;color:var(--text-muted);">Все</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Concierge -->
+  <section id="concierge" class="section" style="background:var(--bg-secondary);transition:var(--transition);">
+    <div class="section-inner">
+      <div class="conc-grid">
+        <div class="fade-in">
+          <div class="section-label">Полный консьерж-сервис</div>
+          <h2 class="section-title">Мы не просто связываем.<br>Мы управляем всем.</h2>
+          <p style="color:var(--text-tertiary);margin:1rem 0 2rem;line-height:1.6;">С момента прибытия в Корею до отъезда наша консьерж-команда берёт на себя всю логистику, чтобы вы могли сосредоточиться на главном.</p>
+          <div style="display:flex;flex-direction:column;gap:.75rem;">
+            <div class="conc-item"><div class="conc-icon" style="background:rgba(51,145,255,.1);"><svg width="20" height="20" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">Трансфер из аэропорта</div><div style="font-size:.75rem;color:var(--text-tertiary);">Персональный транспорт из аэропорта Инчхон/Кимпо.</div></div></div>
+            <div class="conc-item"><div class="conc-icon" style="background:rgba(142,68,173,.1);"><svg width="20" height="20" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">Премиум-проживание</div><div style="font-size:.75rem;color:var(--text-tertiary);">Отель 3-5 звёзд рядом с больницей.</div></div></div>
+            <div class="conc-item"><div class="conc-icon" style="background:rgba(52,211,153,.1);"><svg width="20" height="20" fill="none" stroke="#34d399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">Переводчик и поддержка</div><div style="font-size:.75rem;color:var(--text-tertiary);">Круглосуточный многоязычный координатор.</div></div></div>
+            <div class="conc-item"><div class="conc-icon" style="background:rgba(245,158,11,.1);"><svg width="20" height="20" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">Визовая и документальная поддержка</div><div style="font-size:.75rem;color:var(--text-tertiary);">Приглашение и визовые консультации.</div></div></div>
+          </div>
+        </div>
+        <div class="fade-in">
+          <div class="trip-box">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+              <div style="width:.5rem;height:.5rem;border-radius:50%;background:#34d399;"></div>
+              <span style="font-size:.875rem;font-weight:500;color:var(--text-secondary);">Панель поездки</span>
+            </div>
+            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">Прибытие рейса</span><span style="font-size:.75rem;color:#34d399;">Подтверждено</span></div><div style="font-size:.875rem;font-weight:500;">KC 932 · Almaty → Incheon</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">14 апреля 2026 · 08:40 KST</div></div>
+            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">Трансфер</span><span style="font-size:.75rem;color:#3391ff;">Запланировано</span></div><div style="font-size:.875rem;font-weight:500;">Водитель Ким · Чёрный Genesis G80</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">Терминал 1 · Гейт A</div></div>
+            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">Проживание</span><span style="font-size:.75rem;color:#34d399;">Забронировано</span></div><div style="font-size:.875rem;font-weight:500;">Lotte Hotel Seoul · Делюкс</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">14/04 – 10/05 · 26 ночей</div></div>
+            <div class="trip-card" style="border:1px solid rgba(51,145,255,.2);"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">Программа обучения</span><span style="font-size:.75rem;color:#f59e0b;">Начало через 3 дня</span></div><div style="font-size:.875rem;font-weight:500;">Кардиохирургия · Госпиталь Сеульского нац. ун-та</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">17/04 – 09/05 · Команда проф. Кима</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
+        <div class="section-label">Отзывы</div>
+        <h2 class="section-title">Нам доверяют медицинские специалисты со всего мира</h2>
+      </div>
+      <div class="test-grid fade-in">
+        <div class="test-card">
+          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"Весь процесс прошёл гладко. От поиска подходящей кардиохирургической программы до бронирования отеля — обо всём позаботились."</p>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#3391ff,#1a6ff5);">A</div><div><div style="font-size:.875rem;font-weight:500;">Dr. Aidar Suleimenov</div><div style="font-size:.75rem;color:var(--text-muted);">Кардиолог · Алматы, Казахстан</div></div></div>
+        </div>
+        <div class="test-card">
+          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"Как агентство медицинского туризма, MediW упростило весь наш рабочий процесс. Управление клиентами и сотрудничество с больницами стало намного проще."</p>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#8e44ad,#6c3483);">M</div><div><div style="font-size:.875rem;font-weight:500;">Marina Kozlova</div><div style="font-size:.75rem;color:var(--text-muted);">CEO, MedTravel Agency · Москва</div></div></div>
+        </div>
+        <div class="test-card">
+          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"Наблюдение за хирургией позвоночника в Северанс было мирового уровня. Благодаря консьерж-поддержке это стал премиальный опыт."</p>
+          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#16a085,#1abc9c);">B</div><div><div style="font-size:.875rem;font-weight:500;">Dr. Batbayar Enkhbat</div><div style="font-size:.75rem;color:var(--text-muted);">Ортопед · Улан-Батор</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partner Cards -->
+  <section class="section" style="background:var(--bg-secondary);transition:var(--transition);">
+    <div class="section-inner">
+      <div class="partner-grid fade-in">
+        <div class="partner-card" style="background:linear-gradient(135deg,rgba(51,145,255,.08),var(--bg-card));border:1px solid rgba(51,145,255,.15);">
+          <div class="section-label">Для больниц</div>
+          <h3 style="font-size:1.5rem;font-weight:700;margin:.75rem 0;">Свяжитесь с зарубежными медицинскими специалистами</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;">Регистрируйте образовательные программы, управляйте заявками и связывайтесь с лучшими специалистами со всего мира.</p>
+          <ul><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Публикация расписания обучения</li><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Проверка квалификации кандидатов</li><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Специальная панель управления для больниц</li></ul>
+          <button class="btn btn-primary">Стать партнёром</button>
+        </div>
+        <div class="partner-card" style="background:linear-gradient(135deg,rgba(142,68,173,.08),var(--bg-card));border:1px solid rgba(142,68,173,.15);">
+          <div class="section-label" style="color:#8e44ad;">Агентства и туристические партнёры</div>
+          <h3 style="font-size:1.5rem;font-weight:700;margin:.75rem 0;">Расширьте ваш бизнес в сфере медицинского туризма</h3>
+          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;">Регистрируйте клиентов, управляйте кейсами и сотрудничайте с корейскими больницами через панель управления.</p>
+          <ul><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Регистрация и управление кейсами клиентов</li><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Прямое сотрудничество с больницами</li><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Отслеживание доходов и расчётов</li></ul>
+          <button class="btn" style="background:#8e44ad;color:#fff;padding:.625rem 1.25rem;">Стать партнёром</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section" style="position:relative;overflow:hidden;">
+    <div class="glow" style="width:800px;height:400px;background:#3391ff;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.08;"></div>
+    <div style="position:relative;max-width:48rem;margin:0 auto;">
+      <h2>Готовы <span class="gradient-text">развить медицинскую карьеру</span><br>в Корее?</h2>
+      <p style="color:var(--text-tertiary);font-size:1.125rem;margin:1.5rem auto 2.5rem;max-width:36rem;line-height:1.6;">Присоединяйтесь к тысячам медицинских специалистов, выбравших MediW как путь к мировой системе здравоохранения Кореи.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+        <a href="programs.html" class="btn btn-primary btn-lg" style="text-decoration:none;">Смотреть открытые программы</a>
+        <button class="btn btn-outline btn-lg">Связаться с нами</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:1rem;">
+          <div class="logo-icon">M</div>
+          <span class="logo-text">MediW</span>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-muted);line-height:1.6;max-width:16rem;">Ваш путь к передовой корейской медицине. Связываем специалистов со всего мира с больницами мирового уровня.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Платформа</div><a href="programs.html">Образовательные программы</a><a href="#">Каталог больниц</a><a href="#">Услуги для пациентов</a><a href="#">Консьерж</a></div>
+      <div class="footer-col"><div class="footer-col-title">Партнёры</div><a href="#">Для больниц</a><a href="#">Для агентств</a><a href="#">Стать партнёром</a><a href="#">Гостиничный консорциум</a></div>
+      <div class="footer-col"><div class="footer-col-title">Компания</div><a href="#">О RBG</a><a href="#">Вакансии</a><a href="#">Блог</a><a href="#">Контакты</a></div>
+      <div class="footer-col"><div class="footer-col-title">Языки</div><a href="#">Русский</a><a href="#">Қазақша</a><a href="#">Монгол</a><a href="#">English</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 RayBusiness Group. All rights reserved. Все права защищены.</span>
+      <div><a href="#">Конфиденциальность</a><a href="#">Условия</a><a href="#">Cookie</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme
+    function getTheme(){return localStorage.getItem('mediw-theme')||'dark';}
+    function setTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mediw-theme',t);}
+    function toggleTheme(){setTheme(getTheme()==='dark'?'light':'dark');}
+    setTheme(getTheme());
+
+    // Mobile menu
+    function toggleMobile(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+    // Language
+    function changeLanguage(lang){localStorage.setItem('language',lang);console.log('Language changed to:',lang);}
+    if(document.getElementById('langSelector')){document.getElementById('langSelector').value=localStorage.getItem('language')||'en';}
+
+    // Fade in
+    const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.1});
+    document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+    // Show desktop login
+    if(window.innerWidth>768)document.getElementById('loginBtnDesktop').style.display='';
+  </script>
+</body>
+</html>

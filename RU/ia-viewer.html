@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Документация IA MediW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #fff;
+  --card-bg: #fff;
+  --border: #e5e7eb;
+  --primary: #3391ff;
+  --primary-light: #e8f2ff;
+  --heading: #111827;
+  --body: #4b5563;
+  --body-light: #9ca3af;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --purple: #8b5cf6;
+  --sidebar-w: 240px;
+  --header-h: 56px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--body);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: -0.3px;
+}
+.sidebar-logo span {
+  font-size: 11px;
+  color: var(--body-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sidebar-nav { padding: 12px 0; flex: 1; }
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  color: var(--body);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar-nav a:hover {
+  background: #f3f4f6;
+  color: var(--heading);
+}
+.sidebar-nav a.active {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-left-color: var(--primary);
+  font-weight: 600;
+}
+.sidebar-nav a .nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--header-h);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+.header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--heading);
+}
+.header .meta {
+  font-size: 12px;
+  color: var(--body-light);
+}
+
+/* Main */
+.main {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--header-h);
+  min-height: 100vh;
+}
+.main-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 40px 80px;
+}
+
+/* Sections */
+.section { margin-bottom: 56px; scroll-margin-top: calc(var(--header-h) + 24px); }
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--body-light);
+  margin-bottom: 24px;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--heading);
+  line-height: 1.2;
+}
+.stat-card .label {
+  font-size: 12px;
+  color: var(--body-light);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.stat-card.accent .num { color: var(--primary); }
+.stat-card.green .num { color: var(--success); }
+.stat-card.purple .num { color: var(--purple); }
+
+.info-row {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.info-row .info-label {
+  font-size: 12px;
+  color: var(--body-light);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.info-row .info-value {
+  font-size: 14px;
+  color: var(--heading);
+  font-weight: 500;
+}
+
+/* Subsection */
+.subsection { margin-bottom: 32px; }
+.subsection-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.subsection-title .badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #fff;
+}
+.badge-blue { background: var(--primary); }
+.badge-green { background: var(--success); }
+.badge-purple { background: var(--purple); }
+.badge-orange { background: var(--warning); }
+.badge-red { background: var(--danger); }
+.badge-gray { background: #9ca3af; }
+
+/* Tables */
+.table-wrap {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--body-light);
+  background: #f9fafb;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+tbody td {
+  padding: 10px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f3f4f6;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f9fafb; }
+.mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--body);
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Pill button */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.btn-pill:hover { opacity: 0.85; }
+
+/* Accordion Cards */
+.accordion-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.accordion-card.open { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  gap: 12px;
+  transition: background 0.15s;
+}
+.accordion-header:hover { background: #f9fafb; }
+.accordion-header .chevron {
+  transition: transform 0.2s;
+  color: var(--body-light);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.accordion-card.open .accordion-header .chevron { transform: rotate(90deg); }
+.accordion-header .page-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.accordion-header .page-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--heading);
+  flex: 1;
+}
+.accordion-body {
+  display: none;
+  padding: 0 18px 18px;
+  border-top: 1px solid #f3f4f6;
+}
+.accordion-card.open .accordion-body { display: block; padding-top: 16px; }
+
+.detail-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--body-light);
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+.detail-section-label:first-child { margin-top: 0; }
+
+.info-list { list-style: none; padding: 0; }
+.info-list li {
+  position: relative;
+  padding: 4px 0 4px 16px;
+  font-size: 13px;
+  color: var(--body);
+  line-height: 1.5;
+}
+.info-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 5px;
+  height: 5px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+/* Checkboxes */
+.check-list { list-style: none; padding: 0; }
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: var(--body);
+}
+.check-list li.checked { color: var(--body-light); text-decoration: line-through; }
+.check-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.progress-bar-wrap .progress-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  white-space: nowrap;
+}
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.progress-pct {
+  font-size: 12px;
+  color: var(--body-light);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Test Flows */
+.flow-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.flow-card .flow-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-card .flow-num {
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.flow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.flow-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--heading);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+a.flow-step:hover { background: var(--primary-light); color: var(--primary); }
+.flow-step.note {
+  background: transparent;
+  color: var(--body-light);
+  font-style: italic;
+  padding: 6px 4px;
+}
+.flow-arrow {
+  color: var(--body-light);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Status table */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Nav map */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.nav-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.nav-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 12px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--body);
+  transition: background 0.15s;
+}
+.nav-item:hover { background: #f3f4f6; }
+.nav-item a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 12px;
+}
+.nav-item .count-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* Mobile */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--heading);
+}
+@media (max-width: 860px) {
+  .mobile-toggle { display: flex; }
+  .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.1); }
+  .header { left: 0; padding-left: 56px; }
+  .main { margin-left: 0; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-grid { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; align-items: flex-start; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h2>MediW IA</h2>
+    <span>Информационная архитектура</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#overview" class="active"><span class="nav-icon">&#9673;</span> Обзор</a>
+    <a href="#sitemap"><span class="nav-icon">&#9783;</span> Карта сайта</a>
+    <a href="#details"><span class="nav-icon">&#9881;</span> Детали страниц</a>
+    <a href="#flows"><span class="nav-icon">&#10140;</span> Тестовые сценарии</a>
+    <a href="#statuses"><span class="nav-icon">&#9679;</span> Определения статусов</a>
+    <a href="#navigation"><span class="nav-icon">&#9776;</span> Карта навигации</a>
+  </nav>
+</aside>
+
+<header class="header">
+  <h1>Документация IA MediW</h1>
+  <span class="meta">Последнее обновление: 2026-03-24</span>
+</header>
+
+<main class="main">
+<div class="main-inner">
+
+<!-- OVERVIEW -->
+<section id="overview" class="section">
+  <h2 class="section-title">Обзор</h2>
+  <p class="section-subtitle">Текущее состояние всех страниц платформы MediW</p>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="num">20</div><div class="label">Всего страниц</div></div>
+    <div class="stat-card accent"><div class="num">5</div><div class="label">Публичные</div></div>
+    <div class="stat-card green"><div class="num">7</div><div class="label">Пользовательские</div></div>
+    <div class="stat-card purple"><div class="num">8</div><div class="label">Административные</div></div>
+  </div>
+  <div class="info-row">
+    <span class="info-label">URL деплоя</span>
+    <span class="info-value" style="color:var(--body-light);">Будет обновлено после деплоя</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">Последнее обновление</span>
+    <span class="info-value">2026-03-24</span>
+  </div>
+</section>
+
+<!-- SITEMAP -->
+<section id="sitemap" class="section">
+  <h2 class="section-title">Карта сайта</h2>
+  <p class="section-subtitle">Полный список страниц и сопоставление файлов</p>
+
+  <div class="subsection">
+    <div class="subsection-title">Публичные страницы <span class="badge badge-blue">5</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Название страницы</th><th>Файл</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>P-1</td><td>Лендинг</td><td><code class="mono">index.html</code></td><td><a href="index.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>P-2</td><td>Вход</td><td><code class="mono">login.html</code></td><td><a href="login.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>P-3</td><td>Регистрация (4 шага)</td><td><code class="mono">signup.html</code></td><td><a href="signup.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>P-4</td><td>Регистрация завершена</td><td><code class="mono">signup-success.html</code></td><td><a href="signup-success.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>P-5</td><td>Список программ</td><td><code class="mono">programs.html</code></td><td><a href="programs.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Пользовательские страницы <span class="badge badge-green">7</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Название страницы</th><th>Файл</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>U-1</td><td>Панель управления</td><td><code class="mono">dashboard.html</code></td><td><a href="dashboard.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-2</td><td>Мой профиль</td><td><code class="mono">profile.html</code></td><td><a href="profile.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-3</td><td>Управление пациентами (список)</td><td><code class="mono">patient-list.html</code></td><td><a href="patient-list.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-4</td><td>Информация о пациенте</td><td><code class="mono">patient-detail.html?id=1</code></td><td><a href="patient-detail.html?id=1" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-5</td><td>Приём пациента (2 шага)</td><td><code class="mono">patient-intake.html</code></td><td><a href="patient-intake.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-6</td><td>Поиск больниц</td><td><code class="mono">hospitals.html</code></td><td><a href="hospitals.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>U-7</td><td>Информация о больнице</td><td><code class="mono">hospital-detail.html?id=1</code></td><td><a href="hospital-detail.html?id=1" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Административные страницы <span class="badge badge-purple">8</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Название страницы</th><th>Файл</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>A-1</td><td>Панель администратора</td><td><code class="mono">admin.html</code></td><td><a href="admin.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-2</td><td>Управление пользователями</td><td><code class="mono">admin-users.html</code></td><td><a href="admin-users.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-3</td><td>Кейсы пациентов</td><td><code class="mono">admin-cases.html</code></td><td><a href="admin-cases.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-4</td><td>Управление больницами</td><td><code class="mono">admin-hospitals.html</code></td><td><a href="admin-hospitals.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-5</td><td>Управление агентствами</td><td><code class="mono">admin-agencies.html</code></td><td><a href="admin-agencies.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-6</td><td>Управление одобрениями</td><td><code class="mono">admin-approvals.html</code></td><td><a href="admin-approvals.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-7</td><td>Системные настройки</td><td><code class="mono">admin-settings.html</code></td><td><a href="admin-settings.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+          <tr><td>A-8</td><td>Регистрация больницы</td><td><code class="mono">hospital-register.html</code></td><td><a href="hospital-register.html" target="_blank" class="btn-pill">Открыть &rarr;</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE DETAILS -->
+<section id="details" class="section">
+  <h2 class="section-title">Детали страниц</h2>
+  <p class="section-subtitle">Информация о содержимом каждой страницы и чек-листы</p>
+  <div class="progress-bar-wrap" id="progress-wrap">
+    <span class="progress-text" id="progress-text">0 / 0 пунктов выполнено</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+  <div id="accordion-container"></div>
+</section>
+
+<!-- TEST FLOWS -->
+<section id="flows" class="section">
+  <h2 class="section-title">Тестовые сценарии</h2>
+  <p class="section-subtitle">Тестовые сценарии по основным пользовательским кейсам</p>
+  <div id="flows-container"></div>
+</section>
+
+<!-- STATUS DEFINITIONS -->
+<section id="statuses" class="section">
+  <h2 class="section-title">Определения статусов</h2>
+  <p class="section-subtitle">Определения статусов кейсов пациентов</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Статус</th><th>Англ.</th><th>Бейдж</th><th>Описание</th></tr></thead>
+      <tbody>
+        <tr><td>Черновик</td><td>Draft</td><td><span class="status-badge" style="background:#9ca3af">Черновик</span></td><td>Форма приёма пациента в процессе заполнения</td></tr>
+        <tr><td>Заявка подана</td><td>Submitted</td><td><span class="status-badge" style="background:var(--primary)">Заявка подана</span></td><td>Заявка подана, ожидает рассмотрения больницей</td></tr>
+        <tr><td>На рассмотрении</td><td>Under Review</td><td><span class="status-badge" style="background:var(--warning)">На рассмотрении</span></td><td>Больница рассматривает кейс</td></tr>
+        <tr><td>Запрос документов</td><td>Docs Requested</td><td><span class="status-badge" style="background:var(--danger)">Запрос документов</span></td><td>Больница запросила дополнительные медицинские документы</td></tr>
+        <tr><td>Одобрено больницей</td><td>Hospital Approved</td><td><span class="status-badge" style="background:var(--purple)">Одобрено больницей</span></td><td>Больница одобрила приём</td></tr>
+        <tr><td>Ожидание подтверждения</td><td>Pending Confirmation</td><td><span class="status-badge" style="background:var(--warning)">Ожидание подтверждения</span></td><td>Ожидание окончательного подтверждения от пациента или агентства</td></tr>
+        <tr><td>Подтверждено</td><td>Confirmed</td><td><span class="status-badge" style="background:var(--success)">Подтверждено</span></td><td>Обе стороны подтвердили, приём утверждён</td></tr>
+        <tr><td>Отозвано</td><td>Withdrawn</td><td><span class="status-badge" style="background:#9ca3af">Отозвано</span></td><td>Пациент или агентство отозвали кейс</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- NAVIGATION MAP -->
+<section id="navigation" class="section">
+  <h2 class="section-title">Карта навигации</h2>
+  <p class="section-subtitle">Структура боковой навигации</p>
+  <div class="nav-grid">
+    <div class="nav-card">
+      <h4>Боковая панель пользователя</h4>
+      <div class="nav-item"><span>Панель управления</span><a href="dashboard.html" target="_blank">dashboard.html</a></div>
+      <div class="nav-item"><span>Мой профиль</span><a href="profile.html" target="_blank">profile.html</a></div>
+      <div class="nav-item"><span>Управление пациентами</span><a href="patient-list.html" target="_blank">patient-list.html</a></div>
+      <div class="nav-item"><span>Поиск больниц</span><a href="hospitals.html" target="_blank">hospitals.html</a></div>
+      <div class="nav-item"><span>Настройки</span><span style="color:var(--body-light);font-size:12px">Ссылка в панели управления</span></div>
+    </div>
+    <div class="nav-card">
+      <h4>Боковая панель администратора</h4>
+      <div class="nav-item"><span>Панель управления</span><a href="admin.html" target="_blank">admin.html</a></div>
+      <div class="nav-item"><span>Управление пользователями</span><span class="count-badge">156</span></div>
+      <div class="nav-item"><span>Кейсы пациентов</span><span class="count-badge">28</span></div>
+      <div class="nav-item"><span>Управление больницами</span><span class="count-badge">32</span></div>
+      <div class="nav-item"><span>Управление агентствами</span><span class="count-badge">12</span></div>
+      <div class="nav-item"><span>Управление одобрениями</span><span class="count-badge">7</span></div>
+      <div class="nav-item"><span>Системные настройки</span><a href="admin-settings.html" target="_blank">admin-settings.html</a></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script>
+// Page data
+const pages = [
+  {id:'P-1',name:'Лендинг',file:'index.html',
+   info:['Секция Hero (заголовок, 2 CTA-кнопки)','Карточки расписания стажировок в реальном времени — 4 шт.','Панель статистики (150+ партнёрских больниц, 23 страны, 2 400+ программ, 98% удовлетворённость)','How It Works — 4 шага','Featured Hospitals — 3 шт.','Категории специализаций — 8 шт.','Консьерж-сервисы — 4 шт. + демо Trip Dashboard','Отзывы — 3 шт.','CTA для больниц / агентств','Футер'],
+   checks:['Переключение тёмной/светлой темы','Переключение языка (EN, KO, JA, ZH, RU)','Explore Programs → programs.html','Get Started → signup.html','Log in → login.html','Анимация fade-in при скролле','Мобильная адаптивность (гамбургер-меню при ширине < 768px)']},
+  {id:'P-2',name:'Вход',file:'login.html',
+   info:['Поля ввода email / пароля','Чекбокс «Запомнить меня»','Социальный вход (Google, Facebook)','Ссылка «Забыли пароль»','Ссылка на регистрацию'],
+   checks:['Отправка формы входа → dashboard.html','Ссылка Sign up → signup.html','Переключение тёмной/светлой темы','Мобильная адаптивность']},
+  {id:'P-3',name:'Регистрация (4 шага)',file:'signup.html',
+   info:['Степпер из 4 шагов (Basic Info → Location → Account Type → Terms)','Шаг 1: имя, email, пароль, дата рождения, пол, телефон, язык','Шаг 2: гражданство, страна проживания, город (модальный поиск)','Шаг 3: выбор типа аккаунта (Patient, Doctor, Hospital, Agency)','Шаг 4: 3 чекбокса согласия с условиями'],
+   checks:['Кнопки «Далее»/«Назад» на каждом шаге','Ошибка при несовпадении паролей','Открытие/закрытие/выбор модального окна поиска страны/города','Обновление списка городов после выбора страны','UI выбора типа аккаунта (радиокнопки)','Предупреждение при отсутствии обязательного согласия','Финальная отправка → signup-success.html']},
+  {id:'P-4',name:'Регистрация завершена',file:'signup-success.html',
+   info:['Персонализированное приветственное сообщение по типу аккаунта','Сводка регистрационных данных (имя, email, тип аккаунта, локация)','Инструкция по подтверждению email','3 следующих шага (различаются по типу аккаунта)','Кнопки «Перейти в панель управления» / «На главную»'],
+   checks:['Отображение данных из sessionStorage, переданных из signup.html','Разный контент по типу аккаунта','Перейти в панель управления → login.html']},
+  {id:'P-5',name:'Список программ',file:'programs.html',
+   info:['Переключение вида: календарь/список','Боковая панель фильтров (специализация, больница, период)','Список карточек программ','Модальное окно подачи заявки'],
+   checks:['Переключение вида календарь/список','Фильтрация списка при применении фильтров','Клик по карточке программы → модальное окно с деталями']},
+  {id:'U-1',name:'Панель управления',file:'dashboard.html',
+   info:['Левая боковая панель (панель управления, мой профиль, управление пациентами, поиск больниц, настройки)','Карточка пользователя (имя, роль)','Переключатель типа (пациент / медработник / агентство)','Баннер (разный заголовок/описание по типу)','CTA-кнопка — пациент/агентство: «Поиск больниц · приём» → hospitals.html / медработник: «Подать заявку на программу» → programs.html','4 карточки статистики (по типу)','Список уведомлений (по типу)'],
+   checks:['Переключение типа → смена баннера/статистики/уведомлений','CTA-кнопка (пациент) → hospitals.html','CTA-кнопка (агентство) → hospitals.html','CTA-кнопка (медработник) → programs.html','Боковое меню → переход на страницы','Выход → login.html','Мобильное гамбургер-меню']},
+  {id:'U-2',name:'Мой профиль',file:'profile.html',
+   info:['Пациент: является ли пациентом, отношение опекуна, экстренный контакт, цель визита, номер паспорта','Медработник: больница, должность, специализация, стаж, лицензия, желаемая стажировка, загрузка файлов','Агентство: информация о компании, ответственное лицо, тип бизнеса, объём пациентов, загрузка файлов, расчётный счёт','Прогресс-бар заполнения профиля (фиксированный вверху)','Обязательные поля отмечены красной *'],
+   checks:['Переключение типа → смена содержимого формы','Расчёт процента заполнения профиля','Фиксация прогресс-бара при скролле (sticky)','Клик по области загрузки файла → выбор файла','Кнопка сохранения → toast-уведомление','Отображение обязательных полей красной *']},
+  {id:'U-3',name:'Управление пациентами (список)',file:'patient-list.html',
+   info:['Карточки статистики вверху (всего, черновики, заявки поданы, запрос доп. документов)','9 вкладок фильтрации по статусу','Строка поиска','Таблица списка пациентов','Кнопка регистрации нового пациента'],
+   checks:['Фильтрация по клику на вкладку статуса','Фильтрация в реальном времени по поисковому запросу','Клик по строке «Черновик» → patient-intake.html','Клик по строке «Заявка подана» и выше → patient-detail.html','Регистрация нового пациента → patient-intake.html','Отображение прогресса (Шаг 1/2 или завершено)']},
+  {id:'U-4',name:'Информация о пациенте',file:'patient-detail.html?id=1',
+   info:['Заголовок пациента (имя, статус, больница, отделение)','Таймлайн процесса одобрения — 5 шагов','Уведомление о запросе доп. документов (статус «Запрос документов»)','Ожидание подтверждения (кнопки одобрения/отзыва)','Аккордеон-карточки с информацией (основные данные, медицинские данные, медицинские записи, план визита)'],
+   checks:['?id=1 → статус «Запрос документов» (уведомление отображается)','?id=3 → статус «Ожидание подтверждения» (кнопки одобрения/отзыва)','?id=17 → статус «Отозвано»','Раскрытие/сворачивание аккордеон-карточек','Загрузка и отправка доп. документов','Клик по кнопке одобрения/отзыва → смена статуса','Назад → patient-list.html']},
+  {id:'U-5',name:'Приём пациента (2 шага)',file:'patient-intake.html',
+   info:['Шаг 1: отображение выбранной больницы/отделения, имя, пол, дата рождения, гражданство, телефон, email, чипы желаемых отделений, основные симптомы','Шаг 2: местный диагноз, анамнез, лекарства, загрузка медицинских записей — 8 типов, расписание визита, 4 тогла консьерж-сервисов'],
+   checks:['[Основной процесс] Проверить автоматическое отображение больницы + отделения, переданных из hospitals.html','[Основной процесс] Проверить автоматическое отображение больницы, переданной из hospital-detail.html','Анимация перехода между шагами 1 и 2','Множественный выбор чипов отделений','Индивидуальный выбор файлов для каждого слота загрузки','Тогл консьерж-сервисов ON/OFF','Подать заявку → patient-list.html','Сохранить черновик → статус «Черновик»']},
+  {id:'U-6',name:'Поиск больниц',file:'hospitals.html',
+   info:['3-колоночный макет (фильтры | список | детали)','Фильтры: чипы специализаций, тип больницы, регион, язык','Список больниц — 12 шт.','Детали больницы: фото, название, адрес, бейджи аккредитации, описание, карта','Аккордеон: отделение → карточки врачей','Клик по врачу → модальное окно (опыт, образование, специализация, заболевания, исследования)','Чекбокс отделения → плавающая панель приёма внизу'],
+   checks:['Отображение 12 больниц','Поиск в реальном времени (по названию больницы, отделению, заболеванию, имени врача)','Фильтрация по чипам/чекбоксам','Кнопка сброса → снятие всех фильтров','Клик по карточке больницы → переключение правой панели','Клик по строке отделения → раскрытие/сворачивание списка врачей','Карточка врача → модальное окно профиля (ESC/клик по фону для закрытия)','Выбор чекбокса отделения → появление плавающей панели внизу','[Основной процесс] Выбор отделения → клик «Приём» → передача параметров больницы + отделения в patient-intake.html']},
+  {id:'U-7',name:'Информация о больнице',file:'hospital-detail.html?id=1',
+   info:['Заголовок больницы (название, тип, адрес, бейджи JCI/Минздрав)','Кнопки связи: WhatsApp, email, веб-сайт','3 вкладки: основная информация | отделения и врачи | международный медицинский центр','CTA «Подать заявку в эту больницу» внизу'],
+   checks:['?id=1 (Асан), ?id=3 (Каннам Северанс), ?id=5 (Сеульский университет) — отображение соответствующей информации','Переключение вкладок','Ссылки WhatsApp/email','Приём → patient-intake.html','Список больниц → hospitals.html']},
+  {id:'A-1',name:'Панель администратора',file:'admin.html',
+   info:['Тёмная боковая панель (7 пунктов меню)','4 карточки статистики (пользователи 156, кейсы 28, больницы 32, ожидают одобрения 7)','График заявок по месяцам','Лента последних действий','Распределение типов пользователей','Распределение пациентов по странам'],
+   checks:['Переход из бокового меню на соответствующие admin-страницы','Отображение столбцов графика по месяцам','Регистрация новой больницы → hospital-register.html','Мобильная адаптивность боковой панели']},
+  {id:'A-2',name:'Управление пользователями',file:'admin-users.html',
+   info:['Фильтр по типу (все, пациенты, медработники, агентства)','Строка поиска','Таблица пользователей (имя, email, тип, страна, дата регистрации, статус)'],
+   checks:['Фильтрация таблицы при клике по фильтру типа','Фильтрация в реальном времени по поиску','Отображение бейджей «Активен»/«Ожидание»']},
+  {id:'A-3',name:'Кейсы пациентов',file:'admin-cases.html',
+   info:['9 фильтров по статусу','Строка поиска','Таблица кейсов (пациент, агентство, больница, отделение, статус, дата)'],
+   checks:['Фильтрация при клике по статусу','Различение цветовых бейджей по статусам']},
+  {id:'A-4',name:'Управление больницами',file:'admin-hospitals.html',
+   info:['Таблица больниц (название, тип, регион, отделения, языки, статус)','Кнопка регистрации больницы','Ссылка «Подробнее» в каждой строке'],
+   checks:['Фильтрация в реальном времени по поиску','Клик по строке → hospital-detail.html','Работа ссылки «Подробнее»','+ Регистрация больницы → hospital-register.html','Бейджи статуса «Активна»/«Ожидание»']},
+  {id:'A-5',name:'Управление агентствами',file:'admin-agencies.html',
+   info:['Таблица агентств (название компании, страна, ответственное лицо, кол-во пациентов, дата регистрации, статус)','Строка поиска'],
+   checks:['Фильтрация в реальном времени по поиску','Отображение бейджей статуса']},
+  {id:'A-6',name:'Управление одобрениями',file:'admin-approvals.html',
+   info:['Фильтр по типу (все, ожидает рассмотрения больницей, ожидает подтверждения пациентом, ожидает дополнения документов)','Список карточек ожидающих одобрения','Кнопки действий: одобрить/отклонить/обработать'],
+   checks:['Работа фильтра по типу','Рассмотрение больницей → кнопки одобрения/отклонения','Подтверждение пациентом → кнопка запроса подтверждения','Дополнение документов → кнопка запроса документов']},
+  {id:'A-7',name:'Системные настройки',file:'admin-settings.html',
+   info:['Тоглы уведомлений (email, SMS, push)','Тоглы процесса одобрения','Тоглы системных настроек'],
+   checks:['ON/OFF для каждого тогла','Кнопка сохранения → toast-уведомление']},
+  {id:'A-8',name:'Регистрация больницы',file:'hospital-register.html',
+   info:['Форма из 7 секций: основная информация, локация, отделения и врачи, языки, аккредитация, международный медицинский центр, загрузка файлов','Динамическое добавление/удаление отделений','Загрузка файлов — 3 типа','Тоглы JCI/Минздрав'],
+   checks:['Обязательные поля отмечены красной *','Добавление / удаление отделений','Клик по слоту загрузки → выбор файла','Тоглы JCI / Минздрав ON/OFF','Регистрация больницы → валидация обязательных полей → скролл к ошибке','Сохранить черновик → toast-уведомление','К списку → admin-hospitals.html']},
+];
+
+const flows = [
+  {title:'Регистрация → вход в панель управления', steps:[
+    {label:'index.html', href:'index.html'},
+    {label:'signup.html', href:'signup.html'},
+    {label:'signup-success.html', href:'signup-success.html'},
+    {label:'login.html', href:'login.html'},
+    {label:'dashboard.html', href:'dashboard.html'}
+  ]},
+  {title:'Заполнение профиля (агентство)', steps:[
+    {label:'dashboard.html', href:'dashboard.html'},
+    {label:'profile.html', href:'profile.html'},
+    {label:'Выбор типа «Агентство» → заполнение → сохранение', note:true}
+  ]},
+  {title:'★ Основной процесс: поиск больницы → выбор отделения → приём пациента', steps:[
+    {label:'dashboard.html (клик CTA «Поиск больниц · приём»)', href:'dashboard.html'},
+    {label:'hospitals.html', href:'hospitals.html'},
+    {label:'Фильтрация по отделению/региону в левой панели', note:true},
+    {label:'Клик по карточке больницы → правая панель деталей', note:true},
+    {label:'Клик по строке отделения → просмотр врачей', note:true},
+    {label:'Выбор чекбокса отделения → клик «Приём» внизу', note:true},
+    {label:'patient-intake.html (автоматическое отображение больницы + отделения)', href:'patient-intake.html'},
+    {label:'Заполнение шага 1 → заполнение шага 2 → подать заявку', note:true},
+    {label:'patient-list.html (проверить строку «Заявка подана»)', href:'patient-list.html'}
+  ]},
+  {title:'Список пациентов → детали → отправка доп. документов', steps:[
+    {label:'patient-list.html (фильтр «Запрос документов»)', href:'patient-list.html'},
+    {label:'patient-detail.html?id=1', href:'patient-detail.html?id=1'},
+    {label:'Загрузка → отправка', note:true}
+  ]},
+  {title:'Процесс двустороннего одобрения', steps:[
+    {label:'patient-detail.html?id=3', href:'patient-detail.html?id=3'},
+    {label:'Одобрение или отзыв', note:true}
+  ]},
+  {title:'Админ — управление регистрацией больниц', steps:[
+    {label:'admin.html', href:'admin.html'},
+    {label:'admin-hospitals.html', href:'admin-hospitals.html'},
+    {label:'hospital-register.html', href:'hospital-register.html'},
+    {label:'Заполнение → регистрация', note:true},
+    {label:'admin-hospitals.html', href:'admin-hospitals.html'},
+    {label:'hospital-detail.html', href:'hospital-detail.html?id=1'}
+  ]},
+  {title:'Админ — обработка одобрений', steps:[
+    {label:'admin.html', href:'admin.html'},
+    {label:'admin-approvals.html', href:'admin-approvals.html'},
+    {label:'Фильтр → одобрить/отклонить', note:true}
+  ]}
+];
+
+// LocalStorage
+const STORAGE_KEY = 'mediw-ia-checks';
+function loadChecks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveChecks(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// Build accordion cards
+function buildAccordions() {
+  const container = document.getElementById('accordion-container');
+  let totalChecks = 0;
+  let checkedCount = 0;
+  const saved = loadChecks();
+
+  pages.forEach((page, pi) => {
+    const card = document.createElement('div');
+    card.className = 'accordion-card';
+    card.innerHTML = `
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span class="chevron">&#9654;</span>
+        <span class="page-id">${page.id}</span>
+        <span class="page-name">${page.name}</span>
+        <a href="${page.file}" target="_blank" class="btn-pill" onclick="event.stopPropagation()">Открыть &rarr;</a>
+      </div>
+      <div class="accordion-body">
+        <div class="detail-section-label">Отображаемая информация</div>
+        <ul class="info-list">
+          ${page.info.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+        <div class="detail-section-label">Чек-лист</div>
+        <ul class="check-list">
+          ${page.checks.map((c, ci) => {
+            const key = `${page.id}-${ci}`;
+            const isChecked = saved[key] === true;
+            totalChecks++;
+            if (isChecked) checkedCount++;
+            return `<li class="${isChecked ? 'checked' : ''}">
+              <input type="checkbox" data-key="${key}" ${isChecked ? 'checked' : ''} onchange="onCheck(this)">
+              <span>${c}</span>
+            </li>`;
+          }).join('')}
+        </ul>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  updateProgress(checkedCount, totalChecks);
+}
+
+function toggleAccordion(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+function onCheck(cb) {
+  const saved = loadChecks();
+  saved[cb.dataset.key] = cb.checked;
+  saveChecks(saved);
+  const li = cb.parentElement;
+  if (cb.checked) li.classList.add('checked');
+  else li.classList.remove('checked');
+
+  // Recount
+  const allCbs = document.querySelectorAll('.check-list input[type="checkbox"]');
+  let total = allCbs.length, checked = 0;
+  allCbs.forEach(c => { if (c.checked) checked++; });
+  updateProgress(checked, total);
+}
+
+function updateProgress(checked, total) {
+  document.getElementById('progress-text').textContent = `${checked} / ${total} пунктов выполнено`;
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+// Build flows
+function buildFlows() {
+  const container = document.getElementById('flows-container');
+  flows.forEach((flow, fi) => {
+    const card = document.createElement('div');
+    card.className = 'flow-card';
+    let stepsHtml = '';
+    flow.steps.forEach((step, si) => {
+      if (si > 0) stepsHtml += '<span class="flow-arrow">&#8594;</span>';
+      if (step.note) {
+        stepsHtml += `<span class="flow-step note">${step.label}</span>`;
+      } else {
+        stepsHtml += `<a href="${step.href}" target="_blank" class="flow-step">${step.label}</a>`;
+      }
+    });
+    card.innerHTML = `
+      <div class="flow-title"><span class="flow-num">${fi + 1}</span> ${flow.title}</div>
+      <div class="flow-steps">${stepsHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Sidebar active state with IntersectionObserver
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const link = document.querySelector(`.sidebar-nav a[href="#${id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+// Close mobile sidebar on nav click
+document.querySelectorAll('.sidebar-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Init
+buildAccordions();
+buildFlows();
+initScrollSpy();
+</script>

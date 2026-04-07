@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시안 비교</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; color: #fff; font-family: 'Apple SD Gothic Neo', sans-serif; }
+
+  .toolbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px;
+  }
+
+  .toolbar h1 { font-size: 14px; font-weight: 600; color: #aaa; margin-right: 8px; }
+
+  .tab-btn {
+    padding: 6px 20px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    background: #fff;
+    color: #111;
+    border-color: #fff;
+    font-weight: 600;
+  }
+  .tab-btn:hover:not(.active) { border-color: #777; color: #ccc; }
+
+  .side-btn {
+    margin-left: auto;
+    padding: 6px 20px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: transparent;
+    color: #aaa;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .side-btn.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .side-btn:hover:not(.active) { border-color: #999; color: #fff; }
+
+  .content { padding-top: 56px; }
+
+  /* 단일 뷰 */
+  .single-view { display: flex; justify-content: center; padding: 32px 24px; }
+  .single-view img { max-width: 1200px; width: 100%; border-radius: 8px; box-shadow: 0 4px 40px rgba(0,0,0,.6); }
+
+  /* 나란히 비교 뷰 */
+  .compare-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 24px 16px;
+  }
+  .compare-view .panel { display: flex; flex-direction: column; }
+  .compare-view .panel-label {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .compare-view img {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>시안 비교</h1>
+  <button class="tab-btn active" onclick="showTab(1)">시안 001</button>
+  <button class="tab-btn" onclick="showTab(2)">시안 002</button>
+  <button class="side-btn" id="compareBtn" onclick="toggleCompare()">나란히 보기</button>
+</div>
+
+<div class="content">
+  <!-- 단일 뷰 -->
+  <div id="view-single">
+    <div class="single-view" id="panel-1">
+      <img src="MEDI-W Landing Page.png" alt="시안 001">
+    </div>
+    <div class="single-view hidden" id="panel-2">
+      <img src="MEDI-W Landing Page_v2.png" alt="시안 002">
+    </div>
+  </div>
+
+  <!-- 나란히 비교 뷰 -->
+  <div id="view-compare" class="hidden">
+    <div class="compare-view">
+      <div class="panel">
+        <div class="panel-label">시안 001</div>
+        <img src="MEDI-W Landing Page.png" alt="시안 001">
+      </div>
+      <div class="panel">
+        <div class="panel-label">시안 002</div>
+        <img src="MEDI-W Landing Page_v2.png" alt="시안 002">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentTab = 1;
+  let compareMode = false;
+
+  function showTab(n) {
+    if (compareMode) return;
+    currentTab = n;
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n - 1));
+    document.getElementById('panel-1').classList.toggle('hidden', n !== 1);
+    document.getElementById('panel-2').classList.toggle('hidden', n !== 2);
+  }
+
+  function toggleCompare() {
+    compareMode = !compareMode;
+    document.getElementById('view-single').classList.toggle('hidden', compareMode);
+    document.getElementById('view-compare').classList.toggle('hidden', !compareMode);
+    const btn = document.getElementById('compareBtn');
+    btn.classList.toggle('active', compareMode);
+    btn.textContent = compareMode ? '탭으로 보기' : '나란히 보기';
+    document.querySelectorAll('.tab-btn').forEach(b => b.style.opacity = compareMode ? '.4' : '1');
+  }
+</script>
+</body>
+</html>

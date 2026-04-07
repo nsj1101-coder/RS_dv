@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediW — Предложение для партнёров по медицинскому туризму в Корею 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;}
+body{
+  font-family:'Noto Sans','Arial',sans-serif;
+  background:#1a1a2e;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ===== SLIDE BASE ===== */
+.slide{
+  width:297mm;height:210mm;
+  position:relative;overflow:hidden;
+  display:flex;margin:0 auto 6mm;
+  page-break-after:always;background:#fff;
+}
+.slide:last-child{page-break-after:avoid;}
+
+/* ===== DECORATIVE ===== */
+.deco{position:absolute;border-radius:50%;pointer-events:none;}
+.deco-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+
+/* ===== COMMON ELEMENTS ===== */
+.logo-wrap{display:flex;align-items:center;gap:9px;}
+.logo-ico{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:15px;flex-shrink:0;
+}
+.logo-txt{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.02em;}
+.logo-txt.dark{color:#0f172a;}
+
+.slide-footer{
+  position:absolute;bottom:0;left:0;right:0;height:8mm;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 10mm;
+}
+.sf-brand{font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.sf-brand.light{color:rgba(255,255,255,.2);}
+.sf-brand.dark{color:#cbd5e1;}
+.sf-num{font-size:8px;font-weight:600;}
+.sf-num.light{color:rgba(255,255,255,.2);}
+.sf-num.dark{color:#cbd5e1;}
+
+.slide-tag{
+  font-size:8.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;margin-bottom:5px;
+}
+.slide-tag::before{content:'';width:18px;height:2px;border-radius:1px;}
+.slide-tag.blue{color:#3b82f6;} .slide-tag.blue::before{background:linear-gradient(90deg,#2563eb,#60a5fa);}
+.slide-tag.white{color:rgba(255,255,255,.45);} .slide-tag.white::before{background:rgba(255,255,255,.2);}
+.slide-tag.green{color:#10b981;} .slide-tag.green::before{background:linear-gradient(90deg,#047857,#10b981);}
+.slide-tag.gold{color:#f59e0b;} .slide-tag.gold::before{background:linear-gradient(90deg,#d97706,#fbbf24);}
+
+/* ===== SLIDE 1: COVER ===== */
+.s1{background:linear-gradient(145deg,#060c1f 0%,#0d1635 50%,#091228 100%);}
+.s1-wrap{flex:1;display:flex;position:relative;z-index:2;}
+.s1-left{
+  width:52%;padding:11mm 10mm 10mm 13mm;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.s1-right{
+  width:48%;padding:9mm 11mm 9mm 5mm;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+.s1-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);
+  border-radius:100px;padding:4px 12px;
+  font-size:9px;color:#60a5fa;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:10px;width:fit-content;
+}
+.s1-badge-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.s1-h1{font-size:34px;font-weight:900;color:#fff;line-height:1.18;letter-spacing:-.025em;margin-bottom:8px;}
+.s1-h1 em{
+  font-style:normal;
+  color:#60a5fa;
+}
+.s1-sub{font-size:10.5px;color:rgba(255,255,255,.42);line-height:1.7;max-width:290px;}
+.s1-footer-row{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,.07);padding-top:4mm;
+}
+.s1-footer-l{font-size:9px;color:rgba(255,255,255,.25);}
+.s1-footer-r{font-size:8.5px;color:rgba(255,255,255,.2);text-align:right;}
+.s1-footer-ver{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);}
+
+/* Dashboard mockup */
+.mock-dash{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;padding:0;}
+.mock-topbar{background:rgba(255,255,255,.04);padding:7px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.05);}
+.mock-dot{width:6px;height:6px;border-radius:50%;}
+.mock-tab{font-size:7px;font-weight:600;padding:3px 8px;border-radius:4px;color:rgba(255,255,255,.3);}
+.mock-tab.act{background:rgba(59,130,246,.2);color:#60a5fa;}
+.mock-body{padding:8px 10px;display:flex;flex-direction:column;gap:6px;}
+.mock-stat-row{display:flex;gap:6px;}
+.mock-stat-card{flex:1;background:rgba(255,255,255,.04);border-radius:8px;padding:6px 8px;border:1px solid rgba(255,255,255,.05);}
+.mock-stat-num{font-size:13px;font-weight:800;color:#fff;}
+.mock-stat-lbl{font-size:7px;color:rgba(255,255,255,.3);margin-top:1px;}
+.mock-list-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,.02);}
+.mock-avatar{width:16px;height:16px;border-radius:50%;font-size:7px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;}
+.mock-name{font-size:8px;color:rgba(255,255,255,.55);flex:1;}
+.mock-status{font-size:7px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.mock-chart-bar-wrap{display:flex;gap:3px;align-items:flex-end;height:30px;}
+.mock-cbar{border-radius:2px 2px 0 0;flex:1;}
+
+/* ===== SLIDE 2: MARKET ===== */
+.s2{background:#f8fafc;}
+.s2-left{
+  width:40%;background:linear-gradient(155deg,#06091e,#0f1e3d);
+  padding:10mm 9mm;display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.s2-right{flex:1;padding:10mm 11mm;display:flex;flex-direction:column;justify-content:center;}
+
+.opp-big{font-size:44px;font-weight:900;color:#fff;line-height:1;letter-spacing:-.04em;margin-bottom:3px;}
+.opp-big-label{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:5mm;text-transform:uppercase;letter-spacing:.06em;}
+.opp-fact{display:flex;flex-direction:column;gap:2.5mm;}
+.opp-fact-item{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;padding:2.5mm 4mm;
+  display:flex;align-items:center;gap:8px;
+}
+.opp-fact-ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.opp-fact-text{font-size:10.5px;color:rgba(255,255,255,.7);line-height:1.5;}
+.opp-fact-text strong{color:#fff;font-weight:700;}
+
+.ring-stats{display:flex;flex-direction:column;gap:3mm;margin-top:4mm;}
+.ring-stat-row{display:flex;align-items:center;gap:8px;padding:3mm 4mm;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;}
+.ring-stat-svg{flex-shrink:0;}
+.ring-stat-info{flex:1;}
+.ring-stat-num{font-size:15px;font-weight:800;color:#fff;line-height:1;}
+.ring-stat-lbl{font-size:9px;color:rgba(255,255,255,.4);margin-top:1px;}
+
+.s2r-title{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:3mm;line-height:1.25;}
+.growth-facts{display:flex;flex-direction:column;gap:3mm;}
+.growth-item{background:#fff;border:1px solid #e2e8f0;border-radius:11px;padding:3.5mm 4.5mm;box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;gap:10px;}
+.growth-num{font-size:28px;font-weight:900;line-height:1;letter-spacing:-.03em;flex-shrink:0;min-width:70px;}
+.growth-body h5{font-size:11.5px;font-weight:700;color:#0f172a;margin-bottom:2px;}
+.growth-body p{font-size:10px;color:#475569;line-height:1.5;}
+
+/* ===== SLIDE 4: PLATFORM 5 STEPS ===== */
+.s4p{background:#0d1635;}
+.s4p-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+
+.roadmap-steps{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-top:4mm;position:relative;padding-top:2mm;
+}
+.diag-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;}
+.rm-step-v{display:flex;flex-direction:column;align-items:center;z-index:1;flex:1;}
+.rm-circle{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#fff;
+  box-shadow:0 0 0 6px rgba(255,255,255,.06);
+}
+.rm-card-v{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:3.5mm 3mm;text-align:center;width:95%;margin-top:3mm;
+}
+.rm-ico{font-size:20px;margin-bottom:4px;}
+.rm-title{font-size:11.5px;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.3;}
+.rm-desc{font-size:9px;color:rgba(255,255,255,.5);line-height:1.55;}
+
+/* ===== SLIDE 5: PARTNER BENEFITS PART 1 ===== */
+.s5b{background:#fff;}
+.s5b-inner{flex:1;padding:8mm 12mm 10mm;display:flex;flex-direction:column;}
+
+.bene-open{display:grid;grid-template-columns:repeat(3,1fr);flex:1;margin-top:5mm;}
+.bene-col{padding:0 9mm;display:flex;flex-direction:column;justify-content:center;position:relative;}
+.bene-col:not(:last-child)::after{content:'';position:absolute;right:0;top:8%;height:84%;width:1px;background:linear-gradient(to bottom,transparent,#e2e8f0,transparent);}
+.bene-emoji{font-size:56px;line-height:1;margin-bottom:5mm;}
+.bene-stat{font-size:58px;font-weight:900;line-height:1;letter-spacing:-.04em;margin-bottom:4mm;}
+.bene-stat.blue{color:#3b82f6;}
+.bene-stat.gold{color:#d97706;}
+.bene-stat.green{color:#047857;}
+.bene-title{font-size:17px;font-weight:800;color:#0f172a;margin-bottom:6px;line-height:1.3;}
+.bene-desc{font-size:12px;color:#64748b;line-height:1.75;}
+
+/* ===== SLIDE 6: PARTNER BENEFITS PART 2 ===== */
+.s6b{background:#fff;}
+.s6b-inner{flex:1;padding:8mm 13mm;display:flex;flex-direction:column;}
+.bene6-list{display:flex;flex-direction:column;gap:0;flex:1;margin-top:4mm;justify-content:center;}
+.bene6-item{display:flex;align-items:center;gap:7mm;padding:5mm 0;position:relative;}
+.bene6-item:not(:last-child)::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#e2e8f0 15%,#e2e8f0 85%,transparent);}
+.bene6-ico{font-size:42px;flex-shrink:0;width:52px;text-align:center;}
+.bene6-body{flex:1;}
+.bene6-title{font-size:18px;font-weight:800;color:#0f172a;margin-bottom:5px;line-height:1.3;}
+.bene6-desc{font-size:13px;color:#64748b;line-height:1.7;}
+.mini-body h5{font-size:12px;font-weight:700;color:#0f172a;margin-bottom:3px;}
+.mini-body p{font-size:10px;color:#475569;line-height:1.55;}
+
+.income-ladder{
+  background:linear-gradient(135deg,#06091e,#0d1635);
+  border-radius:14px;padding:4.5mm 6mm;
+  display:flex;align-items:center;gap:0;
+  flex:1;
+}
+.ladder-step{flex:1;text-align:center;padding:0 4mm;position:relative;}
+.ladder-step:not(:last-child)::after{
+  content:'→';position:absolute;right:-2mm;top:50%;transform:translateY(-50%);
+  font-size:18px;color:rgba(255,255,255,.25);
+}
+.ladder-patients{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.ladder-earn{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;}
+.ladder-earn.green{color:#34d399;}
+.ladder-sub{font-size:9px;color:rgba(255,255,255,.3);margin-top:3px;}
+.ladder-divider{width:1px;background:rgba(255,255,255,.08);align-self:stretch;}
+
+/* ===== SLIDE 7: PARTNER HOSPITALS ===== */
+.s7h{background:#f8fafc;}
+.s7h-inner{flex:1;padding:9mm 11mm;display:flex;flex-direction:column;}
+.s7h-body{display:flex;gap:4mm;flex:1;margin-top:4mm;}
+.hosp-col{display:flex;flex-direction:column;gap:3mm;flex:1;}
+.hosp-card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:13px;
+  padding:4mm;box-shadow:0 2px 10px rgba(0,0,0,.05);
+  display:flex;flex-direction:column;flex:1;
+}
+.hosp-rank{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.hosp-name{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:1px;letter-spacing:-.01em;line-height:1.2;}
+.hosp-name-sub{font-size:9.5px;color:#94a3b8;margin-bottom:3.5mm;}
+.hosp-divider{height:1px;background:#f1f5f9;margin-bottom:3mm;}
+.hosp-specs{display:flex;flex-direction:column;gap:2.5px;flex:1;}
+.hosp-spec{display:flex;align-items:center;gap:6px;font-size:10px;color:#475569;}
+.hosp-spec-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.hosp-footer{margin-top:3mm;padding:2.5mm;border-radius:7px;font-size:9.5px;font-weight:700;text-align:center;}
+
+.spec-map{
+  width:42%;background:linear-gradient(155deg,#06091e,#0f1e3d);
+  border-radius:14px;padding:4mm 5mm;
+  display:flex;flex-direction:column;
+}
+.spec-map-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:3mm;}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;flex:1;}
+.spec-badge{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;padding:3mm 2mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;
+}
+.spec-ico{font-size:18px;line-height:1;}
+.spec-lbl{font-size:8px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.3;}
+
+/* ===== SLIDE 8: SPECIALTY NETWORK ===== */
+.s8n{background:#0d1635;}
+.s8n-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+.specialty-fullgrid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:3mm;flex:1;margin-top:4mm;
+}
+.sp-full-card{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:4mm 3mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;
+}
+.sp-full-ico{font-size:26px;line-height:1;}
+.sp-full-title{font-size:10px;font-weight:700;color:#fff;line-height:1.3;}
+.sp-full-sub{font-size:8.5px;color:rgba(255,255,255,.4);line-height:1.4;}
+
+.network-stats{
+  display:flex;gap:0;align-items:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:3.5mm 5mm;margin-top:3.5mm;
+}
+.net-stat{flex:1;text-align:center;}
+.net-stat-num{font-size:22px;font-weight:800;color:#fff;line-height:1;letter-spacing:-.02em;}
+.net-stat-lbl{font-size:8.5px;color:rgba(255,255,255,.3);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+.net-divider{width:1px;height:30px;background:rgba(255,255,255,.1);align-self:center;}
+
+/* ===== SLIDE 9: HOW TO JOIN (ROADMAP) ===== */
+.s9j{background:#0d1635;}
+.s9j-inner{flex:1;padding:9mm 12mm 8mm;display:flex;flex-direction:column;}
+
+.roadmap{position:relative;display:flex;gap:0;justify-content:space-between;padding:0 20px;margin-top:8mm;}
+.roadmap::before{content:'';position:absolute;top:24px;left:40px;right:40px;height:3px;background:linear-gradient(90deg,#1d4ed8,#3b82f6,#10b981,#34d399);border-radius:2px;z-index:0;}
+.rm-step{display:flex;flex-direction:column;align-items:center;z-index:1;flex:1;}
+.rm-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;box-shadow:0 0 0 6px rgba(29,78,216,.15);}
+.rm-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;margin-top:8px;width:85%;}
+.rm-card-ico{font-size:22px;margin-bottom:5px;}
+.rm-card-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3;}
+.rm-card-desc{font-size:9.5px;color:rgba(255,255,255,.5);line-height:1.55;}
+
+.join-cta-box{
+  background:linear-gradient(135deg,rgba(37,99,235,.15),rgba(59,130,246,.08));
+  border:1px solid rgba(59,130,246,.2);border-radius:12px;
+  padding:3.5mm 6mm;margin-top:4mm;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.join-cta-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#60a5fa;margin-bottom:3px;}
+.join-cta-val{font-size:13px;font-weight:700;color:#fff;}
+.join-cta-right{display:flex;gap:9mm;text-align:center;align-items:center;}
+.join-kpi-num{font-size:21px;font-weight:800;color:#fff;line-height:1;}
+.join-kpi-label{font-size:8px;color:rgba(255,255,255,.35);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* ===== SLIDE 10: BEFORE / AFTER ===== */
+.s10{background:#f8fafc;}
+.s10-left{width:48%;height:100%;background:linear-gradient(150deg,#180404,#2a0808);padding:9mm 9mm;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.s10-right{width:52%;height:100%;background:#f0fdf4;padding:9mm 10mm;display:flex;flex-direction:column;justify-content:center;}
+.ba-label{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:5px;padding:3px 10px;margin-bottom:4mm;}
+.ba-label.before{background:rgba(239,68,68,.15);color:#f87171;}
+.ba-label.after{background:rgba(16,185,129,.15);color:#10b981;}
+.ba-h3{font-size:15px;font-weight:800;line-height:1.3;margin-bottom:4mm;}
+.ba-h3.before{color:#fff;}
+.ba-h3.after{color:#0f172a;}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:2.5mm;}
+.ba-item{display:flex;align-items:flex-start;gap:8px;padding:2.5mm 3.5mm;border-radius:9px;}
+.ba-item.before{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);}
+.ba-item.after{background:#fff;border:1px solid rgba(16,185,129,.2);box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.ba-ico{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;}
+.ba-ico.before{background:rgba(239,68,68,.15);}
+.ba-ico.after{background:rgba(16,185,129,.12);}
+.ba-item-title{font-size:11.5px;font-weight:700;margin-bottom:1px;}
+.ba-item-title.before{color:#fca5a5;}
+.ba-item-title.after{color:#065f46;}
+.ba-item-desc{font-size:10px;line-height:1.5;}
+.ba-item-desc.before{color:rgba(255,255,255,.4);}
+.ba-item-desc.after{color:#475569;}
+.ba-connector{position:absolute;top:50%;left:48%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:16px;z-index:10;box-shadow:0 0 0 6px rgba(37,99,235,.15);}
+.ba-time-row{display:flex;gap:3mm;margin-top:4mm;}
+.ba-time-box{flex:1;padding:3mm 3.5mm;border-radius:9px;display:flex;align-items:center;gap:7px;}
+.ba-time-box.before{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);}
+.ba-time-box.after{background:#fff;border:1px solid rgba(16,185,129,.2);}
+.ba-time-ico{font-size:16px;flex-shrink:0;}
+.ba-time-label{font-size:8.5px;color:rgba(255,255,255,.4);margin-bottom:1px;}
+.ba-time-label.after{color:#94a3b8;}
+.ba-time-val{font-size:14px;font-weight:800;}
+.ba-time-val.before{color:#f87171;}
+.ba-time-val.after{color:#059669;}
+.ba-time-sub{font-size:9px;}
+.ba-time-sub.before{color:rgba(255,255,255,.3);}
+.ba-time-sub.after{color:#94a3b8;}
+
+/* ===== SLIDE 11: COMMISSION & SAVINGS ===== */
+.s11{background:#0d1635;}
+.s11-inner{flex:1;padding:9mm 12mm;display:flex;flex-direction:column;}
+.s11-cols{display:grid;grid-template-columns:1fr 1px 1fr;gap:5mm;flex:1;margin-top:4mm;}
+.s11-divider-v{background:rgba(255,255,255,.08);}
+.s11-col{display:flex;flex-direction:column;gap:3.5mm;}
+.s11-col-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:1mm;}
+.comm-chart{display:flex;flex-direction:column;gap:2.5mm;}
+.comm-row{display:flex;align-items:center;gap:3mm;}
+.comm-lbl{font-size:9.5px;color:rgba(255,255,255,.5);width:70px;text-align:right;flex-shrink:0;line-height:1.3;}
+.comm-bar-wrap{flex:1;height:24px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;}
+.comm-bar{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.comm-bar-val{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
+.saving-block{display:flex;flex-direction:column;gap:3mm;}
+.saving-item-label{font-size:9.5px;color:rgba(255,255,255,.45);margin-bottom:2mm;display:flex;justify-content:space-between;align-items:center;}
+.saving-badge{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(16,185,129,.15);color:#34d399;}
+.saving-bars-wrap{display:flex;flex-direction:column;gap:2px;}
+.saving-bar-row{display:flex;align-items:center;gap:3mm;}
+.saving-bar-tag{font-size:8px;font-weight:700;width:38px;text-align:right;flex-shrink:0;}
+.saving-bar-tag.bef{color:rgba(239,68,68,.65);}
+.saving-bar-tag.aft{color:rgba(16,185,129,.75);}
+.saving-bar-outer{flex:1;height:14px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.saving-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:5px;}
+.saving-bar-fill.bef{background:rgba(239,68,68,.35);}
+.saving-bar-fill.aft{background:rgba(16,185,129,.45);}
+.saving-bar-num{font-size:8.5px;font-weight:700;color:#fff;}
+.tier-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:3.5mm;}
+.tier-label{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.3);margin-bottom:3mm;}
+.tier-rows{display:flex;flex-direction:column;gap:2mm;}
+.tier-row{display:flex;align-items:center;justify-content:space-between;padding:2mm 3mm;border-radius:6px;background:rgba(255,255,255,.03);}
+.tier-left{display:flex;align-items:center;gap:6px;}
+.tier-dot{width:7px;height:7px;border-radius:50%;}
+.tier-pat{font-size:10.5px;color:rgba(255,255,255,.65);font-weight:500;}
+.tier-earn{font-size:14px;font-weight:800;color:#fff;}
+.tier-earn small{font-size:9px;color:rgba(255,255,255,.3);font-weight:400;margin-left:2px;}
+.comm-highlight{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.05));border:1px solid rgba(16,185,129,.18);border-radius:10px;padding:3.5mm 4mm;display:flex;align-items:center;gap:9px;}
+.ch-ico{font-size:20px;flex-shrink:0;}
+.ch-label{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#10b981;margin-bottom:2px;}
+.ch-text{font-size:11.5px;color:#fff;font-weight:600;line-height:1.5;}
+.comm-big-num{font-size:88px;font-weight:900;line-height:1;letter-spacing:-.04em;color:#10b981;}
+.comm-big-sub{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;}
+.comm-flow-row{display:flex;align-items:center;gap:0;padding:3mm 0;}
+.comm-flow-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.comm-flow-step-ico{font-size:22px;line-height:1;}
+.comm-flow-step-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.65);text-align:center;}
+.comm-flow-arrow{font-size:18px;color:rgba(255,255,255,.2);flex-shrink:0;padding:0 2mm;margin-bottom:10px;}
+.comm-example-box{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:3.5mm 4.5mm;display:flex;align-items:center;gap:10px;margin-bottom:3mm;}
+.comm-ex-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#10b981;margin-bottom:3px;}
+.comm-ex-calc{font-size:14px;font-weight:700;color:#fff;line-height:1.4;}
+.comm-delegate{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12);border-radius:10px;padding:3.5mm 4mm;}
+.comm-del-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#60a5fa;margin-bottom:4px;}
+.comm-del-text{font-size:11px;color:rgba(255,255,255,.6);line-height:1.65;}
+
+/* ===== SLIDE 12: CLOSING ===== */
+.s12{background:linear-gradient(145deg,#04070f 0%,#0b1228 50%,#06101e 100%);}
+.s12-inner{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:10mm 12mm;position:relative;z-index:2;
+}
+.s12-tag{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;margin-bottom:7px;}
+.s12-h1{
+  font-size:34px;font-weight:900;color:#fff;
+  text-align:center;line-height:1.2;letter-spacing:-.025em;margin-bottom:7px;
+}
+.s12-h1 em{
+  font-style:normal;
+  color:#60a5fa;
+}
+.s12-sub{font-size:11px;color:rgba(255,255,255,.4);text-align:center;max-width:340px;line-height:1.7;margin-bottom:5mm;}
+
+.s12-kpi-row{display:flex;align-items:center;gap:0;margin-bottom:5mm;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:4mm 6mm;}
+.s12-kpi{text-align:center;flex:1;padding:0 4mm;}
+.s12-kpi-num{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1;}
+.s12-kpi-num small{font-size:12px;color:rgba(255,255,255,.3);}
+.s12-kpi-label{font-size:8px;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.07em;margin-top:3px;white-space:nowrap;}
+.s12-div{width:1px;height:34px;background:rgba(255,255,255,.1);align-self:center;}
+
+.s12-contact{display:flex;gap:4mm;margin-bottom:5mm;}
+.s12-contact-item{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:3.5mm 5mm;text-align:center;
+}
+.s12-contact-label{font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.s12-contact-val{font-size:12.5px;color:rgba(255,255,255,.8);font-weight:600;}
+
+.s12-btn{
+  background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:100px;
+  padding:10px 34px;color:#fff;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(59,130,246,.5),0 0 60px rgba(59,130,246,.15);
+  letter-spacing:.02em;
+}
+.s12-footer{
+  position:absolute;bottom:7mm;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;
+  gap:6mm;font-size:8px;color:rgba(255,255,255,.18);
+}
+.s12-footer-div{width:1px;height:9px;background:rgba(255,255,255,.1);}
+
+/* ===== PRINT ===== */
+@media print{
+  body{background:#fff;}
+  .slide{margin:0;box-shadow:none;}
+  .toolbar{display:none!important;}
+}
+@page{size:A4 landscape;margin:0;}
+
+/* ===== TOOLBAR ===== */
+.toolbar{
+  position:fixed;bottom:20px;right:20px;
+  display:flex;gap:8px;z-index:9999;
+}
+.tb-btn{
+  display:flex;align-items:center;gap:6px;
+  border:none;border-radius:50px;
+  padding:10px 18px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.tb-pdf{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(59,130,246,.4);}
+.tb-pdf:hover{transform:translateY(-2px);}
+.tb-dark{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,.15);}
+@media print{.toolbar{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<div class="slide s1">
+  <div class="deco" style="width:500px;height:500px;top:-150px;right:50px;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);"></div>
+  <div class="deco" style="width:300px;height:300px;bottom:-80px;left:100px;background:radial-gradient(circle,rgba(96,165,250,.09),transparent 70%);"></div>
+  <div class="deco-grid"></div>
+
+  <div class="s1-wrap">
+    <!-- Left -->
+    <div class="s1-left">
+      <div class="logo-wrap">
+        <div class="logo-ico">M</div>
+        <span class="logo-txt">MediW</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:4px;font-weight:400;">Korea</span>
+      </div>
+      <div>
+        <div class="s1-badge"><span class="s1-badge-dot"></span>Партнёрское предложение · 2026</div>
+        <h1 class="s1-h1">Ваш бизнес<br>в корейской <em>медицине</em><br>— растите вместе с нами</h1>
+        <p class="s1-sub">MediW — цифровая платформа медицинского туризма. Станьте партнёром, направляйте пациентов в лучшие клиники Кореи и зарабатывайте.</p>
+      </div>
+      <div class="s1-footer-row">
+        <span class="s1-footer-l">Конфиденциально · Только для партнёров</span>
+        <span class="s1-footer-r">
+          <span class="s1-footer-ver">2026</span><br>
+          <span>rbglobal.kr · mediw.vercel.app</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Right: Dashboard Mockup -->
+    <div class="s1-right">
+      <div class="mock-dash">
+        <div class="mock-topbar">
+          <div class="mock-dot" style="background:#ef4444;"></div>
+          <div class="mock-dot" style="background:#f59e0b;"></div>
+          <div class="mock-dot" style="background:#22c55e;"></div>
+          <span style="flex:1;font-size:7px;color:rgba(255,255,255,.2);margin-left:6px;">MediW Dashboard</span>
+          <div class="mock-tab act">Обзор</div>
+          <div class="mock-tab">Пациенты</div>
+          <div class="mock-tab">Доход</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-stat-row">
+            <div class="mock-stat-card">
+              <div class="mock-stat-num">24</div>
+              <div class="mock-stat-lbl">Пациентов в этом месяце</div>
+            </div>
+            <div class="mock-stat-card">
+              <div class="mock-stat-num" style="color:#34d399;">$9,600</div>
+              <div class="mock-stat-lbl">Ожидаемая комиссия</div>
+            </div>
+            <div class="mock-stat-card">
+              <div class="mock-stat-num" style="color:#60a5fa;">98%</div>
+              <div class="mock-stat-lbl">Удовлетворённость</div>
+            </div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#1d4ed8;">K</div>
+            <div class="mock-name">Kim Dmitry · Samsung Seoul Hospital</div>
+            <div class="mock-status" style="background:rgba(16,185,129,.2);color:#34d399;">Завершено</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#047857;">A</div>
+            <div class="mock-name">Anna Petrova · Asan Medical Center</div>
+            <div class="mock-status" style="background:rgba(245,158,11,.2);color:#fbbf24;">В процессе</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#7c3aed;">S</div>
+            <div class="mock-name">Sergei Volkov · Severance Hospital</div>
+            <div class="mock-status" style="background:rgba(59,130,246,.2);color:#60a5fa;">На рассмотрении</div>
+          </div>
+          <div class="mock-list-item">
+            <div class="mock-avatar" style="background:#be123c;">M</div>
+            <div class="mock-name">Maria Chen · Gangnam Severance</div>
+            <div class="mock-status" style="background:rgba(239,68,68,.2);color:#f87171;">Ожидание</div>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;padding:4px 6px 0;">
+            <span style="font-size:7px;color:rgba(255,255,255,.25);">Пациентов по месяцам</span>
+            <div class="mock-chart-bar-wrap">
+              <div class="mock-cbar" style="height:40%;background:rgba(59,130,246,.5);"></div>
+              <div class="mock-cbar" style="height:55%;background:rgba(59,130,246,.55);"></div>
+              <div class="mock-cbar" style="height:45%;background:rgba(59,130,246,.5);"></div>
+              <div class="mock-cbar" style="height:70%;background:rgba(59,130,246,.6);"></div>
+              <div class="mock-cbar" style="height:80%;background:rgba(16,185,129,.6);"></div>
+              <div class="mock-cbar" style="height:100%;background:rgba(16,185,129,.75);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">01 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 2: MARKET OPPORTUNITY ==================== -->
+<div class="slide s2">
+  <div class="deco" style="width:350px;height:350px;top:-80px;left:-40px;background:radial-gradient(circle,rgba(59,130,246,.2),transparent 70%);"></div>
+
+  <div class="s2-left">
+    <div class="slide-tag white">Возможности рынка</div>
+
+    <!-- SVG Donut Chart -->
+    <div style="display:flex;justify-content:center;margin-bottom:4mm;">
+      <svg width="160" height="160" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="14"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="url(#g1)" stroke-width="14"
+          stroke-dasharray="95 144" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#60a5fa"/>
+          </linearGradient>
+        </defs>
+        <text x="50" y="46" text-anchor="middle" fill="#fff" font-size="14" font-weight="800" font-family="sans-serif">$21B</text>
+        <text x="50" y="58" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="6" font-family="sans-serif">Объём рынка</text>
+      </svg>
+    </div>
+
+    <!-- Mini ring stats -->
+    <div class="ring-stats">
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#10b981" stroke-width="5"
+            stroke-dasharray="66 22" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">+18%</div>
+          <div class="ring-stat-lbl">Годовой рост</div>
+        </div>
+      </div>
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#f59e0b" stroke-width="5"
+            stroke-dasharray="55 33" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">600K+</div>
+          <div class="ring-stat-lbl">Иностранных пациентов в год</div>
+        </div>
+      </div>
+      <div class="ring-stat-row">
+        <svg class="ring-stat-svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#8b5cf6" stroke-width="5"
+            stroke-dasharray="44 44" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="ring-stat-info">
+          <div class="ring-stat-num">Top 5</div>
+          <div class="ring-stat-lbl">Россия и СНГ — топ-5 стран</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s2-right">
+    <div class="slide-tag blue">Данные о росте</div>
+    <h2 class="s2r-title">Лучшая медицина Азии —<br>теперь для ваших клиентов</h2>
+
+    <div class="growth-facts">
+      <div class="growth-item">
+        <div class="growth-num" style="color:#1d4ed8;">$21B</div>
+        <div class="growth-body">
+          <h5>Объём рынка медтуризма в Корее</h5>
+          <p>Один из самых быстрорастущих рынков медтуризма в мире. До 2030 года ожидается рост до $40B.</p>
+        </div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-num" style="color:#047857;">18%</div>
+        <div class="growth-body">
+          <h5>Среднегодовой темп роста (CAGR)</h5>
+          <p>Более чем в 2 раза выше среднемирового показателя медтуризма (8%) — уверенная экспансия.</p>
+        </div>
+      </div>
+      <div class="growth-item">
+        <div class="growth-num" style="color:#7c3aed;">600K</div>
+        <div class="growth-body">
+          <h5>Иностранных пациентов в год</h5>
+          <p>Более 600 тысяч человек из России, СНГ, Юго-Восточной Азии и Ближнего Востока ежегодно посещают Корею для лечения.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">02 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 4: PLATFORM 5 STEPS ==================== -->
+<div class="slide s4p">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;top:-120px;right:-80px;background:radial-gradient(circle,rgba(59,130,246,.14),transparent 70%);"></div>
+
+  <div class="s4p-inner">
+    <div>
+      <div class="slide-tag white">Как работает платформа</div>
+      <h2 style="font-size:23px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:0;">От заявки до возвращения пациента — 5 шагов полностью цифрового процесса</h2>
+    </div>
+
+    <div class="roadmap-steps">
+      <!-- Diagonal connector SVG -->
+      <svg class="diag-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="diagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1d4ed8"/>
+            <stop offset="25%" stop-color="#10b981"/>
+            <stop offset="50%" stop-color="#f59e0b"/>
+            <stop offset="75%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#f43f5e"/>
+          </linearGradient>
+        </defs>
+        <polyline points="10,93 30,71 50,49 70,27 90,5" fill="none" stroke="url(#diagGrad)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="rm-step-v" style="margin-top:72mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);">1</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">🔍</div>
+          <div class="rm-title">Поиск клиники</div>
+          <div class="rm-desc">Агентство выбирает оптимальную клинику и отделение из 150+ больниц</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:54mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#047857,#10b981);">2</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">📋</div>
+          <div class="rm-title">Подача заявки</div>
+          <div class="rm-desc">Данные пациента и медицинские документы заполняются в цифровой форме за один раз</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:36mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#b45309,#f59e0b);">3</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">✅</div>
+          <div class="rm-title">Подтверждение клиники</div>
+          <div class="rm-desc">Клиника рассматривает заявку и подтверждает приём в течение 2–5 дней</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:18mm;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#6d28d9,#8b5cf6);">4</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">✈️</div>
+          <div class="rm-title">Сопровождение</div>
+          <div class="rm-desc">Агентство оформляет визу, транспорт, жильё и сопровождает пациента на месте</div>
+        </div>
+      </div>
+      <div class="rm-step-v" style="margin-top:0;z-index:1;">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#be123c,#f43f5e);">5</div>
+        <div class="rm-card-v">
+          <div class="rm-ico">💳</div>
+          <div class="rm-title">Выплата комиссии</div>
+          <div class="rm-desc">После завершения лечения агентство автоматически получает комиссию за каждого пациента</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:3.5mm 5mm;margin-top:4mm;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:10.5px;color:rgba(255,255,255,.6);font-weight:500;">На каждом этапе агентство поддерживает персональный менеджер RBG</div>
+      <div style="display:flex;gap:6mm;">
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#fff;">5 мин</div><div style="font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.04em;">Регистрация пациента</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.08);"></div>
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#fff;">2–5 дней</div><div style="font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.04em;">Подтверждение клиники</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.08);"></div>
+        <div style="text-align:center;"><div style="font-size:16px;font-weight:800;color:#fff;">24/7</div><div style="font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.04em;">Работа платформы</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">03 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 5: PARTNER BENEFITS PART 1 ==================== -->
+<div class="slide s5b">
+  <div class="deco" style="width:300px;height:300px;top:-60px;right:-40px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s5b-inner">
+    <div>
+      <div class="slide-tag blue">Преимущества партнёра 1/2</div>
+      <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;">3 причины стать партнёром MediW</h2>
+    </div>
+
+    <div class="bene-open">
+      <div class="bene-col">
+        <div class="bene-emoji">💰</div>
+        <div class="bene-stat blue">$0</div>
+        <div class="bene-title">Без вступительного взноса</div>
+        <div class="bene-desc">Регистрация, обучение и персональный менеджер — всё бесплатно. Комиссия начисляется только когда вы зарабатываете.</div>
+      </div>
+      <div class="bene-col">
+        <div class="bene-emoji">⚡</div>
+        <div class="bene-stat gold">5 мин</div>
+        <div class="bene-title">До регистрации первого пациента</div>
+        <div class="bene-desc">Одна цифровая форма — и готово. Регистрация, которая занимала 2 часа, теперь займёт 5 минут.</div>
+      </div>
+      <div class="bene-col">
+        <div class="bene-emoji">🏥</div>
+        <div class="bene-stat green">150+</div>
+        <div class="bene-title">Клиник доступно прямо сейчас</div>
+        <div class="bene-desc">Samsung Seoul, Asan, Severance и ещё 150+ лучших клиник Кореи — через один аккаунт.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">04 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 6: PARTNER BENEFITS PART 2 ==================== -->
+<div class="slide s6b">
+  <div class="deco" style="width:250px;height:250px;bottom:-40px;left:-30px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);"></div>
+
+  <div class="s6b-inner">
+    <div>
+      <div class="slide-tag blue">Преимущества партнёра 2/2</div>
+      <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;">Платформа, которая полностью поддерживает вашу работу</h2>
+    </div>
+
+    <div class="bene6-list">
+      <div class="bene6-item">
+        <div class="bene6-ico">📄</div>
+        <div class="bene6-body">
+          <div class="bene6-title">Управление медицинскими документами</div>
+          <div class="bene6-desc">КТ, МРТ, результаты анализов — загружаются прямо на платформе, без мессенджеров и без потерь.</div>
+        </div>
+      </div>
+      <div class="bene6-item">
+        <div class="bene6-ico">🌐</div>
+        <div class="bene6-body">
+          <div class="bene6-title">Интерфейс на 5 языках</div>
+          <div class="bene6-desc">Русский, английский, корейский, японский, китайский. Платформа говорит на вашем языке.</div>
+        </div>
+      </div>
+      <div class="bene6-item">
+        <div class="bene6-ico">🎓</div>
+        <div class="bene6-body">
+          <div class="bene6-title">Поддержка и обучение</div>
+          <div class="bene6-desc">Онбординг, поддержка RBG на каждом этапе, персональный менеджер — вы не одни.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Income Ladder -->
+    <div class="income-ladder" style="margin-top:4mm;">
+      <div class="ladder-step">
+        <div class="ladder-patients">Оплата $2,000</div>
+        <div class="ladder-earn">$400</div>
+        <div class="ladder-sub">Комиссия 20%</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">Оплата $5,000</div>
+        <div class="ladder-earn">$1,000</div>
+        <div class="ladder-sub">Комиссия 20%</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">Оплата $10,000</div>
+        <div class="ladder-earn green">$2,000</div>
+        <div class="ladder-sub">Комиссия 20%</div>
+      </div>
+      <div class="ladder-divider"></div>
+      <div class="ladder-step">
+        <div class="ladder-patients">Оплата $20,000</div>
+        <div class="ladder-earn green">$4,000</div>
+        <div class="ladder-sub">Комиссия 20%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">05 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 7: PARTNER HOSPITALS ==================== -->
+<div class="slide s7h">
+  <div class="deco" style="width:300px;height:300px;top:-60px;left:-50px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);"></div>
+
+  <div class="s7h-inner">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="slide-tag blue">Клиники-партнёры</div>
+        <h2 style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:0;">Лучшие клиники Кореи — на одной платформе</h2>
+      </div>
+      <span style="font-size:10px;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;padding:4px 10px;border-radius:6px;font-weight:600;">150+ клиник</span>
+    </div>
+
+    <div class="s7h-body">
+      <div class="hosp-col">
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#f59e0b;"><span style="background:rgba(245,158,11,.1);padding:2px 7px;border-radius:4px;">🏆 №1 в Корее</span></div>
+          <div class="hosp-name">Samsung Seoul Hospital</div>
+          <div class="hosp-name-sub">삼성서울병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>Онкология, кардиология, нейрохирургия</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>Сертификация JCI · Международный медцентр</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#3b82f6;"></span>Персонал со знанием русского языка</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(59,130,246,.07);color:#1d4ed8;">Доступно через MediW</div>
+        </div>
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#8b5cf6;"><span style="background:rgba(139,92,246,.1);padding:2px 7px;border-radius:4px;">⭐ Лидер в исследованиях</span></div>
+          <div class="hosp-name">Asan Medical Center</div>
+          <div class="hosp-name-sub">서울아산병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>Трансплантация органов, заболевания печени</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>Крупнейший медцентр Азии — 2700 коек</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#8b5cf6;"></span>Более 80 отделений</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(139,92,246,.07);color:#6d28d9;">Доступно через MediW</div>
+        </div>
+        <div class="hosp-card">
+          <div class="hosp-rank" style="color:#10b981;"><span style="background:rgba(16,185,129,.1);padding:2px 7px;border-radius:4px;">🎓 Первая клиника Кореи</span></div>
+          <div class="hosp-name">Severance Hospital</div>
+          <div class="hosp-name-sub">세브란스병원</div>
+          <div class="hosp-divider"></div>
+          <div class="hosp-specs">
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>Онкология, репродуктология, роботическая хирургия</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>Университет Ёнсэ — 140 лет истории</div>
+            <div class="hosp-spec"><span class="hosp-spec-dot" style="background:#10b981;"></span>Международный медцентр</div>
+          </div>
+          <div class="hosp-footer" style="background:rgba(16,185,129,.07);color:#047857;">Доступно через MediW</div>
+        </div>
+      </div>
+
+      <!-- Specialty Map -->
+      <div class="spec-map">
+        <div class="spec-map-title">Карта специализаций</div>
+        <div class="spec-grid">
+          <div class="spec-badge" style="border-color:rgba(239,68,68,.2);">
+            <div class="spec-ico">🎗️</div>
+            <div class="spec-lbl">Онкология</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(239,68,68,.2);">
+            <div class="spec-ico">❤️</div>
+            <div class="spec-lbl">Кардиология</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(59,130,246,.2);">
+            <div class="spec-ico">🦴</div>
+            <div class="spec-lbl">Ортопедия</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(245,158,11,.2);">
+            <div class="spec-ico">🦷</div>
+            <div class="spec-lbl">Стоматология</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(236,72,153,.2);">
+            <div class="spec-ico">💆</div>
+            <div class="spec-lbl">Эстетическая хирургия</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(16,185,129,.2);">
+            <div class="spec-ico">🍼</div>
+            <div class="spec-lbl">Репродуктология</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(139,92,246,.2);">
+            <div class="spec-ico">🧠</div>
+            <div class="spec-lbl">Нейрохирургия</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(6,182,212,.2);">
+            <div class="spec-ico">🫀</div>
+            <div class="spec-lbl">Торакальная хирургия</div>
+          </div>
+          <div class="spec-badge" style="border-color:rgba(245,158,11,.2);">
+            <div class="spec-ico">👁️</div>
+            <div class="spec-lbl">Офтальмология</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">06 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 8: SPECIALTY NETWORK ==================== -->
+<div class="slide s8n">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;bottom:-100px;right:-60px;background:radial-gradient(circle,rgba(59,130,246,.12),transparent 70%);"></div>
+
+  <div class="s8n-inner">
+    <div>
+      <div class="slide-tag white">Сеть специализаций</div>
+      <h2 style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:0;">Специалисты всех направлений готовы к работе</h2>
+    </div>
+
+    <div class="specialty-fullgrid">
+      <div class="sp-full-card" style="border-color:rgba(239,68,68,.2);">
+        <div class="sp-full-ico">🎗️</div>
+        <div class="sp-full-title">Онкология</div>
+        <div class="sp-full-sub">Диагностика, лечение, лучевая терапия рака</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(239,68,68,.2);">
+        <div class="sp-full-ico">❤️</div>
+        <div class="sp-full-title">Кардиология</div>
+        <div class="sp-full-sub">Сердечно-сосудистые заболевания, стентирование, операции</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(59,130,246,.2);">
+        <div class="sp-full-ico">🦴</div>
+        <div class="sp-full-title">Ортопедия</div>
+        <div class="sp-full-sub">Позвоночник, суставы, эндопротезирование</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(245,158,11,.2);">
+        <div class="sp-full-ico">🦷</div>
+        <div class="sp-full-title">Стоматология</div>
+        <div class="sp-full-sub">Импланты, ортодонтия, эстетика</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(236,72,153,.2);">
+        <div class="sp-full-ico">💆</div>
+        <div class="sp-full-title">Эстетическая хирургия</div>
+        <div class="sp-full-sub">Пластическая хирургия, дерматология</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(16,185,129,.2);">
+        <div class="sp-full-ico">🍼</div>
+        <div class="sp-full-title">Репродуктология</div>
+        <div class="sp-full-sub">ЭКО, лечение бесплодия, гинекология</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(139,92,246,.2);">
+        <div class="sp-full-ico">🧠</div>
+        <div class="sp-full-title">Нейрохирургия</div>
+        <div class="sp-full-sub">Операции на мозге, спинном мозге, нервной системе</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(6,182,212,.2);">
+        <div class="sp-full-ico">🫀</div>
+        <div class="sp-full-title">Торакальная хирургия</div>
+        <div class="sp-full-sub">Операции на лёгких, сердце, аорте</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(245,158,11,.2);">
+        <div class="sp-full-ico">👁️</div>
+        <div class="sp-full-title">Офтальмология</div>
+        <div class="sp-full-sub">LASIK, катаракта, сетчатка</div>
+      </div>
+      <div class="sp-full-card" style="border-color:rgba(59,130,246,.2);">
+        <div class="sp-full-ico">🫁</div>
+        <div class="sp-full-title">Пульмонология</div>
+        <div class="sp-full-sub">Лёгкие, астма, ХОБЛ</div>
+      </div>
+    </div>
+
+    <div class="network-stats">
+      <div class="net-stat">
+        <div class="net-stat-num">80<span style="font-size:14px;color:rgba(255,255,255,.3);">+</span></div>
+        <div class="net-stat-lbl">Специализированных отделений</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">150<span style="font-size:14px;color:rgba(255,255,255,.3);">+</span></div>
+        <div class="net-stat-lbl">Клиник-партнёров</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">3–7<span style="font-size:14px;color:rgba(255,255,255,.3);">дн</span></div>
+        <div class="net-stat-lbl">До записи к специалисту</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">JCI</div>
+        <div class="net-stat-lbl">Глобальная сертификация</div>
+      </div>
+      <div class="net-divider"></div>
+      <div class="net-stat">
+        <div class="net-stat-num">98<span style="font-size:14px;color:rgba(255,255,255,.3);">%</span></div>
+        <div class="net-stat-lbl">Удовлетворённость пациентов</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">07 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 9: HOW TO JOIN (ROADMAP) ==================== -->
+<div class="slide s9j">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;bottom:-100px;left:-60px;background:radial-gradient(circle,rgba(16,185,129,.12),transparent 70%);"></div>
+
+  <div class="s9j-inner">
+    <div>
+      <div class="slide-tag green">Как стать партнёром</div>
+      <h2 style="font-size:23px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:0;">Бесплатная регистрация за 4 шага</h2>
+    </div>
+
+    <div class="roadmap">
+      <div class="rm-step">
+        <div class="rm-circle">1</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">📝</div>
+          <div class="rm-card-title">Регистрация на платформе</div>
+          <div class="rm-card-desc">Создайте профиль агентства на mediw.vercel.app — бесплатно, займёт 10 минут</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#059669,#10b981);">2</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">📁</div>
+          <div class="rm-card-title">Верификация документов</div>
+          <div class="rm-card-desc">Загрузите свидетельство о регистрации бизнеса. RBG проверит и подтвердит партнёрство</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#047857,#34d399);">3</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">🎓</div>
+          <div class="rm-card-title">Обучение и онбординг</div>
+          <div class="rm-card-desc">Персональный менеджер проведёт онлайн-обучение по работе с платформой</div>
+        </div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-circle" style="background:linear-gradient(135deg,#065f46,#10b981);">4</div>
+        <div class="rm-card">
+          <div class="rm-card-ico">🚀</div>
+          <div class="rm-card-title">Первый пациент</div>
+          <div class="rm-card-desc">Подайте первую заявку и начните зарабатывать при полной поддержке RBG</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="join-cta-box">
+      <div>
+        <div class="join-cta-label">Начните прямо сейчас</div>
+        <div class="join-cta-val">mediw.vercel.app → Регистрация → Агентство</div>
+      </div>
+      <div class="join-cta-right">
+        <div style="text-align:center;">
+          <div class="join-kpi-num">$0</div>
+          <div class="join-kpi-label">Стоимость входа</div>
+        </div>
+        <div style="width:1px;height:30px;background:rgba(255,255,255,.1);align-self:center;"></div>
+        <div style="text-align:center;">
+          <div class="join-kpi-num">10 мин</div>
+          <div class="join-kpi-label">Время на регистрацию</div>
+        </div>
+        <div style="width:1px;height:30px;background:rgba(255,255,255,.1);align-self:center;"></div>
+        <div style="text-align:center;">
+          <div class="join-kpi-num">24/7</div>
+          <div class="join-kpi-label">Поддержка RBG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">08 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 10: BEFORE / AFTER ==================== -->
+<div class="slide s10">
+  <div class="deco" style="width:300px;height:300px;top:-60px;right:200px;background:radial-gradient(circle,rgba(239,68,68,.12),transparent 70%);"></div>
+
+  <div class="s10-left">
+    <div class="ba-label before">✕ До MediW</div>
+    <h3 class="ba-h3 before">Ручная работа, ошибки,<br>бесконечное ожидание</h3>
+    <ul class="ba-list">
+      <li class="ba-item before">
+        <div class="ba-ico before">📋</div>
+        <div>
+          <div class="ba-item-title before">Ручная регистрация пациентов</div>
+          <div class="ba-item-desc before">Данные вносятся вручную через Excel, мессенджеры и бумажные документы</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">📎</div>
+        <div>
+          <div class="ba-item-title before">Документы — через мессенджер или email</div>
+          <div class="ba-item-desc before">КТ, МРТ, анализы отправляются через мессенджеры — файлы часто теряются</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">📞</div>
+        <div>
+          <div class="ba-item-title before">Постоянные звонки в клинику</div>
+          <div class="ba-item-desc before">Статус заявки можно узнать только по телефону или email</div>
+        </div>
+      </li>
+      <li class="ba-item before">
+        <div class="ba-ico before">❓</div>
+        <div>
+          <div class="ba-item-title before">Невозможно отследить статус кейса</div>
+          <div class="ba-item-desc before">Ни пациент, ни агентство не понимают, что происходит</div>
+        </div>
+      </li>
+    </ul>
+    <div class="ba-time-row">
+      <div class="ba-time-box before">
+        <div class="ba-time-ico">⏱️</div>
+        <div>
+          <div class="ba-time-label">Среднее время обработки</div>
+          <div class="ba-time-val before">2–4 недели</div>
+          <div class="ba-time-sub before">До подтверждения клиники</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ba-connector">→</div>
+
+  <div class="s10-right">
+    <div class="ba-label after">✓ После внедрения MediW</div>
+    <h3 class="ba-h3 after">Цифровой процесс —<br>максимально быстро</h3>
+    <ul class="ba-list">
+      <li class="ba-item after">
+        <div class="ba-ico after">⚡</div>
+        <div>
+          <div class="ba-item-title after">Регистрация пациента за 5 минут</div>
+          <div class="ba-item-desc after">Один раз заполнил цифровую форму — все данные сохранены</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">☁️</div>
+        <div>
+          <div class="ba-item-title after">Документы загружаются на платформу</div>
+          <div class="ba-item-desc after">КТ, МРТ, анализы загружаются прямо в кейс — ничего не теряется</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">🔔</div>
+        <div>
+          <div class="ba-item-title after">Статус — через автоуведомления</div>
+          <div class="ba-item-desc after">Статус кейса обновляется в реальном времени — без звонков</div>
+        </div>
+      </li>
+      <li class="ba-item after">
+        <div class="ba-ico after">✅</div>
+        <div>
+          <div class="ba-item-title after">Полная прозрачность</div>
+          <div class="ba-item-desc after">История кейса, документы, решение клиники — всё в одном экране</div>
+        </div>
+      </li>
+    </ul>
+    <div class="ba-time-row">
+      <div class="ba-time-box after">
+        <div class="ba-time-ico">🚀</div>
+        <div>
+          <div class="ba-time-label after">Среднее время обработки</div>
+          <div class="ba-time-val after">2–5 дней</div>
+          <div class="ba-time-sub after">До ответа клиники</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand dark">MediW Platform</span>
+    <span class="sf-num dark">09 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 11: COMMISSION & SAVINGS ==================== -->
+<div class="slide s11">
+  <div class="deco-grid"></div>
+  <div class="deco" style="width:400px;height:400px;top:-100px;right:-60px;background:radial-gradient(circle,rgba(16,185,129,.12),transparent 70%);"></div>
+
+  <div class="s11-inner">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="slide-tag green">Доход партнёра</div>
+        <h2 style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:0;">Структура комиссии партнёра MediW</h2>
+      </div>
+      <span style="font-size:9.5px;background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.15);padding:4px 10px;border-radius:6px;font-weight:700;">MAX 20% от суммы оплаты · Договор через MediW</span>
+    </div>
+
+    <div class="s11-cols">
+      <!-- Left: Commission structure -->
+      <div class="s11-col">
+        <div class="s11-col-title">Структура комиссии</div>
+
+        <div style="text-align:center;padding:2mm 0 1mm;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:4px;">Максимальная комиссия</div>
+          <div class="comm-big-num">20%</div>
+          <div class="comm-big-sub">от общей суммы оплаты пациента</div>
+        </div>
+
+        <div class="comm-flow-row">
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">✈️</div>
+            <div class="comm-flow-step-lbl">Въезд</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">🏥</div>
+            <div class="comm-flow-step-lbl">Лечение</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">💳</div>
+            <div class="comm-flow-step-lbl">Оплата</div>
+          </div>
+          <div class="comm-flow-arrow">→</div>
+          <div class="comm-flow-step">
+            <div class="comm-flow-step-ico">💰</div>
+            <div class="comm-flow-step-lbl">Выплата комиссии</div>
+          </div>
+        </div>
+
+        <div class="comm-example-box">
+          <div style="font-size:28px;flex-shrink:0;">🧮</div>
+          <div>
+            <div class="comm-ex-lbl">Пример расчёта</div>
+            <div class="comm-ex-calc">Оплата $5,000 → Комиссия <span style="color:#34d399;font-size:16px;">$1,000</span></div>
+          </div>
+        </div>
+
+        <div class="comm-delegate">
+          <div class="comm-del-lbl">Договор через MediW</div>
+          <div class="comm-del-text">MediW заключает договор с клиникой от въезда до оплаты. Агентству остаётся только направлять пациентов.</div>
+        </div>
+      </div>
+
+      <div class="s11-divider-v"></div>
+
+      <!-- Right: Time & cost savings -->
+      <div class="s11-col">
+        <div class="s11-col-title">Экономия времени и затрат</div>
+        <div class="saving-block">
+          <div>
+            <div class="saving-item-label">Время регистрации пациента <span class="saving-badge">экономия −95%</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">До</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:90%;"><span class="saving-bar-num">~2 часа</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:8%;"></div></div>
+                <span style="font-size:9px;color:rgba(16,185,129,.8);font-weight:700;margin-left:4px;">5 мин</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">Срок до подтверждения клиники <span class="saving-badge">экономия −80%</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">До</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:100%;"><span class="saving-bar-num">2–4 недели</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:20%;"><span class="saving-bar-num">2–5 дней</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">Количество контактов с клиникой <span class="saving-badge">экономия −90%</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">До</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:95%;"><span class="saving-bar-num">50+ звонков и писем</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:10%;"><span class="saving-bar-num">Авто</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="saving-item-label">Затраты на операционный персонал <span class="saving-badge">значительная экономия</span></div>
+            <div class="saving-bars-wrap">
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag bef">До</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill bef" style="width:85%;"><span class="saving-bar-num">N часов/кейс</span></div></div>
+              </div>
+              <div class="saving-bar-row">
+                <span class="saving-bar-tag aft">MediW</span>
+                <div class="saving-bar-outer"><div class="saving-bar-fill aft" style="width:18%;"><span class="saving-bar-num">Платформа 24/7</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:3.5mm 4mm;margin-top:auto;">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#60a5fa;margin-bottom:3px;">Бизнес-эффект</div>
+          <div style="font-size:11.5px;color:#fff;font-weight:600;line-height:1.5;">Меньше ручной работы → больше пациентов → выше доход. MediW масштабирует ваш бизнес без дополнительных затрат.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="sf-brand light">MediW Platform</span>
+    <span class="sf-num light">10 / 11</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 12: CLOSING ==================== -->
+<div class="slide s12">
+  <div class="deco" style="width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(59,130,246,.13),transparent 70%);"></div>
+  <div class="deco" style="width:350px;height:350px;bottom:-120px;left:-60px;background:radial-gradient(circle,rgba(96,165,250,.08),transparent 70%);"></div>
+  <div class="deco-grid"></div>
+
+  <div class="s12-inner">
+    <div class="s12-tag">Присоединяйтесь</div>
+    <h1 class="s12-h1">Растите вместе<br>с <em>корейской медициной</em></h1>
+    <p class="s12-sub">Ваши клиенты заслуживают лучшего лечения. MediW предоставляет инструменты, клиники и поддержку — вам остаётся только достигать результатов.</p>
+
+    <div class="s12-kpi-row">
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">150<small>+</small></div>
+        <div class="s12-kpi-label">Клиник-партнёров</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">23</div>
+        <div class="s12-kpi-label">Стран-участников</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">$0</div>
+        <div class="s12-kpi-label">Стоимость входа</div>
+      </div>
+      <div class="s12-div"></div>
+      <div class="s12-kpi">
+        <div class="s12-kpi-num">98<small>%</small></div>
+        <div class="s12-kpi-label">Удовлетворённость пациентов</div>
+      </div>
+    </div>
+
+    <div class="s12-contact">
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">Платформа</div>
+        <div class="s12-contact-val">mediw.vercel.app</div>
+      </div>
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">Оператор</div>
+        <div class="s12-contact-val">RBG · rbglobal.kr</div>
+      </div>
+      <div class="s12-contact-item">
+        <div class="s12-contact-label">Вопросы партнёрства</div>
+        <div class="s12-contact-val">partner@rbglobal.kr</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s12-footer">
+    <span>© 2026 MediW Platform</span>
+    <span class="s12-footer-div"></span>
+    <span>Operated by RBG</span>
+    <span class="s12-footer-div"></span>
+    <span>Конфиденциально · Только для партнёров</span>
+    <span class="s12-footer-div"></span>
+    <span>11 / 11</span>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <button class="tb-btn tb-dark" onclick="document.querySelector('.slide').scrollIntoView()">← Слайд 1</button>
+  <button class="tb-btn tb-pdf" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Сохранить PDF
+  </button>
+</div>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск больниц - MediW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;background:#fff;color:#1a1a2e;min-height:100vh;}
+    .app{display:flex;height:100vh;overflow:hidden;}
+
+    /* Sidebar */
+    .sidebar{width:240px;background:#fff;border-right:1px solid #e8ecf1;display:flex;flex-direction:column;flex-shrink:0;}
+    .sidebar-logo{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:.625rem;border-bottom:1px solid #e8ecf1;}
+    .sidebar-logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.875rem;}
+    .sidebar-logo-text{font-size:1.125rem;font-weight:700;color:#1a1a2e;}
+    .user-card{margin:1rem 1rem 0;padding:1rem;border:1px solid #e8ecf1;border-radius:.75rem;display:flex;align-items:center;gap:.75rem;}
+    .user-avatar{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;}
+    .user-avatar svg{width:1.25rem;height:1.25rem;color:#2563eb;}
+    .user-name{font-size:.875rem;font-weight:600;color:#1a1a2e;}
+    .user-role-label{font-size:.75rem;color:#3391ff;font-weight:500;}
+    .type-switcher{display:flex;gap:.25rem;margin:1rem 1rem 0;padding:.25rem;background:#f0f4f8;border-radius:.5rem;}
+    .type-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.5rem .25rem;border:none;border-radius:.375rem;background:transparent;cursor:pointer;transition:all .2s;font-size:.625rem;font-weight:500;color:#999;font-family:inherit;}
+    .type-btn svg{width:1.125rem;height:1.125rem;color:#999;transition:color .2s;}
+    .type-btn:hover{background:#e2e8f0;}
+    .type-btn.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#3391ff;}
+    .type-btn.active svg{color:#3391ff;}
+    .nav-menu{flex:1;padding:1rem 0;margin-top:.5rem;}
+    .nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;cursor:pointer;transition:all .15s;color:#8896a6;font-size:.875rem;font-weight:500;border-left:3px solid transparent;text-decoration:none;}
+    .nav-item:hover{background:#f5f7fa;color:#1a1a2e;}
+    .nav-item.active{background:rgba(51,145,255,.06);color:#3391ff;border-left-color:#3391ff;font-weight:600;}
+    .nav-item svg{width:1.25rem;height:1.25rem;flex-shrink:0;}
+    .sidebar-footer{padding:1rem 1.5rem;border-top:1px solid #e8ecf1;}
+    .logout-btn{display:flex;align-items:center;gap:.75rem;width:100%;padding:.625rem 0;border:none;background:none;cursor:pointer;color:#8896a6;font-size:.875rem;font-weight:500;transition:color .15s;font-family:inherit;}
+    .logout-btn:hover{color:#e74c3c;}
+    .logout-btn svg{width:1.25rem;height:1.25rem;}
+
+    /* 3-Column Layout */
+    .content{flex:1;display:flex;overflow:hidden;}
+
+    /* Filter Panel */
+    .filter-panel{width:220px;border-right:1px solid #f1f5f9;padding:1.5rem;overflow-y:auto;flex-shrink:0;background:#fff;}
+    .filter-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+    .filter-title{font-size:.9375rem;font-weight:700;color:#1a1a2e;}
+    .filter-reset{font-size:.75rem;color:#3391ff;cursor:pointer;border:none;background:none;font-weight:600;font-family:inherit;}
+    .filter-reset:hover{text-decoration:underline;}
+    .filter-section{margin-bottom:1.5rem;}
+    .filter-label{font-size:.8125rem;font-weight:600;color:#475569;margin-bottom:.625rem;}
+    .filter-chips{display:flex;flex-wrap:wrap;gap:.375rem;}
+    .f-chip{padding:.375rem .75rem;border:1px solid #e2e8f0;border-radius:2rem;font-size:.75rem;font-weight:500;color:#64748b;cursor:pointer;transition:all .15s;background:#fff;}
+    .f-chip:hover{border-color:#93c5fd;background:#f8fbff;}
+    .f-chip.active{border-color:#3391ff;background:#eff6ff;color:#1d4ed8;font-weight:600;}
+    .f-check{display:flex;align-items:center;gap:.5rem;padding:.375rem 0;cursor:pointer;font-size:.8125rem;color:#475569;}
+    .f-check input{width:1rem;height:1rem;accent-color:#3391ff;cursor:pointer;}
+    .f-toggle{display:flex;align-items:center;justify-content:space-between;padding:.625rem 0;border-top:1px solid #f8fafc;}
+    .f-toggle-label{font-size:.8125rem;color:#475569;font-weight:500;}
+    .f-switch{width:2.25rem;height:1.25rem;background:#e2e8f0;border-radius:.75rem;cursor:pointer;position:relative;transition:background .2s;}
+    .f-switch.on{background:#3391ff;}
+    .f-switch::after{content:'';position:absolute;top:2px;left:2px;width:1rem;height:1rem;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+    .f-switch.on::after{transform:translateX(1rem);}
+
+    /* Hospital List */
+    .list-panel{width:380px;border-right:1px solid #f1f5f9;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+    .list-header{padding:1.25rem 1.25rem .75rem;border-bottom:1px solid #f1f5f9;}
+    .list-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+    .list-title{font-size:1rem;font-weight:700;color:#1a1a2e;}
+    .list-count{font-size:.8125rem;color:#94a3b8;font-weight:500;}
+    .list-search{width:100%;padding:.5rem .75rem .5rem 2.25rem;border:1px solid #e2e8f0;border-radius:.5rem;font-size:.8125rem;font-family:inherit;color:#1a1a2e;outline:none;transition:border-color .15s;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'/%3E%3C/svg%3E") no-repeat .625rem center / .875rem;}
+    .list-search:focus{border-color:#3391ff;}
+    .list-search::placeholder{color:#cbd5e1;}
+    .list-scroll{flex:1;overflow-y:auto;}
+
+    .h-card{display:flex;gap:.875rem;padding:1rem 1.25rem;border-bottom:1px solid #f8fafc;cursor:pointer;transition:background .1s;}
+    .h-card:hover{background:#f8fbff;}
+    .h-card.selected{background:#eff6ff;border-left:3px solid #3391ff;}
+    .h-thumb{width:3.5rem;height:3.5rem;border-radius:.5rem;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:.625rem;font-weight:700;color:#94a3b8;flex-shrink:0;overflow:hidden;}
+    .h-card-body{flex:1;min-width:0;}
+    .h-name{font-size:.875rem;font-weight:600;color:#1a1a2e;margin-bottom:.125rem;}
+    .h-type{font-size:.75rem;color:#94a3b8;margin-bottom:.5rem;}
+    .h-tags{display:flex;flex-wrap:wrap;gap:.25rem;}
+    .h-tag{padding:.125rem .5rem;border-radius:2rem;font-size:.625rem;font-weight:500;background:#f1f5f9;color:#64748b;}
+    .h-tag.dept{background:#eff6ff;color:#3391ff;}
+    .h-tag.lang{background:#f0fdf4;color:#16a34a;}
+    /* Detail Panel */
+    .detail-panel{flex:1;overflow-y:auto;background:#fff;position:relative;}
+    .detail-inner{padding:2rem;}
+    .detail-images{display:flex;gap:.5rem;margin-bottom:1.5rem;border-radius:.75rem;overflow:hidden;height:180px;background:#f1f5f9;}
+    .detail-img{flex:1;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#94a3b8;}
+    .detail-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;}
+    .detail-name{font-size:1.375rem;font-weight:700;color:#1a1a2e;margin-bottom:.375rem;}
+    .detail-addr{font-size:.875rem;color:#94a3b8;}
+    .detail-actions{display:flex;gap:.5rem;flex-shrink:0;}
+    .detail-btn{display:inline-flex;align-items:center;gap:.375rem;padding:.5rem 1rem;border:1px solid #e2e8f0;border-radius:.5rem;font-size:.8125rem;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;color:#475569;font-family:inherit;text-decoration:none;}
+    .detail-btn:hover{background:#f8fafc;border-color:#cbd5e1;}
+    .detail-btn.whatsapp{background:#25d366;color:#fff;border-color:#25d366;}
+    .detail-btn.whatsapp:hover{background:#20bd5a;}
+    .detail-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;}
+    .detail-badge{display:inline-flex;align-items:center;gap:.375rem;padding:.375rem .75rem;border:1px solid #e2e8f0;border-radius:2rem;font-size:.75rem;font-weight:500;color:#475569;}
+    .detail-badge svg{width:.875rem;height:.875rem;color:#10b981;}
+    .detail-desc{font-size:.9375rem;color:#475569;line-height:1.7;margin-bottom:1.5rem;}
+    .detail-location{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:#64748b;margin-bottom:1rem;}
+    .detail-location svg{width:1rem;height:1rem;color:#94a3b8;}
+    .detail-map{width:100%;height:200px;background:#f1f5f9;border-radius:.75rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;font-size:.8125rem;color:#94a3b8;}
+    .detail-section-title{font-size:1.0625rem;font-weight:700;color:#1a1a2e;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid #f1f5f9;}
+    .dept-row{display:flex;align-items:center;justify-content:space-between;padding:.875rem 0;border-bottom:1px solid #f8fafc;cursor:pointer;transition:background .1s;}
+    .dept-row:hover{background:#f8fbff;margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:.375rem;}
+    .dept-row:last-child{border-bottom:none;}
+    .dept-name{font-size:.9375rem;font-weight:600;color:#1a1a2e;}
+    .dept-meta{display:flex;align-items:center;gap:.5rem;font-size:.8125rem;color:#94a3b8;}
+    .dept-meta svg{width:1rem;height:1rem;}
+
+    /* No selection state */
+    .detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#cbd5e1;font-size:.9375rem;}
+    .detail-empty svg{width:3rem;height:3rem;margin-bottom:1rem;color:#e2e8f0;}
+
+    /* Dept search & checkbox */
+    .dept-header{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid #f1f5f9;}
+    .dept-header-title{font-size:1.0625rem;font-weight:700;color:#1a1a2e;flex-shrink:0;}
+    .dept-search{flex:1;max-width:240px;padding:.375rem .75rem .375rem 2rem;border:1px solid #e2e8f0;border-radius:.375rem;font-size:.8125rem;font-family:inherit;color:#1a1a2e;outline:none;transition:border-color .15s;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'/%3E%3C/svg%3E") no-repeat .5rem center / .75rem;}
+    .dept-search:focus{border-color:#3391ff;}
+    .dept-search::placeholder{color:#cbd5e1;}
+    .dept-row{display:flex;align-items:center;gap:.75rem;padding:.875rem 0;border-bottom:1px solid #f8fafc;transition:background .1s;}
+    .dept-row:last-child{border-bottom:none;}
+    .dept-row:hover{background:#f8fbff;margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:.375rem;}
+    .dept-check{width:1.125rem;height:1.125rem;accent-color:#3391ff;cursor:pointer;flex-shrink:0;}
+    .dept-info{flex:1;min-width:0;}
+    .dept-name{font-size:.9375rem;font-weight:600;color:#1a1a2e;}
+    .dept-profs{font-size:.75rem;color:#94a3b8;margin-top:.25rem;}
+    .dept-meta{display:flex;align-items:center;gap:.5rem;font-size:.8125rem;color:#94a3b8;flex-shrink:0;}
+    .dept-meta svg{width:1rem;height:1rem;}
+
+    /* Floating intake button */
+    .intake-bar{position:sticky;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #f1f5f9;padding:1rem 2rem;display:none;align-items:center;justify-content:space-between;z-index:5;}
+    .intake-bar.show{display:flex;}
+    .intake-bar-info{font-size:.875rem;color:#475569;}
+    .intake-bar-info strong{color:#3391ff;}
+    .intake-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6875rem 1.5rem;background:#3391ff;color:#fff;border:none;border-radius:.5rem;font-size:.875rem;font-weight:600;cursor:pointer;transition:background .15s;font-family:inherit;}
+    .intake-btn:hover{background:#2577e0;}
+
+    /* Professor expand */
+    .dept-wrapper{border-bottom:1px solid #f1f5f9;}
+    .dept-wrapper:last-child{border-bottom:none;}
+    .dept-row-main{display:flex;align-items:center;gap:.75rem;padding:.875rem 0;cursor:pointer;transition:background .15s;}
+    .dept-row-main:hover{background:#f8fbff;margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:.375rem;}
+    .dept-expand-icon{width:1rem;height:1rem;color:#94a3b8;transition:transform .2s;flex-shrink:0;}
+    .dept-wrapper.open .dept-expand-icon{transform:rotate(90deg);color:#3391ff;}
+    .dept-profs-panel{display:none;padding:0 0 .75rem 2.5rem;}
+    .dept-wrapper.open .dept-profs-panel{display:block;}
+    .prof-card{display:flex;align-items:center;gap:.875rem;padding:.75rem;border:1px solid #f1f5f9;border-radius:.625rem;margin-bottom:.5rem;cursor:pointer;transition:all .15s;}
+    .prof-card:hover{border-color:#c5dcf7;background:#f8fbff;}
+    .prof-avatar{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#2563eb;flex-shrink:0;}
+    .prof-info{flex:1;min-width:0;}
+    .prof-name{font-size:.875rem;font-weight:600;color:#1a1a2e;}
+    .prof-sub{font-size:.75rem;color:#94a3b8;margin-top:.125rem;}
+    .prof-arrow{width:.875rem;height:.875rem;color:#cbd5e1;}
+
+    /* Professor Modal */
+    .prof-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center;padding:1rem;}
+    .prof-modal-overlay.show{display:flex;}
+    .prof-modal{background:#fff;border-radius:1rem;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+    .prof-modal-header{padding:1.75rem 1.75rem 0;display:flex;align-items:flex-start;gap:1rem;}
+    .prof-modal-avatar{width:4rem;height:4rem;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;color:#2563eb;flex-shrink:0;}
+    .prof-modal-name{font-size:1.25rem;font-weight:700;color:#1a1a2e;}
+    .prof-modal-dept{font-size:.875rem;color:#3391ff;font-weight:500;margin-top:.25rem;}
+    .prof-modal-hospital{font-size:.8125rem;color:#94a3b8;margin-top:.25rem;}
+    .prof-modal-close{position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border:none;border-radius:.5rem;background:#f1f5f9;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;}
+    .prof-modal-close:hover{background:#e2e8f0;}
+    .prof-modal-close svg{width:1.125rem;height:1.125rem;color:#64748b;}
+    .prof-modal-body{padding:1.5rem 1.75rem 1.75rem;}
+    .prof-section{margin-bottom:1.25rem;}
+    .prof-section:last-child{margin-bottom:0;}
+    .prof-section-title{font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;}
+    .prof-section-content{font-size:.875rem;color:#475569;line-height:1.6;}
+    .prof-tags{display:flex;flex-wrap:wrap;gap:.375rem;}
+    .prof-tag{padding:.25rem .625rem;background:#f0f7ff;color:#3391ff;border-radius:.375rem;font-size:.75rem;font-weight:500;}
+    .prof-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+    .prof-stat{padding:.75rem;background:#f8fafc;border-radius:.5rem;}
+    .prof-stat-label{font-size:.6875rem;color:#94a3b8;font-weight:500;margin-bottom:.25rem;}
+    .prof-stat-value{font-size:.9375rem;font-weight:700;color:#1a1a2e;}
+
+    /* Mobile */
+    .mobile-header{display:none;padding:1rem;background:#fff;border-bottom:1px solid #e8ecf1;align-items:center;justify-content:space-between;}
+    .mobile-menu-btn{width:2.25rem;height:2.25rem;border:1px solid #e8ecf1;border-radius:.5rem;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .mobile-menu-btn svg{width:1.25rem;height:1.25rem;color:#64748b;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:99;}
+
+    @media(max-width:1200px){.filter-panel{width:180px;}.list-panel{width:320px;}}
+    @media(max-width:1024px){.filter-panel{display:none;}.list-panel{width:300px;}}
+    @media(max-width:768px){
+      .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;transition:left .3s;}
+      .sidebar.open{left:0;}
+      .sidebar-overlay.show{display:block;}
+      .mobile-header{display:flex;}
+      .content{flex-direction:column;}
+      .list-panel{width:100%;height:50%;border-right:none;border-bottom:1px solid #f1f5f9;}
+      .detail-panel{height:50%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div style="font-weight:700;color:#3391ff;">MediW</div>
+    <div style="width:2.25rem;"></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-icon">M</div><div class="sidebar-logo-text">MediW</div></div>
+      <div class="user-card"><div class="user-avatar"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><div class="user-name">Ким Минсу</div><div class="user-role-label">Агентство</div></div></div>
+      <div class="type-switcher">
+        <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>Пациент</span></button>
+        <button class="type-btn"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg><span>Медицинский специалист</span></button>
+        <button class="type-btn active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg><span>Агентство</span></button>
+      </div>
+      <nav class="nav-menu">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg><span>Панель управления</span></a>
+        <a href="profile.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg><span>Мой профиль</span></a>
+        <a href="patient-list.html" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span>Управление пациентами</span></a>
+        <a href="hospitals.html" class="nav-item active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg><span>Поиск больниц</span></a>
+        <a href="#" class="nav-item"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Настройки</span></a>
+      </nav>
+      <div class="sidebar-footer"><button class="logout-btn" onclick="location.href='login.html'"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg><span>Выйти</span></button></div>
+    </aside>
+
+    <div class="content">
+      <!-- Filter -->
+      <div class="filter-panel">
+        <div class="filter-header"><span class="filter-title">Фильтр</span><button class="filter-reset" onclick="resetFilters()">Сбросить</button></div>
+        <div class="filter-section"><div class="filter-label">Отделения</div><div class="filter-chips" id="deptFilter"><div class="f-chip" onclick="toggleFilter(this)">Онкология</div><div class="f-chip" onclick="toggleFilter(this)">Кардиология</div><div class="f-chip" onclick="toggleFilter(this)">Нейрохирургия</div><div class="f-chip" onclick="toggleFilter(this)">Ортопедия</div><div class="f-chip" onclick="toggleFilter(this)">Дерматология</div><div class="f-chip" onclick="toggleFilter(this)">Офтальмология</div><div class="f-chip" onclick="toggleFilter(this)">Акушерство и гинекология</div></div></div>
+        <div class="filter-section"><div class="filter-label">Тип больницы</div><label class="f-check"><input type="checkbox" checked>Многопрофильный госпиталь</label><label class="f-check"><input type="checkbox" checked>Общая больница</label><label class="f-check"><input type="checkbox" checked>Специализированная больница</label></div>
+        <div class="filter-section"><div class="filter-label">Регион</div><div class="filter-chips"><div class="f-chip" onclick="toggleFilter(this)">Сеул</div><div class="f-chip" onclick="toggleFilter(this)">Кёнги</div><div class="f-chip" onclick="toggleFilter(this)">Пусан</div><div class="f-chip" onclick="toggleFilter(this)">Инчхон</div><div class="f-chip" onclick="toggleFilter(this)">Тэгу</div></div></div>
+        <div class="filter-section"><div class="filter-label">Языковая поддержка</div><label class="f-check"><input type="checkbox">Русский</label><label class="f-check"><input type="checkbox">Английский</label><label class="f-check"><input type="checkbox">Китайский</label></div>
+      </div>
+
+      <!-- Hospital List -->
+      <div class="list-panel">
+        <div class="list-header">
+          <div class="list-header-top"><span class="list-title">Список больниц</span><span class="list-count" id="listCount">32</span></div>
+          <input type="text" class="list-search" placeholder="Поиск по названию, отделению, заболеванию, врачу" oninput="searchHospitals(this.value)">
+        </div>
+        <div class="list-scroll" id="hospitalList"></div>
+      </div>
+
+      <!-- Detail -->
+      <div class="detail-panel" id="detailPanel">
+        <div class="detail-empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"/></svg>Выберите больницу из списка</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const hospitals = [
+      {id:1,name:'Seoul Asan Medical Center',type:'Многопрофильный госпиталь',region:'Сеул',addr:'Сеул, Сонпа-гу, Олимпик-ро 43-гиль, 88',depts:['Кардиология (Cardiology)','Неврология (Neurology)','Хирургия молоч. железы (Breast Surgery)','Ортопедия (Orthopedic Surgery)'],langs:['Английский','Русский','Арабский'],open:true,jci:true,gov:true,desc:'Ведущий университетский госпиталь Азии. Мировой уровень кардиохирургии, трансплантации печени и онкохирургии. Около 2 700 коек.',professors:['박승정','이재성','김영학','송재우'],diseases:['ИБС','Сердечная недостаточность','Инсульт','Рак молочной железы','Грыжа диска'],doctors:[{dept:'Кардиология (Cardiology)',count:2,names:['박승정','이재성']},{dept:'Неврология (Neurology)',count:1,names:['송재우']},{dept:'Хирургия молоч. железы (Breast Surgery)',count:1,names:['김영학']},{dept:'Ортопедия (Orthopedic Surgery)',count:1,names:['이상훈']}],whatsapp:'82230105001',email:'international@amc.seoul.kr'},
+      {id:2,name:'Catholic Kwandong Univ. Intl St. Mary Hospital',type:'Общая больница',region:'Инчхон',addr:'Инчхон, Со-гу, Симгок-ро 100-гиль 25',depts:['Хирургия позвоночника (Spine Surgery)','Ортопедия (Orthopedic Surgery)','Реабилитация (Rehabilitation Medicine)'],langs:['Английский','Русский'],open:true,jci:false,gov:true,desc:'Общая больница, предоставляющая специализированную помощь в области позвоночника и суставов, а также услуги для иностранных пациентов.',professors:['한성범','최동호'],diseases:['Стеноз позвоночного канала','Грыжа диска','Артрит','Импинджмент плеча'],doctors:[{dept:'Хирургия позвоночника (Spine Surgery)',count:2,names:['한성범','최동호']},{dept:'Ортопедия (Orthopedic Surgery)',count:1,names:['박민수']},{dept:'Реабилитация (Rehabilitation Medicine)',count:1,names:['이정훈']}],whatsapp:'',email:'intl@ish.ac.kr'},
+      {id:3,name:'Gangnam Severance Hospital',type:'Многопрофильный госпиталь',region:'Сеул',addr:'Сеул, Каннам-гу, Оньджу-ро 211',depts:['Онкология','Ортопедия','Педиатрия'],langs:['Английский','Русский'],open:true,jci:true,gov:true,desc:'Медицинский центр ун-та Ёнсе. Оснащён центром онкологии, роботизированной хирургии и современным оборудованием.',professors:['김형일','이수걸','정현철'],diseases:['Рак желудка','Рак лёгких','Рак толстой кишки','Переломы','Детская астма'],doctors:[{dept:'Онкология',count:3,names:['김형일','이수걸','정현철']},{dept:'Ортопедия',count:2,names:['김학선','유기형']},{dept:'Педиатрия',count:1,names:['박은실']}],whatsapp:'82220193546',email:'intl@yuhs.ac'},
+      {id:4,name:'Samsung Seoul Hospital',type:'Общая больница',region:'Сеул',addr:'Сеул, Каннам-гу, Ирвон-ро 81',depts:['Дерматология','Офтальмология'],langs:['Английский'],open:true,jci:true,gov:true,desc:'Крупная больница Samsung Medical Center. Онкологическое и кардиоваскулярное отделения.',professors:['안효식','김응권'],diseases:['Атопический дерматит','Псориаз','Катаракта','Глаукома'],doctors:[{dept:'Дерматология',count:2,names:['안효식','이주흥']},{dept:'Офтальмология',count:1,names:['김응권']}],whatsapp:'',email:'intl@samsung.com'},
+      {id:5,name:'Seoul National University Hospital',type:'Многопрофильный госпиталь',region:'Сеул',addr:'Сеул, Чонно-гу, Тэхак-ро 101',depts:['Кардиология (Cardiology)','Нейрохирургия (Neurosurgery)','Онкология (Oncology)'],langs:['Английский','Русский','Китайский'],open:true,jci:true,gov:true,desc:'Государственный университетский госпиталь. Центр медицины Кореи. 1 800 коек.',professors:['김효수','백선하','방영주','김성환'],diseases:['Инфаркт миокарда','Опухоль мозга','Рак печени','Рак лёгких','Рак желудка'],doctors:[{dept:'Кардиология (Cardiology)',count:4,names:['김효수','구본권','김성환','이해영']},{dept:'Нейрохирургия (Neurosurgery)',count:3,names:['백선하','한정호','김정은']},{dept:'Онкология (Oncology)',count:2,names:['방영주','이근석']}],whatsapp:'82220722890',email:'snuh_intl@snuh.org'},
+      {id:6,name:'Yonsei Sinchon Severance Hospital',type:'Многопрофильный госпиталь',region:'Сеул',addr:'Сеул, Содэмун-гу, Ёнсе-ро 50-1',depts:['Кардиология','Онкология','Акушерство и гинекология'],langs:['Английский','Русский'],open:true,jci:true,gov:true,desc:'Основной госпиталь Ёнсе. Международный медцентр с сертификацией JCI.',professors:['최동훈','정현철','김영태'],diseases:['Аритмия','Рак толстой кишки','Миома матки','Рак яичника'],doctors:[{dept:'Кардиология',count:3,names:['최동훈','김중선','이병권']},{dept:'Онкология',count:2,names:['정현철','조병철']},{dept:'Акушерство и гинекология',count:1,names:['김영태']}],whatsapp:'82222282114',email:'intl@severance.com'},
+      {id:7,name:'Catholic Univ. Seoul St. Mary Hospital',type:'Общая больница',region:'Сеул',addr:'Сеул, Сочхо-гу, Панпхо-дэро 222',depts:['Кардиология','Гастроэнтерология','Акушерство и гинекология'],langs:['Английский','Русский'],open:true,jci:false,gov:true,desc:'Крупнейший госпиталь Catholic Medical Center. Мировой уровень трансплантации стволовых клеток.',professors:['장기육','이관호'],diseases:['Лейкемия','Лимфома','Язва желудка','Цирроз печени'],doctors:[{dept:'Кардиология',count:2,names:['장기육','황경국']},{dept:'Гастроэнтерология',count:1,names:['이관호']},{dept:'Акушерство и гинекология',count:1,names:['송재윤']}],whatsapp:'',email:'intl@cmcseoul.or.kr'},
+      {id:8,name:'Bundang Seoul National Univ. Hospital',type:'Многопрофильный госпиталь',region:'Кёнги',addr:'Кёнги-до, Соннам-си, Пундан-гу, Куми-ро 173-гиль 82',depts:['Нейрохирургия','Оториноларингология','Кардиология'],langs:['Английский','Русский'],open:true,jci:false,gov:true,desc:'Филиал Seoul National Univ. Hospital. Медицинский центр южного Кёнги.',professors:['한규철','이건국'],diseases:['Опухоль мозга','Потеря слуха','Средний отит','Стенокардия'],doctors:[{dept:'Нейрохирургия',count:2,names:['한규철','김진영']},{dept:'Оториноларингология',count:1,names:['이건국']},{dept:'Кардиология',count:1,names:['윤창환']}],whatsapp:'',email:'intl@snubh.org'},
+      {id:9,name:'Korea Univ. Anam Hospital',type:'Общая больница',region:'Сеул',addr:'Сеул, Сонбук-гу, Инчхон-ро 73',depts:['Офтальмология','Нейрохирургия','Кардиология'],langs:['Английский','Русский','Китайский'],open:true,jci:false,gov:true,desc:'Основной госпиталь Korea Univ. Робот-хирургия, гамма-нож и др. оборудование.',professors:['송수정','조용팔'],diseases:['Заболевания сетчатки','Глаукома','Кровоизлияние в мозг','ИБС'],doctors:[{dept:'Офтальмология',count:2,names:['송수정','유형곤']},{dept:'Нейрохирургия',count:1,names:['조용팔']},{dept:'Кардиология',count:1,names:['최철웅']}],whatsapp:'',email:'intl@kumc.or.kr'},
+      {id:10,name:'Ajou Univ. Hospital',type:'Многопрофильный госпиталь',region:'Кёнги',addr:'Кёнги-до, Сувон-си, Ёнтхон-гу, Уорлдкап-ро 164',depts:['Онкология','Офтальмология','Кардиология'],langs:['Английский','Русский','Китайский'],open:false,jci:false,gov:true,desc:'Госпиталь при ун-те Аджу. Травматологический и экстренный медцентр.',professors:['이경희','조범석'],diseases:['Рак лёгких','Рак желудка','Катаракта','Сердечная недостаточность'],doctors:[{dept:'Онкология',count:2,names:['이경희','김혜련']},{dept:'Офтальмология',count:1,names:['조범석']},{dept:'Кардиология',count:1,names:['최소연']}],whatsapp:'',email:'intl@ajoumc.or.kr'},
+      {id:11,name:'Jeonbuk National Univ. Hospital',type:'Многопрофильный госпиталь',region:'Пусан',addr:'Пусан, Хэундэ-гу, Хэундэ-ро 875',depts:['Акушерство и гинекология','Онкология'],langs:['Английский','Русский','Китайский'],open:true,jci:false,gov:true,desc:'Региональный медицинский центр Чонбук. Участник комплекса высокотехнологичной медицины.',professors:['이규완','김상영'],diseases:['Рак шейки матки','Рак яичника','Рак печени'],doctors:[{dept:'Акушерство и гинекология',count:2,names:['이규완','최성연']},{dept:'Онкология',count:1,names:['김상영']}],whatsapp:'',email:'intl@jbuh.co.kr'},
+      {id:12,name:'Pusan National Univ. Hospital',type:'Специализированная больница',region:'Пусан',addr:'Пусан, Со-гу, Кудок-ро 179',depts:['Онкология','Гастроэнтерология','Офтальмология'],langs:['Английский'],open:true,jci:false,gov:false,desc:'Ведущий государственный университетский госпиталь Пусана.',professors:['박광하','이창균'],diseases:['Рак толстой кишки','Рак печени','Диабетическая ретинопатия'],doctors:[{dept:'Онкология',count:1,names:['박광하']},{dept:'Гастроэнтерология',count:1,names:['이창균']},{dept:'Офтальмология',count:1,names:['배정훈']}],whatsapp:'',email:'intl@pnuh.or.kr'},
+    ];
+
+    // Professor detail data
+    const profDB = {
+      '박승정':{specialty:'Кардиология (Cardiology)',title:'Профессор',experience:'35 лет',education:'Мед. фак-т СНУ',subspecialty:['Коронарная интервенция','Сердечная недостаточность','Структурные заболевания сердца'],research:['Более 10 000 чрескожных коронарных вмешательств','Лучшая исследовательская премия Корейского кардиологического общества'],diseases:['ИБС','Инфаркт миокарда','Сердечная недостаточность','Заболевания клапанов'],langs:['Корейский','Английский']},
+      '이재성':{specialty:'Кардиология (Cardiology)',title:'Доцент',experience:'18 лет',education:'Мед. фак-т СНУ',subspecialty:['Аритмия','Электрофизиология сердца'],research:['Специалист по катетерной абляции аритмий','Более 2 000 процедур при фибрилляции предсердий'],diseases:['Аритмия','Фибрилляция предсердий','Желудочковая тахикардия'],langs:['Корейский','Английский']},
+      '송재우':{specialty:'Неврология (Neurology)',title:'Профессор',experience:'22 года',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Инсульт','Нейроваскулярные заболевания'],research:['Специалист по тромбэктомии при остром инсульте'],diseases:['Инсульт','Ишемический инсульт','Сосудистая деменция'],langs:['Корейский','Английский','Японский']},
+      '김영학':{specialty:'Хирургия молоч. железы (Breast Surgery)',title:'Профессор',experience:'25 лет',education:'Мед. фак-т СНУ',subspecialty:['Хирургия рака молоч. железы','Реконструкция молоч. железы'],research:['Более 5 000 органосохраняющих операций молоч. железы'],diseases:['Рак молочной железы','Доброкач. опухоль молоч. железы'],langs:['Корейский','Английский']},
+      '이상훈':{specialty:'Ортопедия (Orthopedic Surgery)',title:'Доцент',experience:'15 лет',education:'Мед. фак-т ун-та Корё',subspecialty:['Артроскопическая хирургия','Спортивная медицина'],research:['Специалист по реконструкции ПКС'],diseases:['Разрыв крестообразной связки','Повреждение мениска','Разрыв ротаторной манжеты'],langs:['Корейский','Английский']},
+      '한성범':{specialty:'Хирургия позвоночника (Spine Surgery)',title:'Профессор',experience:'28 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Эндоскопическая хирургия позвоночника','Минимально инвазивная хирургия позвоночника'],research:['Более 3 000 эндоскопических операций на позвоночнике'],diseases:['Грыжа диска','Стеноз позвоночного канала','Спондилолистез'],langs:['Корейский','Английский','Русский']},
+      '최동호':{specialty:'Хирургия позвоночника (Spine Surgery)',title:'Доцент',experience:'16 лет',education:'Мед. фак-т СНУ',subspecialty:['Коррекция деформаций позвоночника','Опухоль позвоночника'],research:['Специалист по коррекции сколиоза'],diseases:['Сколиоз','Опухоль позвоночника','Грыжа диска'],langs:['Корейский','Английский']},
+      '박민수':{specialty:'Ортопедия (Orthopedic Surgery)',title:'Ассистент профессора',experience:'10 лет',education:'Мед. фак-т Като. ун-та',subspecialty:['Эндопротезирование','Артрит'],research:['Роботизированное эндопротезирование'],diseases:['Остеоартрит','Ревматоидный артрит'],langs:['Корейский','Английский']},
+      '이정훈':{specialty:'Реабилитация (Rehabilitation Medicine)',title:'Профессор',experience:'20 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Реабилитация при черепно-мозговой травме','Реабилитация при повреждении спинного мозга'],research:['Исследование робот-ассистированной реабилитации'],diseases:['Реабилитация после инсульта','Повреждение спинного мозга','Хроническая боль'],langs:['Корейский','Английский']},
+      '김형일':{specialty:'Онкология',title:'Профессор',experience:'24 года',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Рак желудка','Рак толстой кишки'],research:['Участие в более чем 100 клинических исследованиях рака желудка'],diseases:['Рак желудка','Рак толстой кишки','Рак пищевода'],langs:['Корейский','Английский']},
+      '이수걸':{specialty:'Онкология',title:'Профессор',experience:'22 года',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Рак лёгких','Редкие формы рака'],research:['Исследование иммунотерапии рака лёгких'],diseases:['Рак лёгких','Рак вилочковой железы','Мезотелиома'],langs:['Корейский','Английский']},
+      '정현철':{specialty:'Онкология',title:'Профессор',experience:'26 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Рак молочной железы','Рак яичника'],research:['Клинические исследования таргетной терапии рака молоч. железы'],diseases:['Рак молочной железы','Рак яичника','Рак эндометрия'],langs:['Корейский','Английский','Русский']},
+      '김학선':{specialty:'Ортопедия',title:'Профессор',experience:'30 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Эндопротезирование колена','Артроскопия'],research:['Более 10 000 эндопротезирований'],diseases:['Остеоартрит','Повреждение мениска'],langs:['Корейский','Английский']},
+      '유기형':{specialty:'Ортопедия',title:'Доцент',experience:'14 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Хирургия позвоночника','Остеопорозные переломы'],research:['Специалист по спондилодезу'],diseases:['Перелом позвоночника','Остеопороз','Спондилолистез'],langs:['Корейский','Английский']},
+      '박은실':{specialty:'Педиатрия',title:'Профессор',experience:'19 лет',education:'Мед. фак-т ун-та Ихва',subspecialty:['Детская пульмонология','Детская аллергология'],research:['Международное совместное исследование детской астмы'],diseases:['Детская астма','Атопический дерматит','Пищевая аллергия'],langs:['Корейский','Английский']},
+      '안효식':{specialty:'Дерматология',title:'Профессор',experience:'28 лет',education:'Мед. фак-т СНУ',subspecialty:['Атопический дерматит','Псориаз','Рак кожи'],research:['Клинические исследования биопрепаратов при атопическом дерматите'],diseases:['Атопический дерматит','Псориаз','Рак кожи','Акне'],langs:['Корейский','Английский']},
+      '이주흥':{specialty:'Дерматология',title:'Доцент',experience:'13 лет',education:'Мед. фак-т СНУ',subspecialty:['Лазерная терапия','Пигментные заболевания'],research:['Исследование ингибирования синтеза меланина'],diseases:['Хлоазма','Витилиго','Гиперпигментация'],langs:['Корейский','Английский']},
+      '김응권':{specialty:'Офтальмология',title:'Профессор',experience:'25 лет',education:'Мед. фак-т СНУ',subspecialty:['Катаракта','Рефракционная хирургия'],research:['Исследование мультифокальных ИОЛ'],diseases:['Катаракта','Глаукома','Близорукость'],langs:['Корейский','Английский']},
+      '김효수':{specialty:'Кардиология (Cardiology)',title:'Профессор (заслуженный)',experience:'38 лет',education:'Мед. фак-т СНУ',subspecialty:['Коронарная интервенция','Терапия стволовыми клетками'],research:['Первый в мире успешный опыт регенерации сердца стволовыми клетками','Более 20 000 коронарных вмешательств'],diseases:['Инфаркт миокарда','Стенокардия','Сердечная недостаточность','ИБС'],langs:['Корейский','Английский']},
+      '구본권':{specialty:'Кардиология (Cardiology)',title:'Профессор',experience:'22 года',education:'Мед. фак-т СНУ',subspecialty:['Эхокардиография','Заболевания клапанов'],research:['Специалист по интервенциям при структурных заболеваниях сердца'],diseases:['Стеноз аортального клапана','Недостаточность митрального клапана','Заболевания перикарда'],langs:['Корейский','Английский']},
+      '김성환':{specialty:'Кардиология (Cardiology)',title:'Доцент',experience:'15 лет',education:'Мед. фак-т СНУ',subspecialty:['Сердечная недостаточность','Пересадка сердца'],research:['Клинические исследования устройств поддержки левого желудочка'],diseases:['Терминальная сердечная недостаточность','Наблюдение после пересадки сердца','Кардиомиопатия'],langs:['Корейский','Английский']},
+      '이해영':{specialty:'Кардиология (Cardiology)',title:'Профессор',experience:'20 лет',education:'Мед. фак-т СНУ',subspecialty:['Гипертония','Превентивная кардиология'],research:['Крупное когортное исследование гипертонии'],diseases:['Гипертония','Метаболический синдром','Дислипидемия'],langs:['Корейский','Английский']},
+      '백선하':{specialty:'Нейрохирургия (Neurosurgery)',title:'Профессор',experience:'30 лет',education:'Мед. фак-т СНУ',subspecialty:['Опухоль мозга','Цереброваскулярные заболевания'],research:['Более 2 000 операций при глиоме'],diseases:['Глиома','Менингиома','Аневризма мозга','Болезнь Мойа-Мойа'],langs:['Корейский','Английский','Немецкий']},
+      '한정호':{specialty:'Нейрохирургия (Neurosurgery)',title:'Профессор',experience:'25 лет',education:'Мед. фак-т СНУ',subspecialty:['Спинальная нейрохирургия','Периферические нервы'],research:['Специалист по минимально инвазивной хирургии позвоночника'],diseases:['Грыжа шейного диска','Опухоль спинного мозга','Тригеминальная невралгия'],langs:['Корейский','Английский']},
+      '김정은':{specialty:'Нейрохирургия (Neurosurgery)',title:'Доцент',experience:'14 лет',education:'Мед. фак-т СНУ',subspecialty:['Детская нейрохирургия','Функциональная нейрохирургия'],research:['Исследование хирургии эпилепсии у детей'],diseases:['Эпилепсия','Гидроцефалия','Церебральный паралич'],langs:['Корейский','Английский']},
+      '방영주':{specialty:'Онкология (Oncology)',title:'Профессор',experience:'28 лет',education:'Мед. фак-т СНУ',subspecialty:['Рак желудка','Рак ЖКТ'],research:['Руководство международными клиническими исследованиями таргетной терапии рака желудка'],diseases:['Рак желудка','Рак толстой кишки','Рак печени','Рак поджелудочной железы'],langs:['Корейский','Английский']},
+      '이근석':{specialty:'Онкология (Oncology)',title:'Доцент',experience:'16 лет',education:'Мед. фак-т СНУ',subspecialty:['Рак лёгких','Иммунная противоопухолевая терапия'],research:['Исследование биомаркеров прогнозирования ответа на ингибиторы иммунных контрольных точек'],diseases:['Рак лёгких','Рак головы и шеи'],langs:['Корейский','Английский']},
+      '최동훈':{specialty:'Кардиология',title:'Профессор',experience:'27 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Аритмия','Катетерная абляция фибрилляции предсердий'],research:['Наибольшее количество абляций фибрилляции предсердий в Азии'],diseases:['Фибрилляция предсердий','Желудочковая тахикардия','Аритмия'],langs:['Корейский','Английский']},
+      '김중선':{specialty:'Кардиология',title:'Профессор',experience:'23 года',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['ИБС','Сердечно-сосудистая визуализация'],research:['Исследование КТ-коронарографии'],diseases:['Стенокардия','ИБС'],langs:['Корейский','Английский']},
+      '이병권':{specialty:'Кардиология',title:'Доцент',experience:'15 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Сердечная недостаточность','Кардиореабилитация'],research:['Исследование дистанционного мониторинга сердечной недостаточности'],diseases:['Сердечная недостаточность','Кардиомиопатия'],langs:['Корейский','Английский']},
+      '조병철':{specialty:'Онкология',title:'Профессор',experience:'24 года',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Рак лёгких','Торакальная онкология'],research:['Международное совместное исследование иммунотерапии рака лёгких'],diseases:['Рак лёгких','Мезотелиома','Тимома'],langs:['Корейский','Английский']},
+      '김영태':{specialty:'Акушерство и гинекология',title:'Профессор',experience:'26 лет',education:'Мед. фак-т ун-та Ёнсе',subspecialty:['Гинекологическая онкология','Робот-хирургия'],research:['Более 3 000 гинекологических робот-операций'],diseases:['Рак шейки матки','Миома матки','Киста яичника'],langs:['Корейский','Английский']},
+      '장기육':{specialty:'Кардиология',title:'Профессор',experience:'25 лет',education:'Мед. фак-т Като. ун-та',subspecialty:['Коронарная интервенция'],research:['Специалист по вмешательствам при сложных коронарных поражениях'],diseases:['Стенокардия','Инфаркт миокарда'],langs:['Корейский','Английский']},
+      '황경국':{specialty:'Кардиология',title:'Доцент',experience:'14 лет',education:'Мед. фак-т Като. ун-та',subspecialty:['Эхокардиография','Заболевания клапанов'],research:['Транскатетерная замена аортального клапана'],diseases:['Стеноз аортального клапана','Заболевания митрального клапана'],langs:['Корейский','Английский']},
+      '이관호':{specialty:'Гастроэнтерология',title:'Профессор',experience:'22 года',education:'Мед. фак-т Като. ун-та',subspecialty:['Заболевания печени','Эндоскопия'],research:['Исследование неинвазивной диагностики фиброза печени'],diseases:['Цирроз печени','Гепатит B','Жировая болезнь печени'],langs:['Корейский','Английский']},
+      '송재윤':{specialty:'Акушерство и гинекология',title:'Доцент',experience:'12 лет',education:'Мед. фак-т Като. ун-та',subspecialty:['Беременность высокого риска','Перинатология'],research:['Исследование профилактики преждевременных родов'],diseases:['Беременность высокого риска','Предлежание плаценты','Преэклампсия'],langs:['Корейский','Английский']},
+      '한규철':{specialty:'Нейрохирургия',title:'Профессор',experience:'26 лет',education:'Мед. фак-т СНУ',subspecialty:['Опухоль мозга','Хирургия основания черепа'],research:['Специалист по эндоскопическому удалению опухолей мозга'],diseases:['Аденома гипофиза','Опухоль основания черепа','Менингиома'],langs:['Корейский','Английский']},
+      '김진영':{specialty:'Нейрохирургия',title:'Доцент',experience:'14 лет',education:'Мед. фак-т СНУ',subspecialty:['Церебральные сосуды','Аневризма мозга'],research:['Специалист по эмболизации аневризм мозга'],diseases:['Аневризма мозга','Кровоизлияние в мозг','Болезнь Мойа-Мойа'],langs:['Корейский','Английский']},
+      '이건국':{specialty:'Оториноларингология',title:'Профессор',experience:'23 года',education:'Мед. фак-т СНУ',subspecialty:['Хирургия головы и шеи','Кохлеарная имплантация'],research:['Более 1 000 кохлеарных имплантаций'],diseases:['Тугоухость','Средний отит','Рак глотки','Рак щитовидной железы'],langs:['Корейский','Английский']},
+      '윤창환':{specialty:'Кардиология',title:'Профессор',experience:'21 год',education:'Мед. фак-т СНУ',subspecialty:['Сердечная недостаточность','Пересадка сердца'],research:['Мультицентровые клинические исследования сердечной недостаточности'],diseases:['Сердечная недостаточность','Кардиомиопатия','Пересадка сердца'],langs:['Корейский','Английский']},
+      '송수정':{specialty:'Офтальмология',title:'Профессор',experience:'22 года',education:'Мед. фак-т ун-та Корё',subspecialty:['Сетчатка','Стекловидное тело'],research:['Исследование анти-VEGF терапии диабетической ретинопатии'],diseases:['Отслойка сетчатки','Макулярная дегенерация','Диабетическая ретинопатия'],langs:['Корейский','Английский']},
+      '유형곤':{specialty:'Офтальмология',title:'Доцент',experience:'13 лет',education:'Мед. фак-т ун-та Корё',subspecialty:['Глаукома','시신경'],research:['녹내장 조기진단 AI 연구'],diseases:['Глаукома','시신경염','정상안압녹내장'],langs:['Корейский','Английский']},
+      '조용팔':{specialty:'Нейрохирургия',title:'Профессор',experience:'28 лет',education:'Мед. фак-т ун-та Корё',subspecialty:['감마나이프','Функциональная нейрохирургия'],research:['감마나이프 시술 5,000건 이상'],diseases:['전이성 뇌종양','Тригеминальная невралгия','뇌동정맥기형'],langs:['Корейский','Английский']},
+      '최철웅':{specialty:'Кардиология',title:'Доцент',experience:'12 лет',education:'Мед. фак-т ун-та Корё',subspecialty:['Сердечно-сосудистая визуализация','Превентивная кардиология'],research:['심혈관 CT 진단 연구'],diseases:['ИБС','Гипертония'],langs:['Корейский','Английский']},
+      '이경희':{specialty:'Онкология',title:'Профессор',experience:'20 лет',education:'아주대학교 의과대학',subspecialty:['Рак лёгких','Рак головы и шеи'],research:['폐암 면역치료 임상시험'],diseases:['Рак лёгких','후두암','구강암'],langs:['Корейский','Английский']},
+      '김혜련':{specialty:'Онкология',title:'Доцент',experience:'14 лет',education:'아주대학교 의과대학',subspecialty:['Рак желудка','Рак печени'],research:['간암 복합면역치료 연구'],diseases:['Рак желудка','Рак печени','담도암'],langs:['Корейский','Английский']},
+      '조범석':{specialty:'Офтальмология',title:'Профессор',experience:'22 года',education:'아주대학교 의과대학',subspecialty:['Катаракта','Рефракционная хирургия'],research:['무봉합 백내장 수술 전문'],diseases:['Катаракта','난시','노안'],langs:['Корейский','Английский']},
+      '최소연':{specialty:'Кардиология',title:'Доцент',experience:'11년',education:'아주대학교 의과대학',subspecialty:['여성심장학','Эхокардиография'],research:['임신 중 심장질환 연구'],diseases:['임신 중 심장질환','Заболевания клапанов'],langs:['Корейский','Английский']},
+      '이규완':{specialty:'Акушерство и гинекология',title:'Профессор',experience:'25 лет',education:'전북대학교 의과대학',subspecialty:['Гинекологическая онкология','복강경 수술'],research:['자궁경부암 복강경 수술 전문'],diseases:['Рак шейки матки','Рак эндометрия','Рак яичника'],langs:['Корейский','Английский']},
+      '최성연':{specialty:'Акушерство и гинекология',title:'Доцент',experience:'13 лет',education:'전북대학교 의과대학',subspecialty:['생식내분비','불임'],research:['난임 치료 성공률 향상 연구'],diseases:['불임','다낭성난소증후군','자궁내막증'],langs:['Корейский','Английский']},
+      '김상영':{specialty:'Онкология',title:'Профессор',experience:'21 год',education:'전북대학교 의과대학',subspecialty:['Рак печени','Рак ЖКТ'],research:['간암 항암 병용치료 연구'],diseases:['Рак печени','담낭암','Рак поджелудочной железы'],langs:['Корейский','Английский']},
+      '박광하':{specialty:'Онкология',title:'Профессор',experience:'24 года',education:'부산대학교 의과대학',subspecialty:['Рак толстой кишки','유전성 암'],research:['대장암 유전체 분석 연구'],diseases:['Рак толстой кишки','직장암','유전성 대장암'],langs:['Корейский','Английский']},
+      '이창균':{specialty:'Гастроэнтерология',title:'Профессор',experience:'22 года',education:'부산대학교 의과대학',subspecialty:['Эндоскопия','간담도'],research:['치료 내시경 전문'],diseases:['Язва желудка','역류성 식도염','담석'],langs:['Корейский','Английский']},
+      '배정훈':{specialty:'Офтальмология',title:'Доцент',experience:'12 лет',education:'부산대학교 의과대학',subspecialty:['Сетчатка','당뇨안과'],research:['당뇨망막병증 조기진단 연구'],diseases:['Диабетическая ретинопатия','Макулярная дегенерация','유리체출혈'],langs:['Корейский','Английский']},
+    };
+
+    let selectedId = null;
+    let searchTerm = '';
+
+    function renderList() {
+      const list = document.getElementById('hospitalList');
+      const filtered = hospitals.filter(h => {
+        if (!searchTerm) return true;
+        const s = searchTerm;
+        return h.name.toLowerCase().includes(s) || h.depts.some(d=>d.toLowerCase().includes(s)) || h.professors.some(p=>p.toLowerCase().includes(s)) || h.diseases.some(d=>d.toLowerCase().includes(s)) || h.region.toLowerCase().includes(s);
+      });
+      document.getElementById('listCount').textContent = filtered.length + '개';
+      list.innerHTML = filtered.map(h => {
+        const tags = h.depts.slice(0,3).map(d=>`<span class="h-tag dept">${d.split(' (')[0]}</span>`).join('') +
+          h.langs.map(l=>`<span class="h-tag lang">${l}</span>`).join('') +
+          '';
+        const abbr = h.name.substring(0,2);
+        return `<div class="h-card${selectedId===h.id?' selected':''}" onclick="selectHospital(${h.id})">
+          <div class="h-thumb">${abbr}</div>
+          <div class="h-card-body">
+            <div class="h-name">${h.name}</div>
+            <div class="h-type">${h.type} · ${h.region}</div>
+            <div class="h-tags">${tags}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function selectHospital(id) {
+      selectedId = id;
+      renderList();
+      const h = hospitals.find(x=>x.id===id);
+      const dp = document.getElementById('detailPanel');
+      const badges = [];
+      if(h.jci) badges.push('<div class="detail-badge"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Сертификация JCI</div>');
+      if(h.gov) badges.push('<div class="detail-badge"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>보건복지부 외국인환자 유치 의료기관</div>');
+
+      const actions = [];
+      if(h.whatsapp) actions.push(`<a href="https://wa.me/${h.whatsapp}" class="detail-btn whatsapp" target="_blank">WhatsApp</a>`);
+      if(h.email) actions.push(`<a href="mailto:${h.email}" class="detail-btn">Эл. почта</a>`);
+
+      const deptRows = h.doctors.map((d,idx)=>{
+        const profCards = (d.names||[]).map(name=>{
+          const initials = name.slice(0,1);
+          const prof = profDB[name];
+          const sub = prof ? prof.title + ' · ' + prof.experience : '';
+          return `<div class="prof-card" onclick="event.stopPropagation();showProfModal('${name}','${h.name}')">
+            <div class="prof-avatar">${initials}</div>
+            <div class="prof-info"><div class="prof-name">${name}</div><div class="prof-sub">${sub}</div></div>
+            <svg class="prof-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </div>`;
+        }).join('');
+        return `<div class="dept-wrapper" data-dept="${d.dept}">
+          <div class="dept-row-main" onclick="toggleDeptExpand(this.parentElement)">
+            <input type="checkbox" class="dept-check" onchange="event.stopPropagation();updateIntakeBar()" value="${d.dept}" onclick="event.stopPropagation();">
+            <svg class="dept-expand-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            <div class="dept-info"><div class="dept-name">${d.dept}</div><div class="dept-profs">${d.names?d.names.join(', '):''}</div></div>
+            <span class="dept-meta">의사 ${d.count} чел.</span>
+          </div>
+          <div class="dept-profs-panel">${profCards}</div>
+        </div>`;
+      }).join('');
+
+      dp.innerHTML = `<div class="detail-inner">
+        <div class="detail-images"><div class="detail-img">병원 외관</div><div class="detail-img">로비</div></div>
+        <div class="detail-top">
+          <div><div class="detail-name">${h.name}</div><div class="detail-addr">${h.type} · ${h.addr}</div></div>
+          <div class="detail-actions">${actions.join('')}</div>
+        </div>
+        ${badges.length?'<div class="detail-badges">'+badges.join('')+'</div>':''}
+        <div class="detail-desc">${h.desc}</div>
+        <div class="detail-location"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>${h.region}</div>
+        <div class="detail-map">Область карты</div>
+        <div class="dept-header">
+          <span class="dept-header-title">Отделение</span>
+          <input type="text" class="dept-search" placeholder="Поиск отделения" oninput="filterDepts(this.value)">
+        </div>
+        <div id="deptList">${deptRows}</div>
+      </div>
+      <div class="intake-bar" id="intakeBar">
+        <div class="intake-bar-info"><strong id="intakeCount">0</strong> отделений выбрано</div>
+        <button class="intake-btn" onclick="goIntake()">Подать заявку →</button>
+      </div>`;
+      updateIntakeBar();
+    }
+
+    function searchHospitals(v) { searchTerm = v.toLowerCase(); renderList(); }
+    function toggleFilter(el) { el.classList.toggle('active'); }
+    function resetFilters() { document.querySelectorAll('.f-chip.active').forEach(c=>c.classList.remove('active')); }
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+
+    function filterDepts(v) {
+      const s = v.toLowerCase();
+      document.querySelectorAll('#deptList .dept-wrapper').forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(s) ? '' : 'none';
+      });
+    }
+
+    function toggleDeptExpand(el) {
+      el.classList.toggle('open');
+    }
+
+    function showProfModal(name, hospitalName) {
+      const prof = profDB[name];
+      if (!prof) return;
+      const overlay = document.getElementById('profModalOverlay');
+      const initials = name.slice(0,1);
+      overlay.querySelector('.prof-modal').innerHTML = `
+        <div class="prof-modal-header" style="position:relative;">
+          <div class="prof-modal-avatar">${initials}</div>
+          <div>
+            <div class="prof-modal-name">${name}</div>
+            <div class="prof-modal-dept">${prof.specialty} · ${prof.title}</div>
+            <div class="prof-modal-hospital">${hospitalName}</div>
+          </div>
+          <button class="prof-modal-close" onclick="closeProfModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="prof-modal-body">
+          <div class="prof-stat-grid">
+            <div class="prof-stat"><div class="prof-stat-label">Клинический опыт</div><div class="prof-stat-value">${prof.experience}</div></div>
+            <div class="prof-stat"><div class="prof-stat-label">Образование</div><div class="prof-stat-value">${prof.education}</div></div>
+          </div>
+          <div class="prof-section" style="margin-top:1.25rem;">
+            <div class="prof-section-title">Специализация</div>
+            <div class="prof-tags">${prof.subspecialty.map(s=>`<span class="prof-tag">${s}</span>`).join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">Основные заболевания</div>
+            <div class="prof-tags">${prof.diseases.map(d=>`<span class="prof-tag" style="background:#f0fdf4;color:#16a34a;">${d}</span>`).join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">Исследования и достижения</div>
+            <div class="prof-section-content">${prof.research.map(r=>'<div style="margin-bottom:.375rem;">· '+r+'</div>').join('')}</div>
+          </div>
+          <div class="prof-section">
+            <div class="prof-section-title">Языки приёма</div>
+            <div class="prof-tags">${prof.langs.map(l=>`<span class="prof-tag" style="background:#fef3c7;color:#d97706;">${l}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      overlay.classList.add('show');
+    }
+
+    function closeProfModal() {
+      document.getElementById('profModalOverlay').classList.remove('show');
+    }
+
+    function updateIntakeBar() {
+      const checked = document.querySelectorAll('.dept-check:checked');
+      const bar = document.getElementById('intakeBar');
+      const count = document.getElementById('intakeCount');
+      if (!bar) return;
+      if (checked.length > 0) {
+        bar.classList.add('show');
+        count.textContent = checked.length;
+      } else {
+        bar.classList.remove('show');
+      }
+    }
+
+    function goIntake() {
+      const h = hospitals.find(x=>x.id===selectedId);
+      const checked = document.querySelectorAll('.dept-check:checked');
+      const depts = Array.from(checked).map(c=>c.value);
+      const params = new URLSearchParams();
+      params.set('hospital', h.name);
+      params.set('depts', depts.join('||'));
+      location.href = 'patient-intake.html?' + params.toString();
+    }
+
+    renderList();
+    selectHospital(1);
+
+    // Close modal on overlay click (deferred to ensure DOM ready)
+    setTimeout(function(){
+      var ov = document.getElementById('profModalOverlay');
+      if(ov) ov.addEventListener('click', function(e){ if(e.target===this) closeProfModal(); });
+    }, 0);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeProfModal(); });
+  </script>
+  <!-- Professor Modal Overlay -->
+  <div class="prof-modal-overlay" id="profModalOverlay"><div class="prof-modal"></div></div>
+</body>
+</html>

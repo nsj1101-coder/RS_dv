@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Добро пожаловать в MediW - Регистрация завершена</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+    /* ===== THEME VARIABLES ===== */
+    :root{
+      --transition:background .3s,color .3s,border-color .3s,box-shadow .3s;
+    }
+    [data-theme="dark"]{
+      --bg-primary:#0a0e1a;--bg-secondary:#0f1629;--bg-tertiary:#161d35;--bg-card:#161d35cc;
+      --bg-card-hover:#1e2744;--bg-elevated:#1e2744;
+      --text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--text-muted:rgba(255,255,255,.2);
+      --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);
+      --brand-bg:rgba(51,145,255,.08);--brand-border:rgba(51,145,255,.2);
+      --glow-opacity:.15;--nav-bg:rgba(10,14,26,.8);
+      --card-shadow:0 4px 24px rgba(0,0,0,.3);--card-hover-shadow:0 20px 60px rgba(51,145,255,.12);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.06),transparent 60%);
+    }
+    [data-theme="light"]{
+      --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;--bg-card:#ffffff;
+      --bg-card-hover:#f8fafc;--bg-elevated:#ffffff;
+      --text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#64748b;--text-muted:#cbd5e1;
+      --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);
+      --brand-bg:rgba(51,145,255,.06);--brand-border:rgba(51,145,255,.15);
+      --glow-opacity:.06;--nav-bg:rgba(255,255,255,.85);
+      --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--card-hover-shadow:0 12px 40px rgba(51,145,255,.1);
+      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.04),transparent 60%);
+    }
+
+    body{background:var(--bg-primary);color:var(--text-primary);}
+
+    /* ===== COMPONENTS ===== */
+    .nav{position:fixed;top:0;width:100%;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);transition:var(--transition);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:4rem;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
+    .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
+    .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
+    .nav-actions{display:flex;align-items:center;gap:.75rem;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
+    .btn-primary{background:#1a6ff5;color:#fff;padding:.625rem 1.25rem;}
+    .btn-primary:hover{background:#3391ff;}
+    .btn-ghost{background:transparent;color:var(--text-tertiary);padding:.5rem 1rem;}
+    .btn-ghost:hover{color:var(--text-primary);}
+    .btn-lg{padding:1rem 2rem;font-size:1rem;border-radius:.75rem;}
+
+    /* Theme Toggle */
+    .theme-toggle{width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-tertiary);}
+    .theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary);}
+    .theme-toggle svg{width:1.125rem;height:1.125rem;}
+    [data-theme="dark"] .icon-sun{display:none;}
+    [data-theme="dark"] .icon-moon{display:block;}
+    [data-theme="light"] .icon-sun{display:block;}
+    [data-theme="light"] .icon-moon{display:none;}
+
+    /* Mobile Menu */
+    .mobile-menu-btn{display:none;width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);align-items:center;justify-content:center;cursor:pointer;color:var(--text-tertiary);}
+
+    /* Glow */
+    .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
+
+    /* Grid BG */
+    .grid-bg{background-image:linear-gradient(rgba(51,145,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(51,145,255,.03) 1px,transparent 1px);background-size:60px 60px;}
+
+    /* Card */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:all .25s;padding:2rem;}
+
+    /* Success Container */
+    .success-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;position:relative;overflow:hidden;margin-top:4rem;}
+    .success-card{max-width:600px;width:100%;}
+
+    .success-icon{width:80px;height:80px;margin:0 auto 2rem;border-radius:50%;background:rgba(52,211,153,.1);display:flex;align-items:center;justify-content:center;animation:scaleIn .6s ease forwards;}
+
+    @keyframes scaleIn {
+      from{transform:scale(0);opacity:0;}
+      to{transform:scale(1);opacity:1;}
+    }
+
+    .success-icon svg{width:40px;height:40px;color:#34d399;}
+
+    .success-header{text-align:center;margin-bottom:2rem;}
+    .success-header h1{font-size:2rem;font-weight:700;margin-bottom:.5rem;color:var(--text-primary);}
+    .success-header p{color:var(--text-tertiary);font-size:.95rem;line-height:1.6;}
+
+    .info-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;margin:2rem 0;}
+    .info-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;font-size:.875rem;}
+    .info-item:last-child{margin-bottom:0;}
+    .info-label{color:var(--text-tertiary);min-width:120px;}
+    .info-value{color:var(--text-primary);word-break:break-word;}
+
+    .next-steps{background:rgba(51,145,255,.05);border:1px solid rgba(51,145,255,.2);border-radius:.75rem;padding:1.5rem;margin:2rem 0;}
+    .next-steps h3{font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text-primary);}
+    .steps-list{list-style:none;padding:0;}
+    .steps-list li{padding:.75rem 0;padding-left:1.75rem;position:relative;font-size:.875rem;color:var(--text-secondary);}
+    .steps-list li::before{content:'✓';position:absolute;left:0;color:#34d399;font-weight:700;}
+
+    .action-buttons{display:flex;gap:1rem;margin-top:2rem;}
+    .action-buttons .btn{flex:1;}
+
+    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+    .fade-in.visible{opacity:1;transform:translateY(0);}
+
+    @media(max-width:768px){
+      .success-container{padding:1rem 1rem;margin-top:2rem;}
+      .success-header h1{font-size:1.5rem;}
+      .action-buttons{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">M</div>
+        <span class="logo-text">MediW</span>
+      </a>
+      <div class="nav-actions">
+        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ru">Русский</option>
+        </select>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">
+          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Success Page -->
+  <div class="grid-bg success-container">
+    <div class="glow" style="width:500px;height:500px;background:#34d399;top:10%;left:10%;"></div>
+    <div class="glow" style="width:400px;height:400px;background:#3391ff;bottom:10%;right:10%;"></div>
+
+    <div class="success-card fade-in" style="position:relative;z-index:1;">
+      <div class="card">
+        <!-- Success Icon -->
+        <div class="success-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-header">
+          <h1>Добро пожаловать в MediW!</h1>
+          <p id="welcomeMessage">Ваш аккаунт успешно создан. Теперь вы готовы исследовать программы медицинского образования мирового уровня в Корее.</p>
+        </div>
+
+        <!-- Account Information -->
+        <div class="info-box">
+          <div class="info-item">
+            <span class="info-label">Эл. почта:</span>
+            <span class="info-value" id="displayEmail">user@example.com</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">ФИО:</span>
+            <span class="info-value" id="displayName">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Тип аккаунта:</span>
+            <span class="info-value" id="displayAccountType">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Статус:</span>
+            <span class="info-value" style="color:#34d399;font-weight:600;">✓ Активен</span>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+          <h3>Следующие шаги</h3>
+          <ul class="steps-list" id="nextSteps">
+            <li>Подтверждение электронной почты</li>
+            <li>Заполнение медицинского профиля</li>
+            <li>Просмотр образовательных программ</li>
+            <li>Подача первой заявки</li>
+          </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-ghost" onclick="window.location.href='index.html'">Вернуться на главную</button>
+          <button class="btn btn-primary" onclick="window.location.href='login.html'">Перейти в панель управления</button>
+        </div>
+
+        <!-- Verification Message -->
+        <div style="text-align:center;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border);">
+          <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:.5rem;"><strong>📧 Требуется подтверждение электронной почты</strong></p>
+          <p style="font-size:.875rem;color:var(--text-muted);">Проверьте ссылку для подтверждения в вашей электронной почте. Нажмите на ссылку, чтобы активировать аккаунт. Получение письма может занять несколько минут.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Language change handler
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      console.log('Language changed to:', lang);
+    }
+
+    // Load saved language
+    const savedLang = localStorage.getItem('language') || 'en';
+    document.getElementById('langSelector').value = savedLang;
+
+    // Load user data from sessionStorage (passed from signup page)
+    window.addEventListener('load', function() {
+      const userData = JSON.parse(sessionStorage.getItem('signupData') || '{}');
+      
+      if (userData.email) {
+        document.getElementById('displayEmail').textContent = userData.email;
+      }
+      if (userData.fullName) {
+        document.getElementById('displayName').textContent = userData.fullName;
+      }
+      if (userData.accountType) {
+        const typeMap = {
+          'doctor': 'Врач / Медицинский специалист',
+          'hospital': 'Больница / Медицинское учреждение',
+          'agency': 'Агентство медицинского туризма'
+        };
+        document.getElementById('displayAccountType').textContent = typeMap[userData.accountType] || userData.accountType;
+
+        // Set welcome message based on account type
+        const welcomeMessages = {
+          'doctor': 'Ваш аккаунт успешно создан. Подключайтесь к лучшим медицинским учреждениям Кореи и развивайте свою медицинскую карьеру.',
+          'hospital': 'Ваш аккаунт успешно создан. Привлекайте зарубежных медицинских специалистов и выстраивайте глобальное партнёрство.',
+          'agency': 'Ваш аккаунт успешно создан. Откройте новые возможности для предоставления медицинских услуг мирового класса зарубежным клиентам.'
+        };
+        document.getElementById('welcomeMessage').textContent = welcomeMessages[userData.accountType] || welcomeMessages.doctor;
+
+        // Set next steps based on account type
+        const nextStepsMap = {
+          'doctor': [
+            'Подтверждение электронной почты',
+            'Добавление врачебной лицензии и квалификации',
+            'Обзор сети больниц',
+            'Подача заявки на медицинскую программу'
+          ],
+          'hospital': [
+            'Подтверждение электронной почты',
+            'Заполнение информации о больнице и сертификатов',
+            'Поиск медицинских специалистов',
+            'Публикация вакансий'
+          ],
+          'agency': [
+            'Подтверждение электронной почты',
+            'Заполнение профиля агентства и квалификации',
+            'Обзор партнёрских больниц и программ',
+            'Связь с зарубежными клиентами'
+          ]
+        };
+
+        const steps = nextStepsMap[userData.accountType] || nextStepsMap.doctor;
+        const stepsList = document.getElementById('nextSteps');
+        stepsList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+      }
+
+      // Fade in animation
+      document.querySelectorAll('.fade-in').forEach(el => {
+        el.classList.add('visible');
+      });
+    });
+  </script>
+</body>
+</html>

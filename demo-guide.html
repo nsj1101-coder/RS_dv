@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediW 시연 가이드 — 대표님용</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter','Noto Sans KR',sans-serif;background:#0a0e1a;color:#fff;-webkit-font-smoothing:antialiased;}
+
+    /* ===== LAYOUT ===== */
+    .app{display:flex;height:100vh;overflow:hidden;}
+
+    /* ===== SIDEBAR ===== */
+    .sidebar{width:340px;min-width:340px;background:#0f1629;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;}
+    .sidebar-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+    .sidebar-header h1{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.25rem;}
+    .sidebar-header p{font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.4;}
+    .sidebar-nav{flex:1;overflow-y:auto;padding:.75rem;}
+    .sidebar-nav::-webkit-scrollbar{width:4px;}
+    .sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
+
+    .scenario-group{margin-bottom:.5rem;}
+    .scenario-title{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);padding:.5rem .75rem .25rem;display:flex;align-items:center;gap:.5rem;}
+    .scenario-title::before{content:'';width:8px;height:2px;background:rgba(51,145,255,.5);border-radius:1px;}
+
+    .step-btn{display:flex;align-items:flex-start;gap:.75rem;width:100%;padding:.625rem .75rem;border:none;background:transparent;color:rgba(255,255,255,.5);text-align:left;cursor:pointer;border-radius:.5rem;transition:all .2s;font-family:inherit;font-size:.8rem;line-height:1.4;}
+    .step-btn:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.7);}
+    .step-btn.active{background:rgba(51,145,255,.1);color:#fff;border:1px solid rgba(51,145,255,.2);}
+    .step-num{min-width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;transition:all .2s;}
+    .step-btn.active .step-num{background:linear-gradient(135deg,#3391ff,#8eceff);color:#0a0e1a;}
+    .step-btn.done .step-num{background:rgba(52,211,153,.15);color:#34d399;}
+    .step-btn.done .step-num::after{content:'✓';}
+    .step-info{flex:1;}
+    .step-name{font-weight:600;margin-bottom:.125rem;}
+    .step-page{font-size:.65rem;color:rgba(255,255,255,.25);font-family:'SF Mono','Fira Code',monospace;}
+
+    /* ===== MAIN ===== */
+    .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+    /* Top bar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:#0f1629;border-bottom:1px solid rgba(255,255,255,.06);min-height:3.5rem;}
+    .topbar-left{display:flex;align-items:center;gap:1rem;}
+    .nav-arrows{display:flex;gap:.25rem;}
+    .nav-arrows button{width:2rem;height:2rem;border-radius:.375rem;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:1rem;}
+    .nav-arrows button:hover:not(:disabled){background:rgba(255,255,255,.05);color:#fff;border-color:rgba(255,255,255,.2);}
+    .nav-arrows button:disabled{opacity:.3;cursor:not-allowed;}
+    .step-counter{font-size:.8rem;color:rgba(255,255,255,.4);font-weight:500;}
+    .topbar-right{display:flex;align-items:center;gap:.75rem;}
+    .timer-badge{font-size:.7rem;padding:.25rem .625rem;border-radius:1rem;background:rgba(51,145,255,.1);color:#3391ff;border:1px solid rgba(51,145,255,.15);font-weight:500;}
+    .fullscreen-btn{width:2rem;height:2rem;border-radius:.375rem;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.85rem;}
+    .fullscreen-btn:hover{background:rgba(255,255,255,.05);color:#fff;}
+
+    /* Content area */
+    .content{flex:1;display:flex;overflow:hidden;}
+
+    /* Preview panel */
+    .preview-panel{flex:1;position:relative;background:#080b14;overflow:hidden;}
+    .iframe-wrap{width:100%;height:100%;position:relative;}
+    .iframe-wrap iframe{width:100%;height:100%;border:none;background:#0a0e1a;}
+
+    /* Hotspot overlays */
+    .hotspot-layer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;}
+    .hotspot{position:absolute;pointer-events:auto;cursor:pointer;z-index:11;}
+    .hotspot-ring{width:48px;height:48px;border-radius:50%;border:3px solid #ff4757;background:rgba(255,71,87,.15);display:flex;align-items:center;justify-content:center;animation:hotspot-pulse 2s ease-in-out infinite;position:relative;}
+    .hotspot-ring::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:#ff4757;}
+    @keyframes hotspot-pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.3);opacity:.6;}}
+    .hotspot-label{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;background:rgba(255,71,87,.95);color:#fff;font-size:.7rem;font-weight:600;padding:.25rem .625rem;border-radius:.25rem;backdrop-filter:blur(8px);}
+    .hotspot-label::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:5px solid rgba(255,71,87,.95);}
+
+    /* Script panel */
+    .script-panel{width:380px;min-width:380px;background:#0f1629;border-left:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;}
+    .script-header{padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:.5rem;}
+    .script-header h3{font-size:.85rem;font-weight:600;}
+    .script-icon{font-size:1rem;}
+    .script-body{flex:1;overflow-y:auto;padding:1.25rem;}
+    .script-body::-webkit-scrollbar{width:4px;}
+    .script-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
+
+    .script-section{margin-bottom:1.5rem;}
+    .script-section:last-child{margin-bottom:0;}
+    .script-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.3);margin-bottom:.5rem;display:flex;align-items:center;gap:.375rem;}
+    .script-label svg{width:12px;height:12px;opacity:.5;}
+
+    .talk-bubble{background:rgba(51,145,255,.06);border:1px solid rgba(51,145,255,.1);border-radius:.625rem;padding:.875rem 1rem;font-size:.825rem;line-height:1.7;color:rgba(255,255,255,.85);position:relative;}
+    .talk-bubble::before{content:'"';position:absolute;top:-.1rem;left:.5rem;font-size:1.5rem;color:rgba(51,145,255,.3);font-family:Georgia,serif;}
+
+    .action-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+    .action-item{display:flex;align-items:flex-start;gap:.5rem;padding:.5rem .75rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:.5rem;font-size:.8rem;color:rgba(255,255,255,.7);line-height:1.5;}
+    .action-num{min-width:1.25rem;height:1.25rem;border-radius:50%;background:rgba(255,71,87,.12);color:#ff4757;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;margin-top:.1rem;}
+    .action-item .click-badge{display:inline-flex;align-items:center;gap:.25rem;background:rgba(255,71,87,.1);color:#ff4757;font-size:.65rem;font-weight:600;padding:.125rem .375rem;border-radius:.25rem;white-space:nowrap;}
+    .action-item .click-badge::before{content:'👆';}
+
+    .tip-box{background:rgba(250,204,21,.04);border:1px solid rgba(250,204,21,.1);border-radius:.5rem;padding:.625rem .875rem;font-size:.75rem;color:rgba(250,204,21,.8);line-height:1.5;display:flex;align-items:flex-start;gap:.5rem;}
+    .tip-box::before{content:'💡';font-size:.85rem;}
+
+    .page-info{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:.5rem;padding:.625rem .875rem;}
+    .page-info-row{display:flex;align-items:center;justify-content:space-between;font-size:.75rem;padding:.25rem 0;}
+    .page-info-label{color:rgba(255,255,255,.35);}
+    .page-info-value{color:rgba(255,255,255,.7);font-family:'SF Mono','Fira Code',monospace;font-size:.7rem;}
+    .page-info-value a{color:#3391ff;text-decoration:none;}
+    .page-info-value a:hover{text-decoration:underline;}
+
+    /* Flow connector arrows */
+    .flow-next{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;margin-top:1rem;background:rgba(52,211,153,.04);border:1px dashed rgba(52,211,153,.15);border-radius:.5rem;font-size:.75rem;color:rgba(52,211,153,.7);cursor:pointer;transition:all .2s;}
+    .flow-next:hover{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3);}
+    .flow-next svg{width:16px;height:16px;}
+
+    /* Overview step special styling */
+    .overview-content{padding:2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,rgba(51,145,255,.03),transparent 60%);}
+    .overview-flow{max-width:900px;width:100%;}
+    .flow-diagram{display:flex;flex-direction:column;gap:1.5rem;}
+    .flow-row{display:flex;align-items:center;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .flow-node{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;padding:.875rem 1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);text-align:center;min-width:140px;transition:all .3s;cursor:pointer;}
+    .flow-node:hover{background:rgba(51,145,255,.08);border-color:rgba(51,145,255,.25);color:#fff;transform:translateY(-2px);}
+    .flow-node.highlight{background:rgba(51,145,255,.1);border-color:rgba(51,145,255,.3);color:#fff;}
+    .flow-node-label{font-weight:600;margin-bottom:.25rem;}
+    .flow-node-file{font-size:.6rem;color:rgba(255,255,255,.25);font-family:monospace;}
+    .flow-arrow{color:rgba(255,255,255,.15);font-size:1.25rem;}
+    .flow-section-title{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(51,145,255,.5);text-align:center;margin-bottom:.5rem;}
+
+    /* Responsive */
+    @media(max-width:1200px){
+      .script-panel{width:320px;min-width:320px;}
+      .sidebar{width:280px;min-width:280px;}
+    }
+
+    /* Presentation mode */
+    .app.presentation .sidebar{display:none;}
+    .app.presentation .script-panel{display:none;}
+    .app.presentation .topbar{position:absolute;top:0;left:0;right:0;z-index:20;background:rgba(15,22,41,.9);backdrop-filter:blur(12px);}
+    .app.presentation .content{padding-top:3.5rem;}
+
+    /* Print */
+    @media print{
+      .sidebar,.topbar,.hotspot-layer{display:none;}
+      .script-panel{border:none;page-break-inside:avoid;}
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>MediW 시연 가이드</h1>
+      <p>클라이언트 대표님 시연용 — 총 15단계</p>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="nav-arrows">
+          <button id="prevBtn" onclick="goStep(currentStep-1)" title="이전">‹</button>
+          <button id="nextBtn" onclick="goStep(currentStep+1)" title="다음">›</button>
+        </div>
+        <span class="step-counter" id="stepCounter">1 / 15</span>
+      </div>
+      <div class="topbar-right">
+        <span class="timer-badge" id="timerBadge">예상 시연 시간: ~12분</span>
+        <button class="fullscreen-btn" onclick="togglePresentation()" title="프레젠테이션 모드">⛶</button>
+      </div>
+    </div>
+    <div class="content">
+      <!-- PREVIEW -->
+      <div class="preview-panel" id="previewPanel">
+        <div class="iframe-wrap" id="iframeWrap">
+          <iframe id="previewFrame" src="about:blank"></iframe>
+          <div class="hotspot-layer" id="hotspotLayer"></div>
+        </div>
+        <div class="overview-content" id="overviewContent" style="display:none;"></div>
+      </div>
+      <!-- SCRIPT -->
+      <div class="script-panel">
+        <div class="script-header">
+          <span class="script-icon">🎙️</span>
+          <h3>시연 대본 & 액션</h3>
+        </div>
+        <div class="script-body" id="scriptBody"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ===== DEMO STEPS DATA =====
+const steps = [
+  // ===== OVERVIEW =====
+  {
+    id: 'overview',
+    scenario: '시작',
+    name: '전체 시연 흐름 개요',
+    page: '',
+    type: 'overview',
+    script: `안녕하십니까, MediW 플랫폼을 시연해 드리겠습니다.\n\n오늘 시연은 크게 5개 시나리오로 진행됩니다:\n\n1️⃣ 랜딩 페이지 — 플랫폼 첫 인상\n2️⃣ 회원가입 — 3가지 유형별 가입 프로세스\n3️⃣ 로그인 → 대시보드 — 핵심 사용자 경험\n4️⃣ 환자 관리 — 접수·목록·상세 워크플로우\n5️⃣ 병원 검색·어드민 — 병원 탐색 및 관리자 기능\n\n전체 소요 시간은 약 12분입니다.`,
+    actions: [],
+    tips: '좌측 단계 목록을 클릭하거나, 상단 화살표로 이동하세요. 키보드 ← → 방향키도 사용 가능합니다.',
+    hotspots: [],
+    overviewHtml: `
+      <div class="overview-flow">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+          <div style="display:inline-flex;align-items:center;gap:.75rem;background:rgba(51,145,255,.08);border:1px solid rgba(51,145,255,.15);border-radius:1rem;padding:.75rem 1.5rem;">
+            <span style="font-size:1.5rem;">🎯</span>
+            <div style="text-align:left;">
+              <div style="font-size:1rem;font-weight:700;">MediW 시연 가이드</div>
+              <div style="font-size:.75rem;color:rgba(255,255,255,.5);">총 15단계 · 5개 시나리오 · ~12분</div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-diagram">
+          <div><div class="flow-section-title">시나리오 1 — 서비스 소개</div>
+          <div class="flow-row">
+            <div class="flow-node highlight" onclick="goStep(1)"><div class="flow-node-label">🏠 랜딩 페이지</div><div class="flow-node-file">index.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(2)"><div class="flow-node-label">📖 소개 페이지</div><div class="flow-node-file">index2.html</div></div>
+          </div></div>
+          <div><div class="flow-section-title">시나리오 2 — 회원가입</div>
+          <div class="flow-row">
+            <div class="flow-node" onclick="goStep(3)"><div class="flow-node-label">📝 회원가입 (단일 폼)</div><div class="flow-node-file">signup.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(4)"><div class="flow-node-label">✅ 가입 완료</div><div class="flow-node-file">signup-success.html</div></div>
+          </div></div>
+          <div><div class="flow-section-title">시나리오 3 — 로그인 · 대시보드</div>
+          <div class="flow-row">
+            <div class="flow-node" onclick="goStep(5)"><div class="flow-node-label">🔑 로그인</div><div class="flow-node-file">login.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(6)"><div class="flow-node-label">📊 대시보드</div><div class="flow-node-file">dashboard.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(7)"><div class="flow-node-label">👤 내 정보</div><div class="flow-node-file">profile.html</div></div>
+          </div></div>
+          <div><div class="flow-section-title">시나리오 4 — 환자 관리</div>
+          <div class="flow-row">
+            <div class="flow-node" onclick="goStep(8)"><div class="flow-node-label">📋 환자 목록</div><div class="flow-node-file">patient-list.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(9)"><div class="flow-node-label">➕ 환자 접수</div><div class="flow-node-file">patient-intake.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(10)"><div class="flow-node-label">🔍 환자 상세</div><div class="flow-node-file">patient-detail.html</div></div>
+          </div></div>
+          <div><div class="flow-section-title">시나리오 5 — 병원 · 어드민</div>
+          <div class="flow-row">
+            <div class="flow-node" onclick="goStep(11)"><div class="flow-node-label">🏥 병원 검색</div><div class="flow-node-file">hospitals.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(12)"><div class="flow-node-label">🏥 병원 상세</div><div class="flow-node-file">hospital-detail.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(13)"><div class="flow-node-label">⚙️ 어드민</div><div class="flow-node-file">admin.html</div></div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node" onclick="goStep(14)"><div class="flow-node-label">🏥 병원 등록</div><div class="flow-node-file">hospital-register.html</div></div>
+          </div></div>
+        </div>
+      </div>`
+  },
+
+  // ===== 시나리오 1: 서비스 소개 =====
+  {
+    id: 'landing',
+    scenario: '서비스 소개',
+    name: '랜딩 페이지',
+    page: 'index.html',
+    script: `MediW의 메인 랜딩 페이지입니다.\n\n"MediW는 글로벌 의료 허브 플랫폼입니다. 해외 의료인, 병원, 에이전시를 하나의 플랫폼에서 연결합니다."\n\n상단에서 다크/라이트 테마 전환이 가능하고, 5개 언어를 지원합니다. 스크롤을 내리면 플랫폼의 핵심 가치와 기능을 확인할 수 있습니다.`,
+    actions: [
+      '페이지를 천천히 스크롤하며 전체 구성을 보여줍니다',
+      '<span class="click-badge">프로그램</span> 메뉴를 클릭하면 연수 프로그램 목록으로 이동합니다',
+      '<span class="click-badge">시작하기</span> 버튼을 클릭하면 회원가입 페이지로 이동합니다',
+    ],
+    tips: '스크롤 시 자연스럽게 멈추면서 각 섹션을 설명하세요. 너무 빨리 넘기지 마세요.',
+    hotspots: [
+      { x: '92%', y: '1.5rem', label: '시작하기 버튼' },
+    ]
+  },
+  {
+    id: 'intro',
+    scenario: '서비스 소개',
+    name: '소개 페이지',
+    page: 'index2.html',
+    script: `플랫폼 상세 소개 페이지입니다.\n\n"이 페이지에서는 MediW가 어떤 문제를 해결하는지, 그리고 각 사용자 유형(의료인·병원·에이전시)에게 어떤 가치를 제공하는지 자세히 설명합니다."\n\n하단의 CTA 버튼으로 바로 회원가입이 가능합니다.`,
+    actions: [
+      '페이지를 스크롤하며 핵심 가치 제안을 읽어줍니다',
+      '<span class="click-badge">무료 회원가입</span> 버튼을 강조합니다',
+      '"메인 페이지 보기" 링크로 index.html과의 연결성을 보여줍니다',
+    ],
+    tips: '이 페이지는 "왜 MediW인가"를 설명하는 핵심 페이지입니다. 가치 제안 부분을 강조하세요.',
+    hotspots: []
+  },
+
+  // ===== 시나리오 2: 회원가입 =====
+  {
+    id: 'signup',
+    scenario: '회원가입',
+    name: '회원가입 (단일 폼)',
+    page: 'signup.html',
+    script: `회원가입 페이지입니다.\n\n"한 페이지 안에 4개 섹션으로 구성된 간결한 가입 폼입니다. 위에서부터 기본 정보, 거주지 및 국적, 계정 유형, 약관 동의 순서로 스크롤하며 입력합니다."\n\n특히 계정 유형 선택이 핵심인데요 — 의사/의료 전문가, 병원/의료 기관, 의료 관광 에이전시 3가지 중 하나를 고릅니다. 국적과 거주 국가는 클릭하면 모달 팝업이 열리고, 검색으로 빠르게 찾을 수 있습니다.`,
+    actions: [
+      '페이지를 천천히 스크롤하며 4개 섹션(기본 정보 → 거주지/국적 → 계정 유형 → 약관)을 보여줍니다',
+      '<span class="click-badge">국적</span> 또는 <span class="click-badge">거주 국가</span> 입력 필드를 클릭하여 모달 검색 기능을 시연합니다',
+      '<span class="click-badge">계정 유형</span> 드롭다운을 열어 3가지 유형(의사·병원·에이전시)을 보여줍니다',
+      '약관 동의 체크박스를 클릭합니다',
+      '<span class="click-badge">계정 만들기</span> 버튼을 클릭하여 가입을 완료합니다',
+    ],
+    tips: '시간이 부족하면 계정 유형 선택과 국가 모달 검색만 보여주세요. 계정 유형 3가지가 이 페이지의 핵심 포인트입니다.',
+    hotspots: [
+      { x: '72%', y: '88%', label: '계정 만들기 버튼' },
+    ]
+  },
+  {
+    id: 'signup-done',
+    scenario: '회원가입',
+    name: '가입 완료 페이지',
+    page: 'signup-success.html',
+    script: `가입 성공 화면입니다.\n\n"가입이 완료되면 사용자에게 맞춤형 다음 단계를 안내합니다. 계정 유형에 따라 다른 안내가 표시됩니다 — 예를 들어 의사에게는 면허 인증을, 병원에게는 병원 정보 작성을, 에이전시에게는 프로필 완성을 안내합니다."\n\n여기서 대시보드로 바로 이동하거나 홈으로 돌아갈 수 있습니다.`,
+    actions: [
+      '가입 완료 메시지와 계정 정보를 확인합니다',
+      '계정 유형별 "다음 단계" 체크리스트를 보여줍니다',
+      '<span class="click-badge">대시보드로 이동</span> 버튼을 클릭합니다',
+    ],
+    tips: '각 계정 유형마다 다음 단계가 다르다는 점을 강조하세요. 개인화된 온보딩이 핵심입니다.',
+    hotspots: []
+  },
+
+  // ===== 시나리오 3: 로그인 · 대시보드 =====
+  {
+    id: 'login',
+    scenario: '로그인 · 대시보드',
+    name: '로그인 페이지',
+    page: 'login.html',
+    script: `로그인 페이지입니다.\n\n"심플하고 직관적인 로그인 화면입니다. 5개 언어와 다크/라이트 테마를 지원하며, 비밀번호 찾기와 로그인 상태 유지 기능이 있습니다."\n\n하단에서 아직 계정이 없는 사용자를 위한 회원가입 링크도 제공합니다.`,
+    actions: [
+      '이메일과 비밀번호 입력 필드를 보여줍니다',
+      '언어 선택 드롭다운을 열어 다국어 지원을 시연합니다',
+      '테마 토글로 라이트 모드를 보여줍니다',
+      '<span class="click-badge">로그인</span> 버튼을 클릭하여 대시보드로 이동합니다',
+    ],
+    tips: '다국어와 테마 전환은 간단히 보여주고 넘어가세요. 핵심은 로그인 → 대시보드 전환입니다.',
+    hotspots: [
+      { x: '50%', y: '62%', label: '로그인 버튼' },
+    ]
+  },
+  {
+    id: 'dashboard',
+    scenario: '로그인 · 대시보드',
+    name: '대시보드',
+    page: 'dashboard.html',
+    script: `대시보드입니다. 로그인 후 사용자가 처음 보는 핵심 화면입니다.\n\n"사용자의 이름으로 인사하며, 현재 진행 중인 케이스 현황을 한눈에 보여줍니다. 삼성서울병원, 서울아산병원 등 연결된 병원별 케이스 상태를 확인할 수 있습니다."\n\n좌측 사이드바에서 환자 관리, 병원 검색, 내 정보 등 주요 메뉴에 접근할 수 있습니다.`,
+    actions: [
+      '상단 인사 메시지와 사용자 정보를 보여줍니다',
+      '케이스 현황 카드들을 하나씩 설명합니다',
+      '<span class="click-badge">환자 대리 등록</span> CTA 버튼을 강조합니다',
+      '좌측 사이드바 메뉴 구조를 보여줍니다',
+    ],
+    tips: '대시보드가 시연의 핵심입니다. 여기서 충분히 시간을 쏟으세요. 사이드바 메뉴를 클릭하며 전체 구조를 설명하세요.',
+    hotspots: [
+      { x: '13%', y: '25%', label: '사이드바 메뉴' },
+    ]
+  },
+  {
+    id: 'profile',
+    scenario: '로그인 · 대시보드',
+    name: '내 정보 (프로필)',
+    page: 'profile.html',
+    script: `내 정보(프로필) 페이지입니다.\n\n"사용자가 자신의 정보를 확인하고 수정할 수 있는 페이지입니다. 환자 본인인지 보호자인지 선택할 수 있고, 건강검진·진료상담 등 원하는 서비스 유형을 지정할 수 있습니다."\n\n계정 유형(환자·의사·에이전시) 전환도 가능합니다.`,
+    actions: [
+      '프로필 정보 영역을 보여줍니다',
+      '환자 유형 선택 (환자 본인 / 보호자)을 시연합니다',
+      '서비스 유형 칩 (건강검진, 진료상담 등)을 클릭해봅니다',
+    ],
+    tips: '프로필 페이지는 빠르게 넘어가도 됩니다. 핵심은 "개인화된 설정이 가능하다"는 점입니다.',
+    hotspots: []
+  },
+
+  // ===== 시나리오 4: 환자 관리 =====
+  {
+    id: 'patient-list',
+    scenario: '환자 관리',
+    name: '환자 목록',
+    page: 'patient-list.html',
+    script: `환자 관리 페이지입니다.\n\n"등록된 환자 목록을 한눈에 볼 수 있습니다. 각 환자의 이름, 상태, 담당 병원 정보가 표시됩니다. 우측 상단의 '새 환자 등록' 버튼으로 새 환자를 접수할 수 있습니다."\n\n이 기능은 특히 에이전시 사용자에게 핵심적인 기능입니다.`,
+    actions: [
+      '환자 목록 테이블/카드를 보여줍니다',
+      '<span class="click-badge">+ 새 환자 등록</span> 버튼을 강조합니다',
+      '개별 환자를 클릭하여 상세 페이지로 이동할 수 있음을 설명합니다',
+    ],
+    tips: '환자가 여러 명 등록되어 있다면 리스트 뷰의 정보 밀도를 강조하세요.',
+    hotspots: [
+      { x: '85%', y: '6rem', label: '+ 새 환자 등록' },
+    ]
+  },
+  {
+    id: 'patient-intake',
+    scenario: '환자 관리',
+    name: '환자 접수 (인테이크)',
+    page: 'patient-intake.html',
+    script: `환자 접수 폼입니다.\n\n"환자 또는 보호자가 대리로 환자를 접수할 수 있는 2단계 폼입니다. 환자의 기본 정보, 증상, 희망 의료 서비스 등을 입력합니다."\n\n이 폼이 완료되면 해당 환자가 환자 목록에 추가되고, 병원과의 매칭 프로세스가 시작됩니다.`,
+    actions: [
+      '폼의 각 섹션을 스크롤하며 보여줍니다',
+      '입력 필드에 샘플 데이터를 넣어 보여줍니다',
+      '<span class="click-badge">다음</span> / <span class="click-badge">제출</span> 버튼 흐름을 설명합니다',
+    ],
+    tips: '실제 데이터를 미리 입력해두면 시연이 매끄럽습니다. 사전에 준비하세요.',
+    hotspots: []
+  },
+  {
+    id: 'patient-detail',
+    scenario: '환자 관리',
+    name: '환자 상세',
+    page: 'patient-detail.html',
+    script: `환자 상세 페이지입니다.\n\n"개별 환자의 모든 정보를 한 곳에서 확인할 수 있습니다. 환자 기본 정보, 진행 중인 케이스 상태, 연결된 병원 정보, 그리고 커뮤니케이션 이력까지 포함됩니다."\n\n상단 '환자 목록으로' 버튼으로 다시 목록으로 돌아갈 수 있습니다.`,
+    actions: [
+      '환자 기본 정보 섹션을 보여줍니다',
+      '케이스 상태 및 진행 상황을 설명합니다',
+      '<span class="click-badge">환자 목록으로</span> 뒤로가기를 클릭합니다',
+    ],
+    tips: '환자 상세는 "정보의 통합 뷰"라는 점을 강조하세요. 여러 탭이나 섹션을 보여주세요.',
+    hotspots: [
+      { x: '10%', y: '5rem', label: '← 환자 목록으로' },
+    ]
+  },
+
+  // ===== 시나리오 5: 병원 · 어드민 =====
+  {
+    id: 'hospitals',
+    scenario: '병원 · 어드민',
+    name: '병원 검색',
+    page: 'hospitals.html',
+    script: `병원 검색 페이지입니다.\n\n"등록된 병원을 검색하고 필터링할 수 있습니다. 지역, 진료과목, 평점 등 다양한 조건으로 원하는 병원을 찾을 수 있습니다."\n\n각 병원 카드를 클릭하면 상세 정보를 확인할 수 있습니다.`,
+    actions: [
+      '검색 바와 필터 옵션을 보여줍니다',
+      '병원 카드 목록을 스크롤하며 보여줍니다',
+      '<span class="click-badge">병원 카드</span>를 클릭하여 상세 페이지로 이동합니다',
+    ],
+    tips: '검색 기능을 실제로 시연해보세요. "삼성" 등을 검색하면 효과적입니다.',
+    hotspots: []
+  },
+  {
+    id: 'hospital-detail',
+    scenario: '병원 · 어드민',
+    name: '병원 상세',
+    page: 'hospital-detail.html',
+    script: `병원 상세 정보 페이지입니다.\n\n"선택한 병원의 모든 정보를 확인할 수 있습니다. 병원 소개, 진료 과목, 의료진 정보, 시설 사진, 그리고 환자 리뷰까지 통합적으로 보여줍니다."\n\n이 정보를 바탕으로 환자에게 최적의 병원을 추천할 수 있습니다.`,
+    actions: [
+      '병원 기본 정보를 보여줍니다',
+      '각 세부 섹션을 스크롤하며 설명합니다',
+      '<span class="click-badge">← 병원 목록으로</span> 뒤로가기를 클릭합니다',
+    ],
+    tips: '병원 상세 정보의 풍부함을 강조하세요. "모든 정보가 한 곳에" 메시지가 핵심입니다.',
+    hotspots: [
+      { x: '6%', y: '5rem', label: '← 병원 목록' },
+    ]
+  },
+  {
+    id: 'admin',
+    scenario: '병원 · 어드민',
+    name: '어드민 대시보드',
+    page: 'admin.html',
+    script: `관리자(어드민) 대시보드입니다.\n\n"관리자는 플랫폼 전체를 모니터링하고 관리합니다. 회원 관리, 환자 케이스, 병원 관리, 에이전시 관리, 승인 관리, 시스템 설정까지 7개 메뉴로 구성됩니다."\n\n여기서 '새 병원 등록' 버튼으로 병원을 직접 등록할 수도 있습니다.`,
+    actions: [
+      '어드민 사이드바 메뉴 7개를 하나씩 보여줍니다',
+      '대시보드 통계 카드를 설명합니다',
+      '<span class="click-badge">+ 새 병원 등록</span> 버튼을 클릭합니다',
+    ],
+    tips: '어드민 메뉴를 빠르게 훑으면서 관리자 역할의 범위를 설명하세요. 시간이 부족하면 병원 등록만 보여주세요.',
+    hotspots: [
+      { x: '85%', y: '6rem', label: '+ 새 병원 등록' },
+    ]
+  },
+  {
+    id: 'hospital-register',
+    scenario: '병원 · 어드민',
+    name: '병원 등록 폼',
+    page: 'hospital-register.html',
+    script: `병원 등록 폼입니다.\n\n"관리자가 새로운 병원을 플랫폼에 등록하는 페이지입니다. 병원 기본 정보, 진료 과목, 의료진 정보, 인증 서류 등을 입력합니다."\n\n이 폼이 제출되면 승인 관리 페이지에서 검토 후 최종 등록됩니다.`,
+    actions: [
+      '폼 필드를 스크롤하며 보여줍니다',
+      '필수 입력 항목과 선택 항목을 구분해서 설명합니다',
+      '"제출 후 승인 관리에서 검토된다"는 워크플로우를 설명합니다',
+    ],
+    tips: '마지막 단계입니다. "등록 → 승인 → 노출"의 3단계 흐름을 설명하며 마무리하세요.',
+    hotspots: []
+  },
+  // ===== 마무리 =====
+  {
+    id: 'closing',
+    scenario: '마무리',
+    name: '시연 마무리 & Q&A',
+    page: '',
+    type: 'overview',
+    script: `시연을 마치겠습니다.\n\n"오늘 보여드린 것처럼, MediW 플랫폼은 의료인·병원·에이전시를 하나의 플랫폼에서 연결합니다.\n\n핵심 포인트를 정리하면:\n\n✅ 직관적인 UI/UX — 다크/라이트 테마, 5개 언어 지원\n✅ 3가지 계정 유형 — 각각에 맞춤화된 경험 제공\n✅ 환자 관리 워크플로우 — 접수부터 케이스 추적까지\n✅ 병원 검색 & 매칭 — 최적의 병원을 빠르게 연결\n✅ 강력한 어드민 — 플랫폼 전체 관리 가능\n\n질문이 있으시면 말씀해 주세요."`,
+    actions: [],
+    tips: '시연이 끝나면 잠시 멈추고 질문을 기다리세요. 추가 시연 요청이 있으면 해당 페이지로 바로 이동할 수 있습니다.',
+    hotspots: [],
+    overviewHtml: `
+      <div class="overview-flow">
+        <div style="text-align:center;margin-bottom:3rem;">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">🎉</div>
+          <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem;">시연 완료</h2>
+          <p style="color:rgba(255,255,255,.5);font-size:.9rem;">감사합니다. 질문이 있으시면 말씀해 주세요.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:700px;margin:0 auto;">
+          <div style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);border-radius:.75rem;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:.5rem;">🌐</div>
+            <div style="font-size:.8rem;font-weight:600;color:rgba(52,211,153,.9);">5개 언어 지원</div>
+          </div>
+          <div style="background:rgba(51,145,255,.06);border:1px solid rgba(51,145,255,.12);border-radius:.75rem;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:.5rem;">👥</div>
+            <div style="font-size:.8rem;font-weight:600;color:rgba(51,145,255,.9);">3가지 계정 유형</div>
+          </div>
+          <div style="background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.12);border-radius:.75rem;padding:1.25rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:.5rem;">🏥</div>
+            <div style="font-size:.8rem;font-weight:600;color:rgba(250,204,21,.9);">병원 매칭 시스템</div>
+          </div>
+        </div>
+        <div style="margin-top:2rem;text-align:center;">
+          <div style="display:inline-flex;gap:.75rem;">
+            <div class="flow-node" onclick="goStep(0)" style="cursor:pointer;">
+              <div class="flow-node-label">↩️ 처음으로</div>
+              <div class="flow-node-file">개요 페이지</div>
+            </div>
+            <div class="flow-node" onclick="goStep(1)" style="cursor:pointer;">
+              <div class="flow-node-label">🔄 다시 시연</div>
+              <div class="flow-node-file">1단계부터</div>
+            </div>
+          </div>
+        </div>
+      </div>`
+  }
+];
+
+// ===== STATE =====
+let currentStep = 0;
+
+// ===== BUILD SIDEBAR =====
+function buildSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  let lastScenario = '';
+  steps.forEach((step, i) => {
+    if (step.scenario !== lastScenario) {
+      lastScenario = step.scenario;
+      html += `<div class="scenario-group"><div class="scenario-title">${step.scenario}</div>`;
+    }
+    html += `<button class="step-btn" data-step="${i}" onclick="goStep(${i})">
+      <span class="step-num">${i}</span>
+      <div class="step-info">
+        <div class="step-name">${step.name}</div>
+        ${step.page ? `<div class="step-page">${step.page}</div>` : ''}
+      </div>
+    </button>`;
+    // Close group if next is different or last
+    if (i === steps.length - 1 || steps[i + 1].scenario !== step.scenario) {
+      html += `</div>`;
+    }
+  });
+  nav.innerHTML = html;
+}
+
+// ===== GO TO STEP =====
+function goStep(idx) {
+  if (idx < 0 || idx >= steps.length) return;
+
+  // Mark previous as done
+  if (currentStep < idx) {
+    for (let i = currentStep; i < idx; i++) {
+      const btn = document.querySelector(`.step-btn[data-step="${i}"]`);
+      if (btn) btn.classList.add('done');
+    }
+  }
+
+  currentStep = idx;
+  const step = steps[idx];
+
+  // Update sidebar active
+  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`.step-btn[data-step="${idx}"]`);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  // Update counter
+  document.getElementById('stepCounter').textContent = `${idx} / ${steps.length - 1}`;
+
+  // Update nav buttons
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === steps.length - 1;
+
+  // Update preview
+  const iframe = document.getElementById('previewFrame');
+  const iframeWrap = document.getElementById('iframeWrap');
+  const overviewContent = document.getElementById('overviewContent');
+
+  if (step.type === 'overview') {
+    iframeWrap.style.display = 'none';
+    overviewContent.style.display = 'flex';
+    overviewContent.innerHTML = step.overviewHtml || '';
+  } else {
+    iframeWrap.style.display = 'block';
+    overviewContent.style.display = 'none';
+    iframe.src = step.page;
+  }
+
+  // Update hotspots
+  updateHotspots(step.hotspots || []);
+
+  // Update script panel
+  updateScript(step);
+}
+
+// ===== HOTSPOTS =====
+function updateHotspots(hotspots) {
+  const layer = document.getElementById('hotspotLayer');
+  layer.innerHTML = hotspots.map(h => `
+    <div class="hotspot" style="left:${h.x};top:${h.y};transform:translate(-50%,-50%);">
+      <div class="hotspot-ring"></div>
+      <div class="hotspot-label">${h.label}</div>
+    </div>
+  `).join('');
+}
+
+// ===== SCRIPT PANEL =====
+function updateScript(step) {
+  const body = document.getElementById('scriptBody');
+  let html = '';
+
+  // Page info
+  if (step.page) {
+    html += `<div class="script-section">
+      <div class="script-label"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5H3a2 2 0 0 0-2 2V13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/></svg> 현재 페이지</div>
+      <div class="page-info">
+        <div class="page-info-row"><span class="page-info-label">파일</span><span class="page-info-value"><a href="${step.page}" target="_blank">${step.page}</a></span></div>
+        <div class="page-info-row"><span class="page-info-label">단계</span><span class="page-info-value">${currentStep} / ${steps.length - 1}</span></div>
+      </div>
+    </div>`;
+  }
+
+  // Script (talk bubble)
+  if (step.script) {
+    html += `<div class="script-section">
+      <div class="script-label"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/></svg> 대본 (이렇게 말하세요)</div>
+      <div class="talk-bubble">${step.script.replace(/\n/g, '<br>')}</div>
+    </div>`;
+  }
+
+  // Actions
+  if (step.actions && step.actions.length) {
+    html += `<div class="script-section">
+      <div class="script-label"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z"/></svg> 액션 가이드 (이것을 하세요)</div>
+      <ul class="action-list">${step.actions.map((a, i) => `
+        <li class="action-item"><span class="action-num">${i + 1}</span><span>${a}</span></li>
+      `).join('')}</ul>
+    </div>`;
+  }
+
+  // Tips
+  if (step.tips) {
+    html += `<div class="script-section">
+      <div class="script-label">팁</div>
+      <div class="tip-box">${step.tips}</div>
+    </div>`;
+  }
+
+  // Next step button
+  if (currentStep < steps.length - 1) {
+    const next = steps[currentStep + 1];
+    html += `<div class="flow-next" onclick="goStep(${currentStep + 1})">
+      다음: ${next.name}
+      <svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+    </div>`;
+  }
+
+  body.innerHTML = html;
+}
+
+// ===== PRESENTATION MODE =====
+function togglePresentation() {
+  document.getElementById('app').classList.toggle('presentation');
+}
+
+// ===== KEYBOARD NAV =====
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    goStep(currentStep + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    goStep(currentStep - 1);
+  } else if (e.key === 'Escape') {
+    document.getElementById('app').classList.remove('presentation');
+  } else if (e.key === 'f' || e.key === 'F') {
+    if (!e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+      togglePresentation();
+    }
+  }
+});
+
+// ===== INIT =====
+buildSidebar();
+goStep(0);
+</script>
+</body>
+</html>
