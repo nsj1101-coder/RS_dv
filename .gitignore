@@ -1,2 +1,4 @@
 *.png
+!MEDI-W Landing Page.png
+!MEDI-W Landing Page_v2.png
 .playwright-mcp/
