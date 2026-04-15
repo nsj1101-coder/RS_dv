@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환자 관리 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
+  <style>
+    /* === Layout === */
+    .pt-layout{display:flex;height:100%;min-height:0;background:var(--bg-card)}
+    .pt-sidebar{width:240px;flex-shrink:0;background:var(--bg-card);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+    .pt-add-btn{width:100%;background:#111827;color:#fff;border:0;border-radius:var(--radius-sm);padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer}
+    .pt-add-btn i{font-size:16px}
+    .pt-content{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+    .pt-content-header{display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 0;height:44px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+    .pt-content-body{flex:1;overflow-y:auto;padding:16px 24px;background:var(--bg-secondary)}
+    .view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;height:36px}
+    .view-toggle button{padding:0 10px;border:none;background:#fff;cursor:pointer;font-size:14px;color:var(--fg-muted);display:flex;align-items:center;justify-content:center}
+    .view-toggle button.active{background:var(--accent);color:white}
+
+    /* === Filter items === */
+    .pt-filter{display:flex;flex-direction:column;gap:4px}
+    .pt-filter-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--fg-secondary);cursor:pointer;transition:all .15s;border:1px solid transparent}
+    .pt-filter-item:hover{background:var(--border-light)}
+    .pt-filter-item.active{background:var(--accent-light);border-color:var(--accent);color:var(--fg-primary);font-weight:600}
+    .pt-filter-count{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--fg-secondary);background:var(--bg-secondary);border-radius:9999px;padding:2px 8px;min-width:22px;text-align:center}
+    .pt-filter-item.active .pt-filter-count{background:var(--accent);color:#fff}
+
+    /* === Card grid === */
+    .pt-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+    .pt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.04);min-height:186px;position:relative}
+    .pt-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .pt-card.selected{background:#F9F9FF;border-color:var(--accent);box-shadow:0 4px 12px rgba(59,67,219,.12)}
+    .pt-card-check{position:absolute;top:14px;right:14px}
+    .pt-card-top{display:flex;align-items:center;gap:10px}
+    .pt-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+    .pt-card-name{font-size:14px;font-weight:600;color:var(--fg-primary);line-height:1.3}
+    .pt-card-sub{font-size:13px;font-weight:500;color:var(--fg-muted);margin-top:2px}
+    .pt-card-info{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--fg-secondary)}
+    .pt-card-info span{display:flex;align-items:center;gap:6px}
+    .pt-card-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+    .pt-card-meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg-secondary)}
+    .pt-card-dept{font-weight:600}
+    .pt-card-sep{color:var(--fg-muted)}
+    .pt-progress{display:flex;align-items:center;gap:4px}
+    .pt-progress .dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
+    .pt-progress .dot.on{background:var(--success)}
+    .pt-progress .txt{font-size:13px;font-weight:600;color:var(--fg-secondary);margin-left:4px}
+    .pt-status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:600;align-self:flex-start}
+    .pt-status-badge.draft{background:var(--bg-secondary);color:var(--fg-secondary)}
+    .pt-status-badge.review{background:var(--accent-light);color:var(--accent)}
+    .pt-status-badge.doc{background:#FFF7ED;color:var(--warning)}
+    .pt-status-badge.approve{background:#FFF7ED;color:var(--warning)}
+    .pt-status-badge.confirm{background:var(--accent-light);color:var(--accent)}
+    .pt-status-badge.done{background:#EEFBF0;color:var(--success)}
+    .pt-card-date{font-size:12px;font-weight:600;color:var(--fg-muted);font-family:var(--font-mono);margin-top:auto}
+    .pt-card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:8px}
+    .pt-card-foot .pt-card-date{margin-top:0}
+    .pt-detail-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:12px;font-weight:600;color:var(--fg-secondary);cursor:pointer}
+    .pt-detail-btn:hover{background:var(--border-light);color:var(--fg-primary)}
+    .pt-detail-btn i{font-size:12px}
+
+    /* List view */
+    .pt-list-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin:-16px -24px}
+    .pt-list-wrap{border-radius:0;border-left:none;border-right:none;border-top:none}
+    .pt-list-wrap .data-table th,.pt-list-wrap .data-table td{text-align:center;padding:14px 12px}
+    .pt-list-wrap .data-table th:first-child,.pt-list-wrap .data-table td:first-child{padding-left:24px}
+    .pt-list-wrap .data-table th:last-child,.pt-list-wrap .data-table td:last-child{padding-right:24px}
+    .pt-list-wrap .pt-list-name{justify-content:flex-start}
+    .pt-list-name{display:flex;align-items:center;gap:10px}
+    .pt-list-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0}
+
+    /* Tabs inside header */
+    .pt-tabs{display:flex;height:100%;gap:0}
+    .pt-tabs .pt-tab{height:100%;display:flex;align-items:center;padding:0 24px;font-size:14px;color:var(--fg-muted);cursor:pointer}
+    .pt-tabs .pt-tab.active{color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)}
+
+    /* === Approval Cards === */
+    .ap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .ap-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg-card)}
+    .ap-card.warn{background:#FFFBF5;border-color:var(--warning)}
+    .ap-card.accent{background:#F9F9FF;border-color:var(--accent)}
+    .ap-card.success{background:#F6FEF7;border-color:var(--success)}
+    .ap-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:9999px;font-size:12px;font-weight:600;align-self:flex-start}
+    .ap-badge.warn{background:#FFF7ED;color:var(--warning)}
+    .ap-badge.accent{background:var(--accent-light);color:var(--accent)}
+    .ap-badge.success{background:#ECFDF5;color:var(--success)}
+    .ap-name{font-size:14px;font-weight:600;color:var(--fg-primary)}
+    .ap-meta{font-size:12px;font-weight:600;color:var(--fg-muted)}
+    .ap-desc{font-size:12px;font-weight:600;color:var(--fg-secondary);line-height:1.5}
+    .ap-actions{display:flex;gap:6px;margin-top:2px}
+    .ap-btn{flex:1;padding:6px 12px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--fg-secondary)}
+    .ap-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .ap-btn.success{background:var(--success);color:#fff;border-color:var(--success)}
+    .ap-page{display:flex;align-items:center;justify-content:center;height:48px;border-top:1px solid var(--border-light);font-size:14px;font-weight:600;color:var(--fg-muted);font-family:var(--font-mono);margin-top:12px}
+
+    /* === Slide panel step indicator === */
+    .step-indicator{display:flex;align-items:center;gap:12px;padding:0 24px}
+    .step-item{display:flex;align-items:center;gap:8px}
+    .step-item .step-circle{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--fg-muted);background:#fff}
+    .step-item .step-label{font-size:13px;font-weight:500;color:var(--fg-muted)}
+    .step-item.active .step-circle{background:var(--accent);border-color:var(--accent);color:#fff}
+    .step-item.active .step-label{color:var(--accent);font-weight:600}
+    .step-item.done .step-circle{background:var(--success);border-color:var(--success);color:#fff}
+    .step-item.done .step-label{color:var(--success);font-weight:600}
+    .step-line{flex:1;height:2px;background:var(--border-light)}
+    .step-line.done{background:var(--accent)}
+    .panel-info-banner{font-size:14px;color:var(--accent);font-weight:500;line-height:1.5;padding:0}
+    .panel-info-banner i{display:none}
+    .chip-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{padding:6px 12px;border-radius:9999px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:500;color:var(--fg-secondary);cursor:pointer}
+    .chip.active{background:var(--accent-light);border-color:var(--accent);color:var(--accent);font-weight:600}
+    .pain-scale{display:flex;gap:6px;margin-top:8px}
+    .pain-dot{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--fg-secondary);cursor:pointer;background:#fff}
+    .pain-dot.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+    .pain-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:var(--accent)}
+    .upload-row{display:flex;gap:10px;margin-top:4px}
+    .upload-box{flex:1;height:80px;border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#fff;cursor:pointer}
+    .upload-box.required{background:#FFF5F5;border-color:var(--danger)}
+    .upload-box i{font-size:16px;color:var(--fg-muted)}
+    .upload-title{font-size:12px;font-weight:600;color:var(--fg-secondary)}
+    .upload-sub{font-size:12px;font-weight:600;color:var(--fg-muted)}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--fg-primary);font-weight:500}
+    .toggle-row.last{border-bottom:none}
+    /* Kanban view */
+    .pt-kanban{display:flex;gap:16px;flex:1;overflow-x:auto}
+    .pt-kanban-col{flex:1;min-width:200px;display:flex;flex-direction:column;gap:12px}
+    .pt-kanban-header{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:4px 0}
+    .pt-kanban-header .kb-dot{width:8px;height:8px;border-radius:50%}
+    .pt-kanban-header .kb-count{font-family:var(--font-mono);margin-left:auto;color:var(--fg-muted);font-weight:500}
+    .kb-card{background:var(--bg-card);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:box-shadow .15s;border-left:3px solid transparent}
+    .kb-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .kb-card.blue{border-left-color:var(--accent);border:1px solid var(--border);border-left:3px solid var(--accent)}
+    .kb-card.orange{border-left-color:var(--warning);border:1px solid var(--border);border-left:3px solid var(--warning)}
+    .kb-card.green{border-left-color:var(--success);border:1px solid var(--border);border-left:3px solid var(--success)}
+    .kb-card .kb-name{font-size:14px;font-weight:600;margin-bottom:4px}
+    .kb-card .kb-sub{font-size:12px;color:var(--fg-muted);margin-bottom:8px}
+    .kb-card .kb-meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--fg-secondary)}
+    /* Slide panel additions */
+    .panel-section{display:flex;flex-direction:column;gap:12px}
+    .panel-section h3{font-size:14px;font-weight:700;color:var(--fg-primary)}
+    .panel-info-row{display:flex;align-items:center;gap:12px}
+    .panel-info-label{width:100px;font-size:13px;color:var(--fg-muted);flex-shrink:0}
+    .panel-info-value{font-size:14px;color:var(--fg-primary)}
+    .severity-bar{display:flex;gap:4px}
+    .severity-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--fg-muted);cursor:pointer}
+    .severity-dot.active{background:var(--accent);border-color:var(--accent);color:white}
+    /* Reminder panel */
+    .reminder-channel{display:flex;gap:8px}
+    .channel-btn{padding:6px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:white;color:var(--fg-secondary)}
+    .channel-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+    .channel-btn.whatsapp{background:#25D366;color:white;border-color:#25D366}
+    /* Confirm/Reject modal additions */
+    .confirm-modal-info{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--fg-secondary);text-align:center;margin-bottom:20px}
+    .bottom-page{display:flex;align-items:center;justify-content:center;padding-top:4px;position:relative}
+    .bottom-page .page-info{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--fg-muted);font-family:var(--font-mono)}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
+    <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
+    <a href="my-info.html" class="sidebar-user">
+      <div class="su-av">AD</div>
+      <div class="user-info">
+        <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
+        <div class="su-mail">admin@mediw.co.kr</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospital-list.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="patient.html" class="nav-item active"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agency.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
+  </aside>
+
+  <div class="main-content">
+    <!-- TopBar -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <h1>환자 관리</h1>
+        <p>접수된 환자 케이스를 관리합니다</p>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
+        <div class="bell-wrapper">
+          <button class="bell-btn" onclick="location.href='notification.html'"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
+        </div>
+        <button class="btn-icon" title="알림 설정"><i class="icon-settings" style="font-size:16px;color:var(--fg-secondary)"></i></button>
+      </div>
+    </div>
+
+    <div class="content-scroll" data-tab-container style="overflow:hidden;background:var(--bg-card)">
+      <div class="pt-layout">
+        <!-- Left Sidebar: button + filter -->
+        <aside class="pt-sidebar">
+          <button class="pt-add-btn" onclick="openPanel('newPatient')"><i class="icon-plus"></i>새 환자 등록</button>
+          <div class="pt-filter" data-filter-for="cardview">
+            <div class="pt-filter-item active"><span>전체</span><span class="pt-filter-count">55</span></div>
+            <div class="pt-filter-item"><span>작성 중</span><span class="pt-filter-count">3</span></div>
+            <div class="pt-filter-item"><span>접수 완료</span><span class="pt-filter-count">3</span></div>
+            <div class="pt-filter-item"><span>검토 중</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>자료 요청</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>병원 승인</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>최종 확인 대기</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>최종 확정</span><span class="pt-filter-count">3</span></div>
+            <div class="pt-filter-item"><span>철회</span><span class="pt-filter-count">1</span></div>
+          </div>
+          <div class="pt-filter" data-filter-for="approval" style="display:none">
+            <div class="pt-filter-item active"><span>전체</span><span class="pt-filter-count">7</span></div>
+            <div class="pt-filter-item"><span>병원 검토 대기</span><span class="pt-filter-count">3</span></div>
+            <div class="pt-filter-item"><span>환자 확인 대기</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>자료 보완 대기</span><span class="pt-filter-count">2</span></div>
+            <div class="pt-filter-item"><span>승인 완료</span><span class="pt-filter-count">0</span></div>
+            <div class="pt-filter-item"><span>반려</span><span class="pt-filter-count">0</span></div>
+          </div>
+        </aside>
+
+        <!-- Right Content -->
+        <div class="pt-content">
+          <div class="pt-content-header">
+            <div class="pt-tabs">
+              <div class="pt-tab active" data-tab="cardview">환자 목록</div>
+              <div class="pt-tab" data-tab="approval">승인 관리</div>
+            </div>
+            <div class="view-toggle" id="viewToggle">
+              <button class="active" onclick="switchView('card')" title="카드"><i class="icon-layout-grid" style="font-size:14px"></i></button>
+              <button onclick="switchView('list')" title="리스트"><i class="icon-list" style="font-size:14px"></i></button>
+            </div>
+          </div>
+          <div class="pt-content-body">
+
+        <!-- Card View Tab -->
+        <div data-tab-panel="cardview">
+          <div>
+            <!-- Card Grid (default view) -->
+            <div>
+              <div class="pt-card-grid" id="cardView">
+                <div class="pt-card">
+                  <div class="pt-card-check"><div class="custom-checkbox" data-role="item" data-group="patient"></div></div>
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#A5B4FC">ИП</div>
+                    <div><div class="pt-card-name">Иван Петров</div><div class="pt-card-sub">러시아</div></div>
+                  </div>
+                  <div class="pt-card-meta">
+                    <span class="pt-card-dept">종합내과</span>
+                    <span class="pt-card-sep">·</span>
+                    <div class="pt-progress"><div class="dot on"></div><div class="dot on"></div><span class="txt">완료</span></div>
+                  </div>
+                  <span class="pt-status-badge confirm">최종 확정</span>
+                  <div class="pt-card-date">2026.03.17</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#EC4899">МИ</div>
+                    <div><div class="pt-card-name">Мария Иванова</div><div class="pt-card-sub">러시아/여자 · ♀ · 만 28세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 중앙내과</span><span><i class="icon-phone" style="font-size:12px"></i> +7 ***-****</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-info">접수 완료</span></div>
+                  <div class="pt-card-date">2026.03.16</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#8B5CF6">АС</div>
+                    <div><div class="pt-card-name">Айгуль Сатыбалды</div><div class="pt-card-sub">카자흐/여자 · ♀ · 만 45세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 피부과</span><span><i class="icon-phone" style="font-size:12px"></i> +7 ***-****</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-success">상담완료</span></div>
+                  <div class="pt-card-date">2026.03.15</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#3B82F6">ТС</div>
+                    <div><div class="pt-card-name">Танут소량</div><div class="pt-card-sub">태국/남자 · ♂ · 만 38세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 정형외과</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-gray">대기중</span></div>
+                  <div class="pt-card-date">2026.03.14</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#10B981">ЗА</div>
+                    <div><div class="pt-card-name">조수해</div><div class="pt-card-sub">중국/여자 · ♀ · 만 52세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 내과 부진 의뢰</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-info">치료 병행</span></div>
+                  <div class="pt-card-date">2026.03.13</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#F97316">НЖ</div>
+                    <div><div class="pt-card-name">Нурлан Жумабеков</div><div class="pt-card-sub">카자흐/남자 · ♂ · 만 41세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 건강검진</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-warning">병원 대기</span></div>
+                  <div class="pt-card-date">2026.03.12</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#6366F1">БЭ</div>
+                    <div><div class="pt-card-name">Болдбар Энэбат</div><div class="pt-card-sub">몽골/남자 · ♂ · 만 35세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 건강검진</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-active">접수 확인</span></div>
+                  <div class="pt-card-date">2026.03.11</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#EF4444">ДС</div>
+                    <div><div class="pt-card-name">Дмитрий Соколов</div><div class="pt-card-sub">러시아/남자 · ♂ · 만 50세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 비뇨기과</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-gray">상담 중</span></div>
+                  <div class="pt-card-date">2026.03.10</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#14B8A6">ФА</div>
+                    <div><div class="pt-card-name">Фатима Аленова</div><div class="pt-card-sub">우즈베키스탄/여자 · ♀</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 산부인과</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-success">완료</span></div>
+                  <div class="pt-card-date">2026.03.18</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#0EA5E9">ОС</div>
+                    <div><div class="pt-card-name">Олег Сидоров</div><div class="pt-card-sub">러시아/남자 · ♂ · 만 47세</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 피부과</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-info">접수 완료</span></div>
+                  <div class="pt-card-date">2026.03.11</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#A855F7">СА</div>
+                    <div><div class="pt-card-name">Серик Абдрахманов</div><div class="pt-card-sub">카자흐/남자 · ♂</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 건강검진</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-gray">상담 중</span></div>
+                  <div class="pt-card-date">2026.03.11</div>
+                </div>
+                <div class="pt-card">
+                  <div class="pt-card-top">
+                    <div class="pt-avatar" style="background:#D946EF">АВ</div>
+                    <div><div class="pt-card-name">Анна Волкова</div><div class="pt-card-sub">러시아/여자 · ♀</div></div>
+                  </div>
+                  <div class="pt-card-info"><span><i class="icon-building-2" style="font-size:12px"></i> 안과</span></div>
+                  <div class="pt-card-badges"><span class="badge badge-active">접수 확인</span></div>
+                  <div class="pt-card-date">2026.03.13</div>
+                </div>
+              </div>
+
+              <!-- List View (hidden by default) -->
+              <div class="pt-list-wrap" id="listView" style="display:none">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px"><div class="custom-checkbox" data-role="all" data-group="patient"></div></th>
+                      <th>상태</th>
+                      <th>환자명</th>
+                      <th>진료과목</th>
+                      <th>상태</th>
+                      <th>평점</th>
+                      <th>등록일</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-active">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#F59E0B">ИП</div><div><div style="font-weight:600">Иван Петров</div><div style="font-size:12px;color:var(--fg-muted)">중앙내과</div></div></div></td>
+                      <td>중앙내과</td>
+                      <td><span class="badge badge-warning">우선</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.17</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-info">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#EC4899">МИ</div><div><div style="font-weight:600">Мария Иванова</div><div style="font-size:12px;color:var(--fg-muted)">중앙내과</div></div></div></td>
+                      <td>중앙내과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.16</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-success">완료</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#8B5CF6">АС</div><div><div style="font-weight:600">Айгуль Сатыбалды</div><div style="font-size:12px;color:var(--fg-muted)">피부과</div></div></div></td>
+                      <td>피부과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.15</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-warning">대기</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#3B82F6">ТС</div><div><div style="font-weight:600">Танут소량</div><div style="font-size:12px;color:var(--fg-muted)">정형외과</div></div></div></td>
+                      <td>정형외과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 3/1</td>
+                      <td class="font-mono">2026.03.14</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-info">치료</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#10B981">ЗА</div><div><div style="font-weight:600">조수해</div><div style="font-size:12px;color:var(--fg-muted)">내과</div></div></div></td>
+                      <td>내과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.13</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-active">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#F97316">НЖ</div><div><div style="font-weight:600">Нурлан Жумабеков</div><div style="font-size:12px;color:var(--fg-muted)">건강검진</div></div></div></td>
+                      <td>건강검진</td>
+                      <td><span class="badge badge-warning">우선</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.18</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-active">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#6366F1">БЭ</div><div><div style="font-weight:600">Болдбар Энэбат</div><div style="font-size:12px;color:var(--fg-muted)">건강검진</div></div></div></td>
+                      <td>건강검진</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.11</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-active">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#8B5CF6">АС</div><div><div style="font-weight:600">Айгуль Сатыбалды</div><div style="font-size:12px;color:var(--fg-muted)">피부과</div></div></div></td>
+                      <td>피부과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.18</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-info">치료</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#10B981">ЗА</div><div><div style="font-weight:600">조수해</div><div style="font-size:12px;color:var(--fg-muted)">내과</div></div></div></td>
+                      <td>내과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.13</td>
+                    </tr>
+                    <tr>
+                      <td><div class="custom-checkbox" data-role="item" data-group="patient"></div></td>
+                      <td><span class="badge badge-active">접수</span></td>
+                      <td><div class="pt-list-name"><div class="pt-list-avatar" style="background:#8B5CF6">АС</div><div><div style="font-weight:600">Айгуль Сатыбалды</div><div style="font-size:12px;color:var(--fg-muted)">피부과</div></div></div></td>
+                      <td>피부과</td>
+                      <td><span class="badge badge-gray">보통</span></td>
+                      <td>★ 4/2</td>
+                      <td class="font-mono">2026.03.18</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination -->
+              <div class="bottom-page" style="margin-top:12px">
+                <div class="page-info">1–10 / 42</div>
+                <div class="pagination">
+                  <button class="page-btn active">1</button>
+                  <button class="page-btn">2</button>
+                  <button class="page-btn">3</button>
+                  <button class="page-btn"><i class="icon-chevron-right" style="font-size:14px"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Approval Tab -->
+        <div data-tab-panel="approval" style="display:none">
+          <div class="ap-grid">
+            <div class="ap-card warn" onclick="openModal('confirmModal')">
+              <span class="ap-badge warn">병원 검토 대기</span>
+              <div class="ap-name">Нурлан Жумабеков</div>
+              <div class="ap-meta">서울대학교병원 · 신경외과</div>
+              <div class="ap-desc">접수 서류 확인 필요</div>
+              <div class="ap-actions">
+                <button class="ap-btn success">승인</button>
+                <button class="ap-btn" onclick="event.stopPropagation();openModal('rejectModal')">반려</button>
+              </div>
+            </div>
+            <div class="ap-card warn">
+              <span class="ap-badge warn">병원 검토 대기</span>
+              <div class="ap-name">Алексей Козлов</div>
+              <div class="ap-meta">강남세브란스병원 · 성형외과</div>
+              <div class="ap-desc">진단서 및 검사결과 검토 중</div>
+              <div class="ap-actions">
+                <button class="ap-btn success">승인</button>
+                <button class="ap-btn">반려</button>
+              </div>
+            </div>
+            <div class="ap-card warn">
+              <span class="ap-badge warn">병원 검토 대기</span>
+              <div class="ap-name">Дмитрий Соколов</div>
+              <div class="ap-meta">서울아산병원 · 비뇨기과</div>
+              <div class="ap-desc">접수 서류 확인 필요</div>
+              <div class="ap-actions">
+                <button class="ap-btn success">승인</button>
+                <button class="ap-btn">반려</button>
+              </div>
+            </div>
+
+            <div class="ap-card accent" onclick="openPanel('reminder')">
+              <span class="ap-badge accent">환자 확인 대기</span>
+              <div class="ap-name">Иван Петров</div>
+              <div class="ap-meta">서울대학교병원 · 종합내과</div>
+              <div class="ap-desc">병원 승인 완료, 환자 최종 확인 대기 중</div>
+              <div class="ap-actions">
+                <button class="ap-btn primary">리마인더 발송</button>
+              </div>
+            </div>
+            <div class="ap-card accent">
+              <span class="ap-badge accent">환자 확인 대기</span>
+              <div class="ap-name">Мария Иванова</div>
+              <div class="ap-meta">분당서울대병원 · 산부인과</div>
+              <div class="ap-desc">병원 승인 완료, 환자 최종 확인 대기 중</div>
+              <div class="ap-actions">
+                <button class="ap-btn primary">리마인더 발송</button>
+              </div>
+            </div>
+
+            <div class="ap-card success">
+              <span class="ap-badge success">자료 보완 대기</span>
+              <div class="ap-name">Айгуль Сатыбалды</div>
+              <div class="ap-meta">강남세브란스병원 · 피부과</div>
+              <div class="ap-desc">MRI 최신본 및 혈액검사 결과 추가 제출</div>
+              <div class="ap-actions">
+                <button class="ap-btn primary">리마인더 발송</button>
+              </div>
+            </div>
+            <div class="ap-card success">
+              <span class="ap-badge success">자료 보완 대기</span>
+              <div class="ap-name">Болдбар Энэбат</div>
+              <div class="ap-meta">서울성모병원 · 건강검진</div>
+              <div class="ap-desc">추가 진단서 제출 필요</div>
+              <div class="ap-actions">
+                <button class="ap-btn primary">리마인더 발송</button>
+              </div>
+            </div>
+          </div>
+          <div class="ap-page">1-7 / 7</div>
+        </div>
+          </div><!-- /pt-content-body -->
+        </div><!-- /pt-content -->
+      </div><!-- /pt-layout -->
+    </div><!-- /content-scroll -->
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- ============ Slide Panels ============ -->
+
+<!-- New Patient Panel (Unified 2-step: 간단 접수 → 상세 의료정보) -->
+<div class="slide-panel-backdrop" id="newPatientBackdrop"></div>
+<div class="slide-panel" id="newPatientPanel">
+  <div class="panel-header" style="border-bottom:none">
+    <h2 id="npTitle">새 환자 등록</h2>
+    <button onclick="closePanel('newPatient')" style="background:none;border:none;padding:0;cursor:pointer;color:var(--fg-muted);display:inline-flex"><i class="icon-x" style="font-size:20px"></i></button>
+  </div>
+
+  <div class="panel-body">
+    <div class="panel-info-banner" id="npBanner">환자 정보를 입력해주세요. 접수 후 담당 코디네이터가 배정됩니다.</div>
+
+    <div>
+      <div class="panel-section">
+        <h3>환자 기본 정보</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">이름 <span class="required">*</span></label><input class="form-input" placeholder="성명"></div>
+          <div class="form-group"><label class="form-label">국적 <span class="required">*</span></label><select class="form-select"><option>선택</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">전화번호 <span class="required">*</span></label><input class="form-input" placeholder="+7-000-000-0000"></div>
+          <div class="form-group"><label class="form-label">이메일 <span class="required">*</span></label><input class="form-input" placeholder="email@example.com"></div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>희망 진료과</h3>
+        <div class="form-group"><label class="form-label">진료과 선택 <span class="required">*</span></label>
+          <div class="chip-picker">
+            <span class="chip">심장내과</span>
+            <span class="chip">정형외과</span>
+            <span class="chip">신경외과</span>
+            <span class="chip">성형외과</span>
+            <span class="chip">종양내과</span>
+            <span class="chip">피부과</span>
+            <span class="chip">치과</span>
+            <span class="chip">안과</span>
+            <span class="chip">내과</span>
+            <span class="chip">비뇨의학과</span>
+            <span class="chip">산부인과</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>주요 증상</h3>
+        <div class="form-group"><label class="form-label">증상 설명 <span class="required">*</span></label>
+          <textarea class="form-textarea" placeholder="현재 겪고 있는 증상을 구체적으로 설명해주세요" style="min-height:90px"></textarea>
+        </div>
+        <div class="form-group"><label class="form-label">통증 강도 (1~10)</label>
+          <div class="pain-scale">
+            <div class="pain-dot">1</div>
+            <div class="pain-dot">2</div>
+            <div class="pain-dot">3</div>
+            <div class="pain-dot">4</div>
+            <div class="pain-dot">5</div>
+            <div class="pain-dot">6</div>
+            <div class="pain-dot">7</div>
+            <div class="pain-dot">8</div>
+            <div class="pain-dot">9</div>
+            <div class="pain-dot">10</div>
+          </div>
+          <div class="pain-labels"><span>없음</span><span>보통</span><span>극심</span></div>
+        </div>
+      </div>
+    </div>
+
+      <div class="panel-section">
+        <h3>현지 진단 정보</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">현지 병원 진단명 <span class="required">*</span></label><input class="form-input" placeholder="진단명 입력"></div>
+          <div class="form-group"><label class="form-label">진단 병원 <span class="required">*</span></label><select class="form-select"><option>병원명 입력</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">현재 치료 여부 <span class="required">*</span></label><select class="form-select"><option>선택</option></select></div>
+          <div class="form-group"><label class="form-label">현지 처방 내용 <span class="required">*</span></label><input class="form-input" placeholder="처방 약물 또는 치료 내용"></div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>병력 및 건강 상태</h3>
+        <div class="form-group"><label class="form-label">기저 질환</label>
+          <div class="chip-picker">
+            <span class="chip active">당뇨</span>
+            <span class="chip">고혈압</span>
+            <span class="chip">심장질환</span>
+            <span class="chip">없음</span>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">알레르기</label>
+          <input class="form-input" placeholder="약물, 음식, 기타 알레르기">
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>의료 기록 업로드</h3>
+        <div style="font-size:12px;font-weight:600;color:var(--fg-muted);margin-top:-4px">PDF, JPG, DICOM 형식 지원 · 파일당 최대 50MB</div>
+        <div class="upload-row">
+          <div class="upload-box required">
+            <i class="icon-upload"></i>
+            <div class="upload-title">진단서 <span class="required">*</span></div>
+            <div class="upload-sub">필수 · PDF, JPG</div>
+          </div>
+          <div class="upload-box">
+            <i class="icon-upload"></i>
+            <div class="upload-title">CT/MRI/X-ray</div>
+            <div class="upload-sub">PDF, JPG, DICOM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>방문 일정</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">방문 희망 시기</label><input class="form-input" type="date"></div>
+          <div class="form-group"><label class="form-label">예상 체류 기간</label><select class="form-select"><option>선택</option></select></div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>컨시어지 서비스</h3>
+        <div style="font-size:13px;font-weight:500;color:var(--fg-muted);margin-top:-4px">필요한 서비스를 선택하세요</div>
+        <div class="toggle-row"><span>공항 픽업 서비스</span><div class="toggle-switch"></div></div>
+        <div class="toggle-row"><span>차량 서비스 (병원 이동)</span><div class="toggle-switch"></div></div>
+        <div class="toggle-row"><span>숙박 예약</span><div class="toggle-switch"></div></div>
+        <div class="toggle-row last"><span>통역 서비스</span><div class="toggle-switch"></div></div>
+      </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn btn-primary" style="flex:1" onclick="closePanel('newPatient')">접수 완료</button>
+  </div>
+</div>
+
+<!-- Patient Detail Panel (single slide; contains both 간단 접수 + 상세 의료정보 info) -->
+<div class="slide-panel-backdrop" id="patientDetailBackdrop"></div>
+<div class="slide-panel" id="patientDetailPanel">
+  <div class="panel-header" style="border-bottom:none">
+    <h2>환자 상세 정보</h2>
+    <button onclick="closePanel('patientDetail')" style="background:none;border:none;padding:0;cursor:pointer;color:var(--fg-muted);display:inline-flex"><i class="icon-x" style="font-size:20px"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="pt-avatar" style="background:#A5B4FC;width:48px;height:48px;font-size:16px">ИП</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--fg-primary)">Иван Петров</div>
+          <div style="font-size:13px;color:var(--fg-muted);margin-top:2px">러시아 · 남 · 만 32세</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>환자 기본 정보</h3>
+      <div class="panel-info-row"><span class="panel-info-label">이름</span><span class="panel-info-value">Иван Петров</span></div>
+      <div class="panel-info-row"><span class="panel-info-label">국적</span><span class="panel-info-value">러시아</span></div>
+      <div class="panel-info-row"><span class="panel-info-label">전화번호</span><span class="panel-info-value">+7-901-234-5678</span></div>
+      <div class="panel-info-row"><span class="panel-info-label">이메일</span><span class="panel-info-value">i.petrov@example.com</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3>희망 진료과</h3>
+      <div class="chip-picker">
+        <span class="chip active">심장내과</span>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>현지 진단 정보</h3>
+      <div class="panel-info-row"><span class="panel-info-label">현지 병원 진단명</span><span class="panel-info-value">고혈압 · 협심증</span></div>
+      <div class="panel-info-row"><span class="panel-info-label">진단 병원</span><span class="panel-info-value">Moscow City Hospital #1</span></div>
+      <div class="panel-info-row"><span class="panel-info-label">현재 치료 여부</span><span class="panel-info-value">치료 중</span></div>
+      <div class="panel-info-row" style="align-items:flex-start"><span class="panel-info-label">현지 처방 내용</span><span class="panel-info-value" style="flex:1;line-height:1.5">Amlodipine 5mg, Atorvastatin 20mg (1일 1회)</span></div>
+    </div>
+
+    <div class="panel-section">
+      <h3>병력 및 건강 상태</h3>
+      <div class="form-group"><label class="form-label" style="color:var(--fg-muted)">기저 질환</label>
+        <div class="chip-picker">
+          <span class="chip active">당뇨</span>
+          <span class="chip active">고혈압</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-secondary" style="flex:1" onclick="closePanel('patientDetail')">닫기</button>
+    <button class="btn btn-primary" style="flex:1" onclick="editPatient()"><i class="icon-edit" style="font-size:16px"></i> 수정</button>
+  </div>
+</div>
+
+<!-- Reminder Panel -->
+<div class="slide-panel-backdrop" id="reminderBackdrop"></div>
+<div class="slide-panel" id="reminderPanel">
+  <div class="panel-header"><h2>리마인더 발송</h2><button class="btn-icon" onclick="closePanel('reminder')"><i class="icon-x" style="font-size:18px"></i></button></div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light)">
+        <div class="pt-avatar" style="background:#F97316;width:44px;height:44px;font-size:14px">АК</div>
+        <div>
+          <div style="font-weight:600">Алексей Козлов</div>
+          <div style="font-size:12px;color:var(--fg-muted)">MediTravel Agency</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h3>발송 기록 <span class="required">*</span></h3>
+      <div class="reminder-channel">
+        <button class="channel-btn whatsapp active"><i class="icon-message-circle" style="font-size:14px"></i> WhatsApp</button>
+        <button class="channel-btn"><i class="icon-mail" style="font-size:14px"></i> Email</button>
+        <button class="channel-btn"><i class="icon-phone" style="font-size:14px"></i> SMS</button>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h3>메시지 템플릿 <span class="required">*</span></h3>
+      <select class="form-select"><option>메시지 템플릿 선택 (기본)</option></select>
+    </div>
+    <div class="panel-section">
+      <h3>메시지 미리보기 <span class="required">*</span></h3>
+      <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;font-size:14px;color:var(--fg-secondary);line-height:1.7">
+        <p>안녕하세요 Алексей Козлов님.</p>
+        <p style="margin-top:8px">서울대병교대학병원 성형외과 접수가 완료 되었 접수가 확인되었습니다.</p>
+        <p style="margin-top:8px">혹시 번에 퇴원을 기억 진행하시려 시면 빠르게 연락주세요.</p>
+        <p style="margin-top:12px">감사합니다.<br>MEDI-W 의료 팀</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-secondary" style="flex:1" onclick="closePanel('reminder')">취소</button>
+    <button class="btn btn-primary" style="flex:1"><i class="icon-send" style="font-size:16px"></i> 전송하기</button>
+  </div>
+</div>
+
+<!-- ============ Modals ============ -->
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-content" style="width:440px">
+    <div class="modal-icon" style="background:#EEFBF0"><i class="icon-check-circle" style="color:var(--success);font-size:24px"></i></div>
+    <div class="modal-title">접수를 승인하시겠습니까?</div>
+    <div class="confirm-modal-info">
+      <span>Нурлан Жумабеков 환자의</span>
+      <span>서울대학교병원, 건강라이프 접수를 승인합니다.</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('confirmModal')">취소</button>
+      <button class="btn btn-success" onclick="closeModal('confirmModal')">승인</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal-content" style="width:440px">
+    <div class="modal-icon" style="background:#FEE2E2"><i class="icon-x-circle" style="color:var(--danger);font-size:24px"></i></div>
+    <div class="modal-title">접수를 반려하시겠습니까?</div>
+    <div class="confirm-modal-info">
+      <span>Нурлан Жумабеков 환자의 접수를 반려합니다.</span>
+      <span>반려 사유를 입력해 주세요.</span>
+    </div>
+    <div class="form-group" style="margin-bottom:20px">
+      <label class="form-label">반려 사유 <span class="required">*</span></label>
+      <textarea class="form-textarea" placeholder="반려 사유를 상세히 입력해주세요" style="min-height:80px"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('rejectModal')">취소</button>
+      <button class="btn btn-danger" onclick="closeModal('rejectModal')">반려</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modals -->
+<div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
+<div class="modal-overlay" id="deleteModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FEE2E2"><i class="icon-trash-2" style="color:#FF3B30;font-size:24px"></i></div><div class="modal-title">정말 삭제하시겠습니까?</div><div class="modal-desc">삭제된 데이터는 복구할 수 없습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('deleteModal')">취소</button><button class="btn btn-danger" onclick="closeModal('deleteModal')">삭제</button></div></div></div>
+<div class="modal-overlay" id="successModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#EEFBF0"><i class="icon-check-circle" style="color:#34C759;font-size:24px"></i></div><div class="modal-title">등록이 완료되었습니다</div><div class="modal-desc">목록 페이지로 이동하거나 상세보기 할 수 있습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('successModal')">목록으로</button><button class="btn btn-primary" onclick="closeModal('successModal')">상세보기</button></div></div></div>
+
+<script src="../assets/js/common.js"></script>
+<script>
+  // View toggle (card/list)
+  function switchView(view) {
+    const cardView = document.getElementById('cardView');
+    const listView = document.getElementById('listView');
+    const btns = document.querySelectorAll('#viewToggle button');
+
+    if (view === 'card') {
+      cardView.style.display = '';
+      listView.style.display = 'none';
+      btns[0].classList.add('active');
+      btns[1].classList.remove('active');
+    } else {
+      cardView.style.display = 'none';
+      listView.style.display = '';
+      btns[0].classList.remove('active');
+      btns[1].classList.add('active');
+    }
+  }
+
+  // Filter items
+  document.querySelectorAll('.pt-filter-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.closest('.pt-filter').querySelectorAll('.pt-filter-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Inject checkbox + detail button into each card
+  document.querySelectorAll('#cardView .pt-card').forEach(card => {
+    if (!card.querySelector('.pt-card-check')) {
+      const check = document.createElement('div');
+      check.className = 'pt-card-check';
+      check.innerHTML = '<div class="custom-checkbox" data-role="item" data-group="patient"></div>';
+      card.insertBefore(check, card.firstChild);
+    }
+    const date = card.querySelector('.pt-card-date');
+    if (!date || card.querySelector('.pt-card-foot')) return;
+    const foot = document.createElement('div');
+    foot.className = 'pt-card-foot';
+    date.parentNode.insertBefore(foot, date);
+    foot.appendChild(date);
+    const btn = document.createElement('button');
+    btn.className = 'pt-detail-btn';
+    btn.innerHTML = '<i class="icon-file-text"></i>상세 정보';
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPanel('patientDetail');
+    });
+    foot.appendChild(btn);
+  });
+
+  // Patient tabs (환자 목록 / 승인 관리)
+  document.querySelectorAll('.pt-tabs .pt-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.pt-tabs .pt-tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('[data-tab-panel]').forEach(p => {
+        p.style.display = (p.dataset.tabPanel === target) ? '' : 'none';
+      });
+      document.querySelectorAll('[data-filter-for]').forEach(f => {
+        f.style.display = (f.dataset.filterFor === target) ? '' : 'none';
+      });
+      const vt = document.getElementById('viewToggle');
+      if (vt) vt.style.display = (target === 'cardview') ? '' : 'none';
+    });
+  });
+
+  // Edit patient: close detail panel and open newPatient panel pre-filled
+  window.editPatient = function(){
+    closePanel('patientDetail');
+    const panel = document.getElementById('newPatientPanel');
+    panel.querySelector('#npTitle').textContent = '환자 정보 수정';
+    panel.querySelector('#npBanner').textContent = '환자 정보를 수정할 수 있습니다.';
+    const body = panel.querySelector('.panel-body');
+    const inputs = body.querySelectorAll('input, select, textarea');
+    const data = {
+      '성명':'Иван Петров','이름':'Иван Петров',
+      '선택':'러시아',
+      '+7-000-000-0000':'+7-901-234-5678',
+      'email@example.com':'i.petrov@example.com',
+      '진단명 입력':'고혈압 · 협심증',
+      '병원명 입력':'Moscow City Hospital #1',
+      '처방 약물 또는 치료 내용':'Amlodipine 5mg, Atorvastatin 20mg (1일 1회)',
+      '현재 겪고 있는 증상을 구체적으로 설명해주세요':'가끔 가슴 통증 및 어지럼증',
+      '약물, 음식, 기타 알레르기':'없음'
+    };
+    inputs.forEach(el=>{
+      if(el.tagName==='SELECT'){
+        if(el.options[0] && data[el.options[0].text]) el.options[0].text = data[el.options[0].text];
+      } else {
+        if(el.placeholder && data[el.placeholder]) el.value = data[el.placeholder];
+      }
+    });
+    // preselect chips
+    panel.querySelectorAll('.chip-picker').forEach(picker => {
+      picker.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    });
+    panel.querySelectorAll('.chip').forEach(c => {
+      if(c.textContent.trim() === '심장내과') c.classList.add('active');
+      if(c.textContent.trim() === '당뇨') c.classList.add('active');
+      if(c.textContent.trim() === '고혈압') c.classList.add('active');
+    });
+    // preselect pain intensity
+    panel.querySelectorAll('.pain-dot').forEach(d => d.classList.toggle('active', d.textContent.trim() === '5'));
+    // change submit button text to 수정 완료
+    const submit = panel.querySelector('.panel-footer .btn-primary');
+    if(submit) submit.textContent = '수정 완료';
+    setTimeout(()=>openPanel('newPatient'), 50);
+  };
+
+  // Chip picker toggle
+  document.querySelectorAll('.chip-picker .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('active'));
+  });
+
+  // Pain scale (single select)
+  document.querySelectorAll('.pain-scale .pain-dot').forEach(d => {
+    d.addEventListener('click', () => {
+      d.parentElement.querySelectorAll('.pain-dot').forEach(x => x.classList.remove('active'));
+      d.classList.add('active');
+    });
+  });
+
+  // Severity dots
+  document.querySelectorAll('.severity-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      dot.closest('.severity-bar').querySelectorAll('.severity-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

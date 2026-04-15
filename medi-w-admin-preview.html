@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEDI-W Admin</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    iframe{width:100vw;height:100vh;border:none;display:block}
+  </style>
+</head>
+<body>
+  <iframe id="pvFrame" src="about:blank" title="Preview"></iframe>
+  <script>
+    const pages = [
+      { group: '인증', items: [
+        { file: 'login.html',           label: '로그인' },
+        { file: 'session-expired.html', label: '세션 만료' },
+      ]},
+      { group: '메인', items: [
+        { file: 'dashboard.html',    label: '대시보드' },
+        { file: 'notification.html', label: '알림 센터' },
+      ]},
+      { group: '병원', items: [
+        { file: 'hospital-search.html',   label: '병원 검색' },
+        { file: 'hospital-list.html',     label: '병원 관리' },
+        { file: 'hospital-register.html', label: '병원 등록' },
+      ]},
+      { group: '환자 · 상담', items: [
+        { file: 'patient.html',          label: '환자 관리' },
+        { file: 'patient-register.html', label: '새 환자 등록 (v2 전용)' },
+        { file: 'consultation.html',     label: '상담/예약 관리' },
+      ]},
+      { group: '파트너', items: [
+        { file: 'agency.html', label: '에이전시 파트너' },
+      ]},
+      { group: '통계/리포트', items: [
+        { file: 'statistics.html',            label: '통계 — 개요' },
+        { file: 'statistics-patient.html',    label: '통계 — 환자 분석' },
+        { file: 'statistics-revenue.html',    label: '통계 — 수익 분석' },
+        { file: 'statistics-operations.html', label: '통계 — 운영 효율' },
+      ]},
+      { group: '내 정보', items: [
+        { file: 'my-info.html', label: '관리자 정보' },
+      ]},
+      { group: '설정', items: [
+        { file: 'settings.html',              label: '설정' },
+        { file: 'settings-general.html',      label: '설정 — 일반' },
+        { file: 'settings-notification.html', label: '설정 — 알림' },
+        { file: 'settings-permission.html',   label: '설정 — 권한' },
+        { file: 'settings-data.html',         label: '설정 — 데이터' },
+      ]},
+      { group: '오류', items: [
+        { file: '404.html', label: '404 · Not Found' },
+        { file: '403.html', label: '403 · Forbidden' },
+      ]},
+    ];
+
+    const PAGES_DIR = 'pages/';
+    const initial = location.hash.replace(/^#/, '');
+    const match = pages.flatMap(g => g.items).find(i => i.file === initial);
+    document.getElementById('pvFrame').src = PAGES_DIR + (match ? match.file : 'dashboard.html');
+  </script>
+</body>
+</html>

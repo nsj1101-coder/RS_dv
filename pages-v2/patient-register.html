@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>새 환자 등록 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/css/common.css">
+  <style>
+    .reg-body{flex:1;overflow-y:auto;background:var(--bg-secondary);padding:24px 32px;display:flex;justify-content:center}
+    .reg-card{width:100%;max-width:960px;background:var(--bg-card);border-radius:var(--radius-lg);padding:32px;display:flex;flex-direction:column;gap:24px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+    .reg-banner{color:var(--accent);font-size:14px;font-weight:500}
+    .reg-section{display:flex;flex-direction:column;gap:12px}
+    .reg-section h3{font-size:16px;font-weight:700;color:var(--fg-primary)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .chip-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{padding:6px 12px;border-radius:9999px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:500;color:var(--fg-secondary);cursor:pointer}
+    .chip.active{background:var(--accent-light);border-color:var(--accent);color:var(--accent);font-weight:600}
+    .pain-scale{display:flex;gap:6px;margin-top:8px}
+    .pain-dot{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--fg-secondary);cursor:pointer;background:#fff}
+    .pain-dot.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+    .pain-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:12px;color:var(--accent)}
+    .upload-row{display:flex;gap:10px;margin-top:4px}
+    .upload-box{flex:1;height:80px;border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#fff;cursor:pointer}
+    .upload-box.required{background:#FFF5F5;border-color:var(--danger)}
+    .upload-box i{font-size:16px;color:var(--fg-muted)}
+    .upload-title{font-size:12px;font-weight:600;color:var(--fg-secondary)}
+    .upload-sub{font-size:12px;font-weight:600;color:var(--fg-muted)}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--fg-primary);font-weight:500}
+    .toggle-row.last{border-bottom:none}
+    .reg-actions{display:flex;gap:12px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border-light)}
+    .reg-actions .btn{min-width:140px}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
+    <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
+    <a href="my-info.html" class="sidebar-user">
+      <div class="su-av">AD</div>
+      <div class="user-info">
+        <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
+        <div class="su-mail">admin@mediw.co.kr</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospital-list.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="patient.html" class="nav-item active"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agency.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
+  </aside>
+
+  <div class="main-content">
+    <!-- TopBar -->
+    <div class="top-bar">
+      <div class="top-bar-left" style="display:flex;align-items:center;gap:12px">
+        <a href="patient.html" style="width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--fg-muted);text-decoration:none"><i class="icon-arrow-left" style="font-size:18px"></i></a>
+        <div>
+          <h1>새 환자 등록</h1>
+          <p>환자 정보를 입력해주세요. 접수 후 담당 코디네이터가 배정됩니다.</p>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
+        <div class="bell-wrapper">
+          <button class="bell-btn" onclick="location.href='notification.html'"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reg-body">
+      <div class="reg-card">
+        <div class="reg-section">
+          <h3>환자 기본 정보</h3>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">이름 <span class="required">*</span></label><input class="form-input" placeholder="성명"></div>
+            <div class="form-group"><label class="form-label">국적 <span class="required">*</span></label><select class="form-select"><option>선택</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">전화번호 <span class="required">*</span></label><input class="form-input" placeholder="+7-000-000-0000"></div>
+            <div class="form-group"><label class="form-label">이메일 <span class="required">*</span></label><input class="form-input" placeholder="email@example.com"></div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>희망 진료과</h3>
+          <div class="form-group"><label class="form-label">진료과 선택 <span class="required">*</span></label>
+            <div class="chip-picker">
+              <span class="chip">심장내과</span>
+              <span class="chip">정형외과</span>
+              <span class="chip">신경외과</span>
+              <span class="chip">성형외과</span>
+              <span class="chip">종양내과</span>
+              <span class="chip">피부과</span>
+              <span class="chip">치과</span>
+              <span class="chip">안과</span>
+              <span class="chip">내과</span>
+              <span class="chip">비뇨의학과</span>
+              <span class="chip">산부인과</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>주요 증상</h3>
+          <div class="form-group"><label class="form-label">증상 설명 <span class="required">*</span></label>
+            <textarea class="form-textarea" placeholder="현재 겪고 있는 증상을 구체적으로 설명해주세요" style="min-height:100px"></textarea>
+          </div>
+          <div class="form-group"><label class="form-label">통증 강도 (1~10)</label>
+            <div class="pain-scale">
+              <div class="pain-dot">1</div><div class="pain-dot">2</div><div class="pain-dot">3</div>
+              <div class="pain-dot">4</div><div class="pain-dot">5</div><div class="pain-dot">6</div>
+              <div class="pain-dot">7</div><div class="pain-dot">8</div><div class="pain-dot">9</div>
+              <div class="pain-dot">10</div>
+            </div>
+            <div class="pain-labels"><span>없음</span><span>보통</span><span>극심</span></div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>현지 진단 정보</h3>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">현지 병원 진단명 <span class="required">*</span></label><input class="form-input" placeholder="진단명 입력"></div>
+            <div class="form-group"><label class="form-label">진단 병원 <span class="required">*</span></label><select class="form-select"><option>병원명 입력</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">현재 치료 여부 <span class="required">*</span></label><select class="form-select"><option>선택</option></select></div>
+            <div class="form-group"><label class="form-label">현지 처방 내용 <span class="required">*</span></label><input class="form-input" placeholder="처방 약물 또는 치료 내용"></div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>병력 및 건강 상태</h3>
+          <div class="form-group"><label class="form-label">기저 질환</label>
+            <div class="chip-picker">
+              <span class="chip">당뇨</span>
+              <span class="chip">고혈압</span>
+              <span class="chip">심장질환</span>
+              <span class="chip">없음</span>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">알레르기</label>
+            <input class="form-input" placeholder="약물, 음식, 기타 알레르기">
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>의료 기록 업로드</h3>
+          <div style="font-size:12px;font-weight:600;color:var(--fg-muted);margin-top:-4px">PDF, JPG, DICOM 형식 지원 · 파일당 최대 50MB</div>
+          <div class="upload-row">
+            <div class="upload-box required">
+              <i class="icon-upload"></i>
+              <div class="upload-title">진단서 <span class="required">*</span></div>
+              <div class="upload-sub">필수 · PDF, JPG</div>
+            </div>
+            <div class="upload-box">
+              <i class="icon-upload"></i>
+              <div class="upload-title">CT/MRI/X-ray</div>
+              <div class="upload-sub">PDF, JPG, DICOM</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>방문 일정</h3>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">방문 희망 시기</label><input class="form-input" type="date"></div>
+            <div class="form-group"><label class="form-label">예상 체류 기간</label><select class="form-select"><option>선택</option></select></div>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <h3>컨시어지 서비스</h3>
+          <div style="font-size:13px;font-weight:500;color:var(--fg-muted);margin-top:-4px">필요한 서비스를 선택하세요</div>
+          <div class="toggle-row"><span>공항 픽업 서비스</span><div class="toggle-switch"></div></div>
+          <div class="toggle-row"><span>차량 서비스 (병원 이동)</span><div class="toggle-switch"></div></div>
+          <div class="toggle-row"><span>숙박 예약</span><div class="toggle-switch"></div></div>
+          <div class="toggle-row last"><span>통역 서비스</span><div class="toggle-switch"></div></div>
+        </div>
+
+        <div class="reg-actions">
+          <a href="patient.html" class="btn btn-secondary" style="text-decoration:none">취소</a>
+          <button class="btn btn-primary" onclick="location.href='patient.html'">접수 완료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modals -->
+<div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
+
+<script src="../assets/js/common.js"></script>
+<script>
+  // Chip picker toggle
+  document.querySelectorAll('.chip-picker .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('active'));
+  });
+  // Pain scale single select
+  document.querySelectorAll('.pain-scale .pain-dot').forEach(d => {
+    d.addEventListener('click', () => {
+      d.parentElement.querySelectorAll('.pain-dot').forEach(x => x.classList.remove('active'));
+      d.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
