@@ -624,4 +624,4 @@ src/
 
 ---
 
-*보고서 HTML: `medi-w-dev-report.html` — 시각적 버전 참조*
+*보고서 HTML: `admin/medi-w-dev-report.html` — 시각적 버전 참조*
