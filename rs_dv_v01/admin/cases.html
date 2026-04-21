@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../assets/admin/css/common.css">
   <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
   <style>
+    .sidebar{background:#fff}
     /* === Layout === */
     .pt-layout{display:flex;height:100%;min-height:0;background:var(--bg-card)}
     .pt-sidebar{width:240px;flex-shrink:0;background:var(--bg-card);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
@@ -157,6 +158,47 @@
     .confirm-modal-info{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--fg-secondary);text-align:center;margin-bottom:20px}
     .bottom-page{display:flex;align-items:center;justify-content:center;padding-top:4px;position:relative}
     .bottom-page .page-info{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--fg-muted);font-family:var(--font-mono)}
+
+    /* === Patient Detail Panel Tabs === */
+    .pd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 24px;flex-shrink:0;background:var(--bg-card)}
+    .pd-tab{padding:12px 16px;font-size:14px;color:var(--fg-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+    .pd-tab i{font-size:14px}
+    .pd-tab.active{color:var(--accent);font-weight:600;border-bottom-color:var(--accent)}
+    .pd-tab:hover{color:var(--fg-primary)}
+
+    /* === Request doc dynamic list === */
+    .req-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+    .req-item{display:flex;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card)}
+    .req-item .req-title{flex:2;min-width:0}
+    .req-item .req-note{flex:1.4;min-width:0}
+    .req-item .req-num{width:24px;height:24px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono)}
+    .req-del{background:none;border:none;width:32px;height:32px;border-radius:6px;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .req-del:hover{background:#FEE2E2;color:var(--danger)}
+    .req-add-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px dashed var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--fg-secondary);font-size:13px;font-weight:600;cursor:pointer;justify-content:center;width:100%}
+    .req-add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+    .req-add-btn i{font-size:14px}
+    .req-preset{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+    .req-preset .chip{font-size:12px;padding:5px 10px}
+
+    /* === Message thread === */
+    .msg-thread{display:flex;flex-direction:column;gap:14px;padding:4px 0 14px}
+    .msg-item{display:flex;gap:10px;max-width:100%}
+    .msg-item.me{flex-direction:row-reverse}
+    .msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+    .msg-item.hospital .msg-avatar{background:var(--accent)}
+    .msg-item.agency .msg-avatar{background:#10B981}
+    .msg-item.me .msg-avatar{background:#4B5563}
+    .msg-body{max-width:78%;display:flex;flex-direction:column;gap:4px;min-width:0}
+    .msg-item.me .msg-body{align-items:flex-end}
+    .msg-meta{font-size:11px;color:var(--fg-muted);font-weight:500}
+    .msg-text{font-size:14px;color:var(--fg-primary);padding:10px 14px;border-radius:12px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
+    .msg-item.hospital .msg-text{background:var(--accent-light);border-top-left-radius:4px}
+    .msg-item.agency .msg-text{background:#ECFDF5;border-top-left-radius:4px}
+    .msg-item.me .msg-text{background:#111827;color:#fff;border-top-right-radius:4px}
+    .msg-input-wrap{display:flex;flex-direction:column;gap:8px;padding:12px 0 4px;border-top:1px solid var(--border-light)}
+    .msg-input-wrap .msg-actions{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .msg-sender{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--fg-muted);font-weight:500}
+    .msg-sender .ms-dot{width:8px;height:8px;border-radius:50%;background:#4B5563}
   </style>
 </head>
 <body>
@@ -174,14 +216,11 @@
     </a>
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
-      <a href="users.html" class="nav-item"><i class="icon-user-cog nav-icon"></i><span class="nav-label">회원 관리</span></a>
-      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
       <a href="hospitals.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
       <a href="cases.html" class="nav-item active"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
-      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
       <a href="agencies.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
       <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
-      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+      
     </nav>
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
@@ -704,60 +743,216 @@
   </div>
 </div>
 
-<!-- Patient Detail Panel (single slide; contains both 간단 접수 + 상세 의료정보 info) -->
+<!-- Patient Detail Panel (tabs: 정보 / 자료 재요청 / 스케줄 조정 / 소통) -->
 <div class="slide-panel-backdrop" id="patientDetailBackdrop"></div>
 <div class="slide-panel" id="patientDetailPanel">
-  <div class="panel-header" style="border-bottom:none">
-    <h2>환자 상세 정보</h2>
+  <div class="panel-header" style="border-bottom:none;padding-bottom:12px">
+    <div>
+      <h2 style="margin-bottom:4px">환자 상세 · 병원 대행</h2>
+      <div style="font-size:13px;color:var(--fg-muted);font-weight:500">
+        <span id="pdPatientName">Иван Петров</span>
+        <span style="color:var(--border)"> · </span>
+        <span id="pdPatientHospital">서울아산병원 · 심장내과</span>
+        <span style="color:var(--border)"> · </span>
+        <span id="pdPatientAgency">MedLink Asia</span>
+      </div>
+    </div>
     <button onclick="closePanel('patientDetail')" style="background:none;border:none;padding:0;cursor:pointer;color:var(--fg-muted);display:inline-flex"><i class="icon-x" style="font-size:20px"></i></button>
   </div>
-  <div class="panel-body">
-    <div class="panel-section">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="pt-avatar" style="background:#A5B4FC;width:48px;height:48px;font-size:16px">ИП</div>
-        <div>
-          <div style="font-size:16px;font-weight:700;color:var(--fg-primary)">Иван Петров</div>
-          <div style="font-size:13px;color:var(--fg-muted);margin-top:2px">러시아 · 남 · 만 32세</div>
-        </div>
-      </div>
-    </div>
 
-    <div class="panel-section">
-      <h3>환자 기본 정보</h3>
-      <div class="panel-info-row"><span class="panel-info-label">이름</span><span class="panel-info-value">Иван Петров</span></div>
-      <div class="panel-info-row"><span class="panel-info-label">국적</span><span class="panel-info-value">러시아</span></div>
-      <div class="panel-info-row"><span class="panel-info-label">전화번호</span><span class="panel-info-value">+7-901-234-5678</span></div>
-      <div class="panel-info-row"><span class="panel-info-label">이메일</span><span class="panel-info-value">i.petrov@example.com</span></div>
-    </div>
-
-    <div class="panel-section">
-      <h3>희망 진료과</h3>
-      <div class="chip-picker">
-        <span class="chip active">심장내과</span>
-      </div>
-    </div>
-
-    <div class="panel-section">
-      <h3>현지 진단 정보</h3>
-      <div class="panel-info-row"><span class="panel-info-label">현지 병원 진단명</span><span class="panel-info-value">고혈압 · 협심증</span></div>
-      <div class="panel-info-row"><span class="panel-info-label">진단 병원</span><span class="panel-info-value">Moscow City Hospital #1</span></div>
-      <div class="panel-info-row"><span class="panel-info-label">현재 치료 여부</span><span class="panel-info-value">치료 중</span></div>
-      <div class="panel-info-row" style="align-items:flex-start"><span class="panel-info-label">현지 처방 내용</span><span class="panel-info-value" style="flex:1;line-height:1.5">Amlodipine 5mg, Atorvastatin 20mg (1일 1회)</span></div>
-    </div>
-
-    <div class="panel-section">
-      <h3>병력 및 건강 상태</h3>
-      <div class="form-group"><label class="form-label" style="color:var(--fg-muted)">기저 질환</label>
-        <div class="chip-picker">
-          <span class="chip active">당뇨</span>
-          <span class="chip active">고혈압</span>
-        </div>
-      </div>
-    </div>
+  <!-- Tabs -->
+  <div class="pd-tabs">
+    <div class="pd-tab active" data-pd-tab="info"><i class="icon-user"></i>환자 정보</div>
+    <div class="pd-tab" data-pd-tab="docs"><i class="icon-file-plus"></i>자료 재요청</div>
+    <div class="pd-tab" data-pd-tab="schedule"><i class="icon-calendar-clock"></i>스케줄 조정</div>
+    <div class="pd-tab" data-pd-tab="message"><i class="icon-message-square"></i>소통 <span style="background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:9999px;margin-left:2px">2</span></div>
   </div>
+
+  <div class="panel-body">
+
+    <!-- Info Tab -->
+    <div data-pd-panel="info">
+      <div class="panel-section">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="pt-avatar" style="background:#A5B4FC;width:48px;height:48px;font-size:16px">ИП</div>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--fg-primary)">Иван Петров</div>
+            <div style="font-size:13px;color:var(--fg-muted);margin-top:2px">러시아 · 남 · 만 32세</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>환자 기본 정보</h3>
+        <div class="panel-info-row"><span class="panel-info-label">이름</span><span class="panel-info-value">Иван Петров</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">국적</span><span class="panel-info-value">러시아</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">전화번호</span><span class="panel-info-value">+7-901-234-5678</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">이메일</span><span class="panel-info-value">i.petrov@example.com</span></div>
+      </div>
+
+      <div class="panel-section">
+        <h3>희망 진료과</h3>
+        <div class="chip-picker">
+          <span class="chip active">심장내과</span>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>현지 진단 정보</h3>
+        <div class="panel-info-row"><span class="panel-info-label">현지 병원 진단명</span><span class="panel-info-value">고혈압 · 협심증</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">진단 병원</span><span class="panel-info-value">Moscow City Hospital #1</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">현재 치료 여부</span><span class="panel-info-value">치료 중</span></div>
+        <div class="panel-info-row" style="align-items:flex-start"><span class="panel-info-label">현지 처방 내용</span><span class="panel-info-value" style="flex:1;line-height:1.5">Amlodipine 5mg, Atorvastatin 20mg (1일 1회)</span></div>
+      </div>
+
+      <div class="panel-section">
+        <h3>병력 및 건강 상태</h3>
+        <div class="form-group"><label class="form-label" style="color:var(--fg-muted)">기저 질환</label>
+          <div class="chip-picker">
+            <span class="chip active">당뇨</span>
+            <span class="chip active">고혈압</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Docs Tab: 자료 재요청 -->
+    <div data-pd-panel="docs" style="display:none">
+      <div class="panel-info-banner">
+        병원을 대신하여 <strong>에이전시에 추가 자료를 요청</strong>합니다. 필요한 자료 항목을 자유롭게 추가·삭제할 수 있어요.
+      </div>
+
+      <div class="panel-section">
+        <h3>자주 쓰는 항목</h3>
+        <div style="font-size:12px;color:var(--fg-muted);margin-top:-4px">클릭하면 목록에 추가됩니다</div>
+        <div class="req-preset">
+          <span class="chip" onclick="addReqDoc('심전도 (ECG) 최근 검사','3개월 이내')">심전도 (ECG)</span>
+          <span class="chip" onclick="addReqDoc('혈액 검사 결과','CBC / 화학 패널')">혈액 검사</span>
+          <span class="chip" onclick="addReqDoc('영상 기록 (CT / MRI)','DICOM 또는 고화질')">CT/MRI 영상</span>
+          <span class="chip" onclick="addReqDoc('최신 처방전','1개월 이내')">처방전</span>
+          <span class="chip" onclick="addReqDoc('과거 수술 기록','수술명·일자·합병증')">수술 기록</span>
+          <span class="chip" onclick="addReqDoc('알레르기 내역','약물·조영제')">알레르기</span>
+          <span class="chip" onclick="addReqDoc('여권 사본','유효기간 6개월 이상')">여권 사본</span>
+          <span class="chip" onclick="addReqDoc('비자 정보','')">비자 정보</span>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>요청 자료 목록 <span style="font-size:12px;font-weight:500;color:var(--fg-muted);margin-left:4px">(<span id="reqDocCount">2</span>건)</span></h3>
+        <div class="req-list" id="reqDocList">
+          <div class="req-item">
+            <span class="req-num">1</span>
+            <input class="form-input req-title" placeholder="자료 제목" value="심전도 (ECG) 최근 검사">
+            <input class="form-input req-note" placeholder="비고 · 기한" value="3개월 이내">
+            <button class="req-del" title="삭제" onclick="removeReqDoc(this)"><i class="icon-trash-2" style="font-size:15px"></i></button>
+          </div>
+          <div class="req-item">
+            <span class="req-num">2</span>
+            <input class="form-input req-title" placeholder="자료 제목" value="최신 처방전">
+            <input class="form-input req-note" placeholder="비고 · 기한" value="1개월 이내 약물">
+            <button class="req-del" title="삭제" onclick="removeReqDoc(this)"><i class="icon-trash-2" style="font-size:15px"></i></button>
+          </div>
+        </div>
+        <button class="req-add-btn" onclick="addReqDoc()"><i class="icon-plus"></i> 자료 항목 추가</button>
+      </div>
+
+      <div class="panel-section">
+        <h3>에이전시에 전달할 메모</h3>
+        <textarea class="form-input" rows="3" placeholder="요청 사유 / 참고 정보 / 제출 마감 등"></textarea>
+      </div>
+    </div>
+
+    <!-- Schedule Tab: 스케줄 조정 요청 -->
+    <div data-pd-panel="schedule" style="display:none">
+      <div class="panel-info-banner">
+        병원을 대신하여 <strong>방문 일정 조정을 요청</strong>합니다. 에이전시에 알림이 전달되며 환자에게 공유됩니다.
+      </div>
+
+      <div class="panel-section">
+        <h3>기존 일정</h3>
+        <div class="panel-info-row"><span class="panel-info-label">환자 희망일</span><span class="panel-info-value">2026-05-10</span></div>
+        <div class="panel-info-row"><span class="panel-info-label">예상 체류 기간</span><span class="panel-info-value">5박 6일</span></div>
+      </div>
+
+      <div class="panel-section">
+        <h3>조정 사유 <span class="required">*</span></h3>
+        <div class="chip-picker">
+          <span class="chip active">담당 교수 일정</span>
+          <span class="chip">병실 부족</span>
+          <span class="chip">검사 장비 일정</span>
+          <span class="chip">공휴일 진료 불가</span>
+          <span class="chip">기타</span>
+        </div>
+        <textarea class="form-input" rows="2" placeholder="조정 사유를 구체적으로 입력해주세요" style="margin-top:8px">담당 교수 국제 학회 참석으로 5/10 진료 불가</textarea>
+      </div>
+
+      <div class="panel-section">
+        <h3>병원 제안 일정</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">제안 시작일</label><input class="form-input" type="date" value="2026-05-13"></div>
+          <div class="form-group"><label class="form-label">제안 종료일</label><input class="form-input" type="date" value="2026-05-17"></div>
+        </div>
+        <div class="form-group"><label class="form-label">우선 희망 시간대</label>
+          <div class="chip-picker">
+            <span class="chip">오전 (09-12)</span>
+            <span class="chip active">오후 (13-17)</span>
+            <span class="chip">무관</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3>에이전시 요청 메시지</h3>
+        <textarea class="form-input" rows="3" placeholder="환자 일정 확인 후 회신 부탁드립니다"></textarea>
+      </div>
+    </div>
+
+    <!-- Message Tab: 에이전시 ↔ 병원(어드민) 소통 -->
+    <div data-pd-panel="message" style="display:none">
+      <div class="panel-info-banner">
+        <strong>에이전시 ↔ 병원(어드민) 1:1 소통</strong> — 이 환자 케이스에 대한 메시지가 모두 기록됩니다.
+      </div>
+
+      <div class="msg-thread" id="msgThread">
+        <div class="msg-item hospital">
+          <div class="msg-avatar">병원</div>
+          <div class="msg-body">
+            <div class="msg-meta">서울아산병원 국제진료센터 · 03.14 09:20</div>
+            <div class="msg-text">환자 Иван Петров님 심장내과 케이스, 초진 전 심전도 최근본이 필요합니다. 가능한 빨리 부탁드려요.</div>
+          </div>
+        </div>
+        <div class="msg-item agency">
+          <div class="msg-avatar">에이</div>
+          <div class="msg-body">
+            <div class="msg-meta">MedLink Asia · 03.14 11:40</div>
+            <div class="msg-text">확인했습니다. 환자 본인에게 재촬영 안내드렸고 3/17까지 PDF로 업로드하겠습니다.</div>
+          </div>
+        </div>
+        <div class="msg-item hospital">
+          <div class="msg-avatar">병원</div>
+          <div class="msg-body">
+            <div class="msg-meta">서울아산병원 국제진료센터 · 03.15 14:05</div>
+            <div class="msg-text">감사합니다. 추가로 처방 중인 Amlodipine 외 투약 중인 약물 리스트도 함께 부탁드립니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg-input-wrap">
+        <textarea class="form-input" id="msgInput" rows="3" placeholder="메시지를 입력하세요 (Enter로 줄바꿈, ⌘+Enter로 전송)"></textarea>
+        <div class="msg-actions">
+          <span class="msg-sender"><span class="ms-dot"></span>발신: MediW Admin <span style="color:var(--border)">·</span> 수신: MedLink Asia</span>
+          <button class="btn btn-primary" onclick="sendMsg()" style="padding:8px 16px;font-size:13px"><i class="icon-send" style="font-size:14px"></i> 전송</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="panel-footer">
     <button class="btn btn-secondary" style="flex:1" onclick="closePanel('patientDetail')">닫기</button>
-    <button class="btn btn-primary" style="flex:1" onclick="editPatient()"><i class="icon-edit" style="font-size:16px"></i> 수정</button>
+    <button class="btn btn-primary" id="pdEditBtn" style="flex:1" onclick="editPatient()"><i class="icon-edit" style="font-size:16px"></i> 수정</button>
+    <button class="btn btn-primary" id="pdDocsBtn" style="flex:1;display:none" onclick="submitDocReq()"><i class="icon-send" style="font-size:16px"></i> 에이전시로 자료 요청 발송</button>
+    <button class="btn btn-primary" id="pdSchedBtn" style="flex:1;display:none" onclick="submitSchedReq()"><i class="icon-send" style="font-size:16px"></i> 에이전시로 일정 조정 요청</button>
   </div>
 </div>
 
@@ -976,6 +1171,104 @@
     dot.addEventListener('click', () => {
       dot.closest('.severity-bar').querySelectorAll('.severity-dot').forEach(d => d.classList.remove('active'));
       dot.classList.add('active');
+    });
+  });
+
+  // === Patient Detail Panel tabs ===
+  function switchPdTab(target){
+    document.querySelectorAll('#patientDetailPanel .pd-tab').forEach(t => t.classList.toggle('active', t.dataset.pdTab === target));
+    document.querySelectorAll('#patientDetailPanel [data-pd-panel]').forEach(p => {
+      p.style.display = (p.dataset.pdPanel === target) ? '' : 'none';
+    });
+    const editBtn = document.getElementById('pdEditBtn');
+    const docsBtn = document.getElementById('pdDocsBtn');
+    const schedBtn = document.getElementById('pdSchedBtn');
+    if(editBtn) editBtn.style.display = (target === 'info') ? '' : 'none';
+    if(docsBtn) docsBtn.style.display = (target === 'docs') ? '' : 'none';
+    if(schedBtn) schedBtn.style.display = (target === 'schedule') ? '' : 'none';
+  }
+  document.querySelectorAll('#patientDetailPanel .pd-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchPdTab(tab.dataset.pdTab));
+  });
+
+  // === Dynamic doc request list ===
+  function renumberReqList(){
+    const items = document.querySelectorAll('#reqDocList .req-item');
+    items.forEach((it, i) => { const n = it.querySelector('.req-num'); if(n) n.textContent = i + 1; });
+    const count = document.getElementById('reqDocCount');
+    if(count) count.textContent = items.length;
+  }
+  window.addReqDoc = function(title, note){
+    const list = document.getElementById('reqDocList');
+    if(!list) return;
+    const item = document.createElement('div');
+    item.className = 'req-item';
+    item.innerHTML = '<span class="req-num"></span>'
+      + '<input class="form-input req-title" placeholder="자료 제목">'
+      + '<input class="form-input req-note" placeholder="비고 · 기한">'
+      + '<button class="req-del" title="삭제" onclick="removeReqDoc(this)"><i class="icon-trash-2" style="font-size:15px"></i></button>';
+    list.appendChild(item);
+    if(typeof title === 'string') item.querySelector('.req-title').value = title;
+    if(typeof note === 'string') item.querySelector('.req-note').value = note;
+    renumberReqList();
+    item.querySelector('.req-title').focus();
+  };
+  window.removeReqDoc = function(btn){
+    const item = btn.closest('.req-item');
+    if(item) item.remove();
+    renumberReqList();
+  };
+
+  // === Submit handlers ===
+  window.submitDocReq = function(){
+    const items = document.querySelectorAll('#reqDocList .req-item');
+    const list = Array.from(items).map(it => it.querySelector('.req-title').value.trim()).filter(Boolean);
+    if(list.length === 0){ alert('요청할 자료 항목을 1건 이상 추가해 주세요.'); return; }
+    alert('에이전시로 자료 요청이 발송되었습니다.\n· 항목 ' + list.length + '건\n· 수신: MedLink Asia');
+    closePanel('patientDetail');
+  };
+  window.submitSchedReq = function(){
+    alert('에이전시로 일정 조정 요청이 발송되었습니다.\n· 수신: MedLink Asia\n· 환자 확인 대기 상태로 전환됩니다.');
+    closePanel('patientDetail');
+  };
+
+  // === Message send ===
+  window.sendMsg = function(){
+    const input = document.getElementById('msgInput');
+    if(!input) return;
+    const val = input.value.trim();
+    if(!val) return;
+    const thread = document.getElementById('msgThread');
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const item = document.createElement('div');
+    item.className = 'msg-item me';
+    item.innerHTML = '<div class="msg-avatar">나</div>'
+      + '<div class="msg-body">'
+      + '  <div class="msg-meta">MediW Admin (병원 대행) · ' + mm + '.' + dd + ' ' + hh + ':' + mi + '</div>'
+      + '  <div class="msg-text"></div>'
+      + '</div>';
+    item.querySelector('.msg-text').textContent = val;
+    thread.appendChild(item);
+    input.value = '';
+    thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
+  };
+  // ⌘/Ctrl + Enter to send
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && (e.metaKey || e.ctrlKey)){
+      const input = document.getElementById('msgInput');
+      if(input && document.activeElement === input){ e.preventDefault(); sendMsg(); }
+    }
+  });
+
+  // === Make patient card clickable to open detail panel ===
+  document.querySelectorAll('#cardView .pt-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if(e.target.closest('.pt-card-check') || e.target.closest('button')) return;
+      openPanel('patientDetail');
     });
   });
 </script>
