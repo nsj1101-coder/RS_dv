@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDI-W | 올인원 의료 허브 플랫폼</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { dm: ['"DM Sans"','sans-serif'], inter: ['Inter','sans-serif'] },
+      colors: { 'navy':'#1E1B4B','cyan':'#0891B2','slate-txt':'#475569','muted':'#64748B','blue-accent':'#3B82F6' }
+    }
+  }
+}
+</script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; color:#1A1A1A; }
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .glass { background:rgba(255,255,255,0.56); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.33); }
+  .glass-card { background:rgba(255,255,255,0.56); backdrop-filter:blur(24px); border:1px solid #E2E8F0; }
+  .hero-overlay { background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.67) 100%); }
+  .fade-left { background:linear-gradient(to right,#fff,transparent); }
+  .fade-right { background:linear-gradient(to left,#fff,transparent); }
+  .testimonials-track { display:flex; gap:24px; animation:scroll 30s linear infinite; }
+  @keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .partner-scroll { display:flex; gap:16px; animation:partnerScroll 25s linear infinite; }
+  @keyframes partnerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+</style>
+</head>
+<body>
+
+<!-- ===== Section 1 - Hero ===== -->
+<section class="bg-white p-5 md:px-[60px] md:pt-5 md:pb-5 min-h-screen flex flex-col gap-5">
+  <!-- Nav -->
+  <nav class="flex items-center justify-between h-10">
+    <span class="font-bold text-lg tracking-tight">MEDI-W®</span>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#" class="text-sm font-medium">서비스 소개</a>
+      <a href="#" class="text-sm font-medium">병원 목록</a>
+      <a href="#" class="text-sm font-medium">이용 방법</a>
+      <a href="#" class="text-sm font-medium">컨시어지</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="w-9 h-9 rounded-full border border-black/25 flex items-center justify-center"><span class="material-symbols-outlined text-lg">language</span></button>
+      <button class="w-9 h-9 rounded-full border border-black/25 flex items-center justify-center"><span class="material-symbols-outlined text-lg">light_mode</span></button>
+      <span class="text-sm font-medium hidden md:inline">로그인</span>
+      <a href="#" class="bg-[#1A1A1A] text-white text-sm font-semibold px-6 py-2.5 rounded-full">시작하기</a>
+    </div>
+  </nav>
+  <!-- Hero Image -->
+  <div class="relative flex-1 rounded-3xl overflow-hidden bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1686916058141-a04d7f501ba8?w=1920&q=80')">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="relative h-full flex flex-col justify-center p-[60px]">
+      <div class="flex flex-col items-center gap-1 w-full">
+        <p class="text-white/80 text-base font-medium text-center" style="text-shadow:0 2px 4px rgba(0,0,0,0.25)">대한민국 보건산업진흥원 등록 플랫폼</p>
+        <h1 class="text-white text-5xl md:text-7xl lg:text-[80px] font-extrabold text-center leading-[1.15] tracking-tight" style="text-shadow:0 4px 8px rgba(0,0,0,0.25)">한국 의료를 세계에 연결하는</h1>
+        <h1 class="text-[#A0F0E8] text-5xl md:text-7xl lg:text-[80px] font-extrabold text-center leading-[1.15] tracking-tight" style="text-shadow:0 4px 8px rgba(0,0,0,0.25)">올인원 의료 허브 플랫폼</h1>
+      </div>
+      <div class="absolute bottom-[60px] left-[60px] right-[60px]">
+        <div class="glass rounded-[20px] p-8 max-w-[520px] flex flex-col gap-6" style="background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.33)">
+          <p class="text-white text-base leading-relaxed max-w-[450px]">MediW는 해외 의료 전문가·에이전시·환자를 한국의 상급종합병원과 연결하는 B2B/B2C 통합 플랫폼입니다.<br>교육 연수, 의료 관광, 환자 유치를 하나의 시스템에서 관리하세요.</p>
+          <div class="flex items-center gap-4">
+            <a href="#" class="border-[1.5px] border-white text-white text-[15px] font-medium px-8 py-3.5 rounded-full flex items-center gap-2"><span class="w-8 h-[1px] bg-white inline-block"></span>무료로 시작하기</a>
+            <a href="#" class="bg-white text-[#1A1A1A] text-[15px] font-medium px-8 py-3.5 rounded-full border-[1.5px] border-[#1A1A1A22]">플랫폼 소개 보기</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 2 - Glass Cards ===== -->
+<section class="relative bg-white px-[60px] py-20">
+  <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1752780602852-9045062423fa?w=1920&q=80')"></div>
+  <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent"></div>
+  <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">menu_book</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">의료 교육 연수</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">펠로우십, 임상 참관, 학술 교류 프로그램을 검색하고 원클릭으로 지원하세요.</p>
+    </div>
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">group</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">환자 유치 관리</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">CIS·동남아 환자 접수부터 병원 매칭, 컨시어지까지 전 과정을 통합 관리합니다.</p>
+    </div>
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">bar_chart</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">에이전시 대시보드</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">해외 에이전시 전용 CRM으로 고객 현황, 수익, 정산을 실시간 추적하세요.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 3 - Stats ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-10 items-stretch">
+    <div class="flex-1 flex flex-col justify-center gap-12 py-10">
+      <div class="flex gap-10">
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">152</span><span class="text-navy text-2xl font-semibold leading-[1.3]">곳</span></div>
+          <p class="text-muted text-sm">협력 병원</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +12 이번 분기</span>
+        </div>
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">87</span><span class="text-navy text-2xl font-semibold leading-[1.3]">곳</span></div>
+          <p class="text-muted text-sm">에이전시 파트너</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +8 이번 분기</span>
+        </div>
+      </div>
+      <div class="flex gap-10">
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">47</span><span class="text-navy text-2xl font-semibold leading-[1.3]">개</span></div>
+          <p class="text-muted text-sm">모집 중인 프로그램</p>
+          <span class="inline-block bg-blue-50 text-blue-500 text-xs font-medium px-3 py-1 rounded-full w-fit">실시간 업데이트</span>
+        </div>
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">324</span><span class="text-navy text-2xl font-semibold leading-[1.3]">건</span></div>
+          <p class="text-muted text-sm">이번 달 환자 문의</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +23% 전월 대비</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-1 h-[400px]">
+      <img src="https://images.unsplash.com/photo-1630531210843-d6f343ad1f90?w=900&q=80" alt="Medical" class="w-full h-full object-cover rounded-2xl">
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 4 - Clients ===== -->
+<section class="bg-white overflow-hidden">
+  <!-- Header -->
+  <div class="relative px-[60px] pt-10">
+    <div class="absolute inset-0 opacity-[0.16] bg-cover bg-center" style="background-image:url('./images/earth.png')"></div>
+    <div class="absolute top-[60px] right-0 w-[250px] h-full bg-gradient-to-l from-white to-transparent z-10"></div>
+    <div class="relative flex flex-col gap-6 max-w-[800px]">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">신뢰할 수 있는 파트너</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">함께 성장하는<br>글로벌 네트워크</h2>
+      <p class="text-muted text-base">MediW와 함께하는 대표 협력 병원과 해외 에이전시 파트너를 소개합니다.</p>
+      <div class="flex gap-2">
+        <button class="bg-navy text-white text-sm font-semibold px-6 py-3 rounded-full">대표 협력 병원</button>
+        <button class="text-muted text-sm font-medium px-6 py-3 rounded-full border border-[#E2E8F0]">해외 에이전시 파트너</button>
+      </div>
+    </div>
+  </div>
+  <!-- Partner Grid -->
+  <div class="px-[60px] py-6 space-y-4">
+    <div class="grid grid-cols-6 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-sm font-bold text-center leading-tight">Asseco<br>BUSINESS SOLUTIONS</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">Arthrex</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-extrabold text-center leading-tight">LIQUI<br>MOLY</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[22px] font-bold">TASOMIX</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[13px] font-semibold text-center leading-tight">STRANDHOTEL<br>SEEROSE</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold text-center leading-tight">elprosys<br>automotive</span></div>
+    </div>
+    <div class="grid grid-cols-6 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg italic font-bold">ENERGYNAT</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">BioActiveT</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[28px] font-light">CQURE</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-sm font-extrabold text-center leading-tight">MK<br>MEDICINE KEY</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-semibold">SolarEnergia</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold text-center leading-tight">VERA<br>HEALTH</span></div>
+    </div>
+    <div class="grid grid-cols-5 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold">Omegpharma</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-bold tracking-[2px]">ORIOFARM</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">MEDIVER</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-extrabold text-center leading-tight">HOFFEN<br>FARMA</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[22px] font-semibold">Stoltronic</span></div>
+    </div>
+  </div>
+  <!-- Government Bar -->
+  <div class="relative overflow-hidden bg-white px-[60px] py-4 h-[120px]">
+    <div class="absolute left-0 top-0 w-[120px] h-full fade-left z-10"></div>
+    <div class="absolute right-0 top-0 w-[120px] h-full fade-right z-10"></div>
+    <div class="flex items-center gap-4 overflow-hidden h-full">
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">shield</span></div><span class="text-navy text-xl font-semibold">보건복지부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">language</span></div><span class="text-navy text-xl font-semibold">외교부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">menu_book</span></div><span class="text-navy text-xl font-semibold">교육부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">factory</span></div><span class="text-navy text-xl font-semibold">산업통상자원부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">memory</span></div><span class="text-navy text-xl font-semibold">과학기술정보통신부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">map</span></div><span class="text-navy text-xl font-semibold">국토교통부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">balance</span></div><span class="text-navy text-xl font-semibold">법무부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">verified_user</span></div><span class="text-navy text-xl font-semibold">행정안전부</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 5 - Stats Numbers ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex justify-between items-center border-y border-[#E2E8F0] py-12">
+    <div class="flex-1 text-center"><p class="text-[40px] font-bold text-[#1A1A1A]">152</p><p class="text-sm text-muted mt-1">파트너 병원</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">87</p><p class="text-sm text-muted mt-1">에이전시 파트너</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">23</p><p class="text-sm text-muted mt-1">서비스 국가</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">3,847</p><p class="text-sm text-muted mt-1">누적 환자 유치</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">1,260</p><p class="text-sm text-muted mt-1">연수 프로그램 완료</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">98.2%</p><p class="text-sm text-muted mt-1">고객 만족도</p></div>
+  </div>
+</section>
+
+<!-- ===== Section 6 - CEO Message ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-[60px]">
+    <div class="w-[720px] h-[820px] shrink-0 rounded-3xl overflow-hidden">
+      <img src="./images/ceo.png" alt="CEO" class="w-full h-full object-cover">
+    </div>
+    <div class="flex-1 flex flex-col gap-6 relative">
+      <p class="text-blue-accent text-sm font-bold">대표 인사말</p>
+      <h2 class="text-[#1A1A1A] text-5xl font-extrabold leading-[1.3] tracking-tight">"한국 의료의 <br>가치를 세계로"</h2>
+      <p class="text-[#334155] text-base leading-[1.7]">안녕하세요. RayBusiness Group 대표 김성재입니다.</p>
+      <p class="text-[#334155] text-base leading-[1.7]">지난 10년간 CIS·동남아 의료관광 현장에서 직접 겪은 경험을 바탕으로, 해외 환자와 의료 전문가들이 한국 의료 시스템에 접근하는 과정이 얼마나 복잡하고 비효율적인지 절감했습니다.</p>
+      <blockquote class="border-l-[3px] border-blue-accent pl-6">
+        <p class="text-[#1E293B] text-base italic font-medium leading-[1.7]">"병원과 에이전시 사이에서 수많은 이메일과 전화가 오가고, 환자 정보가 여러 곳에 분산되며, 정산은 늘 뒤늦게 이루어집니다. 이 문제를 기술로 해결하고자 MediW를 만들었습니다."</p>
+      </blockquote>
+      <p class="text-[#334155] text-base leading-[1.7]">MediW는 단순한 중개 플랫폼이 아닙니다. 병원의 교육 프로그램 관리, 에이전시의 고객 관리, 환자의 진료 예약까지 — 의료관광 생태계 전체를 하나의 디지털 인프라로 통합합니다. 대한민국이 글로벌 헬스케어의 중심이 될 수 있도록, 저희가 그 기반을 만들겠습니다.</p>
+      <hr class="border-[#E2E8F0]">
+      <div class="flex gap-8">
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">work</span><span class="text-[#94A3B8] text-[13px] font-medium">의료관광 10년 경력</span></div>
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">public</span><span class="text-[#94A3B8] text-[13px] font-medium">CIS·중앙아시아 전문</span></div>
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">school</span><span class="text-[#94A3B8] text-[13px] font-medium">연세대 국제경영 석사</span></div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0">
+        <p class="text-[#1A1A1A] text-4xl font-bold text-right">김 성 재</p>
+        <p class="text-muted text-2xl font-medium text-right">대표이사 · CEO</p>
+        <p class="text-[#94A3B8] text-base text-right">RayBusiness Group</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 7 - Why MediW ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-16">
+    <div class="w-[360px] shrink-0 flex flex-col gap-4 pt-5">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">WHY MEDIW</p>
+      <h2 class="text-navy text-5xl font-bold">MEDI-W가 <br>필요한 이유</h2>
+      <p class="text-muted text-base leading-[1.7] max-w-[472px]">한국 의료관광 시장은 연간 60만 명 이상의 외국인 환자가 방문하지만, 여전히 아날로그 방식으로 운영됩니다.</p>
+    </div>
+    <div class="flex-1 grid grid-cols-2 grid-rows-2">
+      <div class="p-8 flex flex-col justify-end gap-2 border-r border-b border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 01</p>
+        <h3 class="text-navy text-[22px] font-bold">분산된 정보</h3>
+        <p class="text-muted text-sm leading-[1.7]">병원별로 프로그램 정보가 흩어져 있고, 검색·비교가 어렵습니다. 해외 의사는 어디서부터 시작해야 할지 모릅니다.</p>
+      </div>
+      <div class="p-8 flex flex-col gap-2 border-b border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 02</p>
+        <h3 class="text-navy text-[22px] font-bold">비효율적 커뮤니케이션</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시-병원 간 이메일·카톡·전화가 뒤섞이고, 환자 정보가 유실됩니다. 응답까지 평균 3~5일이 소요됩니다.</p>
+      </div>
+      <div class="p-8 flex flex-col justify-end gap-2 border-r border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 03</p>
+        <h3 class="text-navy text-[22px] font-bold">불투명한 정산</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시 커미션, 컨시어지 비용, 병원 진료비가 별도로 관리되어 정산 분쟁이 빈번합니다.</p>
+      </div>
+      <div class="p-8 flex flex-col justify-end gap-2">
+        <p class="text-muted text-[13px] font-semibold">MediW 솔루션</p>
+        <h3 class="text-navy text-[22px] font-bold">하나의 플랫폼으로 해결</h3>
+        <p class="text-muted text-sm leading-[1.7]">정보 검색, 지원, 커뮤니케이션, 컨시어지, 정산까지 — 모든 과정을 디지털화하여 투명하게 관리합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 8 - Revenue Model ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-12">
+    <div class="w-[320px] shrink-0 flex flex-col gap-4">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">수익 모델</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">MediW<br>수익 창출 가이드</h2>
+      <p class="text-muted text-base max-w-[397px]">MediW 파트너로서 안정적인 수익을 창출할 수 있는 3가지 핵심 모델을 소개합니다.</p>
+    </div>
+    <div class="flex-1 flex gap-6">
+      <!-- Card 1 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">환자 유치 커미션</h4>
+          <p class="text-[#94A3B8] text-[13px]">에이전시 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">해외 환자를 한국 병원에 연결할 때마다 진료비의 일정 비율을 커미션으로 수령합니다. 수술·치료·건강검진 모든 건에 적용됩니다.</p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">건강검진</span><span class="text-navy text-sm font-bold">10~15%</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">외래 진료</span><span class="text-navy text-sm font-bold">8~12%</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">수술/입원</span><span class="text-navy text-sm font-bold">5~10%</span></div>
+        </div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <!-- Card 2 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">컨시어지 패키지</h4>
+          <p class="text-[#94A3B8] text-[13px]">에이전시 · 병원 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">공항 픽업, 숙소, 통역, 관광 등 부가 서비스를 패키지로 판매합니다. 환자 1인당 평균 부가 매출을 극대화할 수 있습니다.</p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">기본 패키지</span><span class="text-navy text-sm font-bold">$500~800</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">프리미엄 패키지</span><span class="text-navy text-sm font-bold">$1,200~2,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">VIP 패키지</span><span class="text-navy text-sm font-bold">$3,000+</span></div>
+        </div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <!-- Card 3 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">교육 연수 수수료</h4>
+          <p class="text-[#94A3B8] text-[13px]">병원 · 플랫폼 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">해외 의사의 교육 연수 프로그램 등록 시 참가비의 일부가 플랫폼 이용료로 책정됩니다. 병원은 글로벌 인재를 확보합니다.</p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">단기 참관 (1~2주)</span><span class="text-navy text-sm font-bold">$1,500~3,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">중기 연수 (4~8주)</span><span class="text-navy text-sm font-bold">$5,000~12,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">장기 펠로우십 (12주+)</span><span class="text-navy text-sm font-bold">$15,000~30,000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 9 - Workflow ===== -->
+<section class="bg-[#f7f7f7] px-[60px] py-20">
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">활용 방법</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">회원 유형별 <br>최적화 워크플로우</h2>
+      <p class="text-muted text-base">회원 유형에 따라 최적화된 워크플로우를 제공합니다.</p>
+      <div class="flex gap-2 mt-2">
+        <button class="bg-navy text-white text-sm font-semibold px-6 py-2.5 rounded-full">병원</button>
+        <button class="text-muted text-sm font-medium px-6 py-2.5 rounded-full border border-[#E2E8F0]">에이전시</button>
+        <button class="text-muted text-sm font-medium px-6 py-2.5 rounded-full border border-[#E2E8F0]">의사 및 환자</button>
+      </div>
+    </div>
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-4 gap-5">
+      <!-- Row 1 -->
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">01</span>
+        <h3 class="font-inter text-[22px] font-bold">교육 프로그램 등록</h3>
+        <p class="text-muted text-sm leading-[1.7]">진료과, 일정, 정원, 비용을 설정하고<br>교육 프로그램을 플랫폼에 등록합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1758206523660-3ef5a51f1113?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">03</span>
+        <h3 class="font-inter text-[22px] font-bold">환자 유치 관리</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시를 통해 연계된 환자를 접수하고<br>진료 일정을 체계적으로 관리합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1758691463354-055e4d72e5fc?w=600&q=80" class="w-full h-full object-cover"></div>
+      <!-- Row 2 -->
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1579356687668-cbdd5a551c18?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">02</span>
+        <h3 class="font-inter text-[22px] font-bold">지원자 접수 및 심사</h3>
+        <p class="text-muted text-sm leading-[1.7]">서류 검토, 면접을 진행한 후<br>합격자에게 통보합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1668600418417-aa0c6ed84e8c?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">04</span>
+        <h3 class="font-inter text-[22px] font-bold">정산 및 리포트</h3>
+        <p class="text-muted text-sm leading-[1.7]">월별 매출과 에이전시 커미션을<br>자동으로 정산하고 리포트를 확인합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 10 - Hospital List ===== -->
+<section class="bg-white min-h-[1020px] relative px-[60px] py-20">
+  <div class="flex gap-20">
+    <div class="w-[600px] shrink-0 flex flex-col gap-5 pt-5">
+      <p class="text-muted text-sm font-medium">리스트</p>
+      <h2 class="text-navy text-5xl font-bold leading-[1.15] tracking-tight">대한민국<br>대표 의료 기관</h2>
+      <p class="text-muted text-[15px] leading-[1.7] max-w-[450px]">MEDI-W는 세계적 수준의 의료 기관들과 협력하여 최상의 의료 서비스를 제공합니다.</p>
+      <div class="flex gap-2">
+        <button class="bg-navy text-white text-sm font-semibold px-5 py-2.5 rounded-full">중증환자</button>
+        <button class="text-muted text-sm font-medium px-5 py-2.5 rounded-full border border-[#E2E8F0]">성형 및 피부</button>
+        <button class="text-muted text-sm font-medium px-5 py-2.5 rounded-full border border-[#E2E8F0]">의학연수</button>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-col">
+      <!-- Item 1 - expanded -->
+      <div class="flex gap-10 py-9 border-t border-navy/20">
+        <span class="text-navy text-sm">01</span>
+        <div class="flex-1 flex flex-col gap-5">
+          <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEOUL NATIONAL<br>UNIVERSITY HOSPITAL</h3>
+          <p class="text-[#8B8578] text-[13px] leading-relaxed max-w-[420px]">We create a complete design concept, carefully balancing style and functionality to reflect your vision in every detail.</p>
+        </div>
+        <div class="w-[260px] h-[180px] rounded-lg overflow-hidden shrink-0"><img src="https://images.unsplash.com/photo-1770381142493-075344e6fc9b?w=400&q=80" class="w-full h-full object-cover"></div>
+      </div>
+      <!-- Item 2 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">02</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEVERANCE<br>HOSPITAL</h3>
+      </div>
+      <!-- Item 3 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">03</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">ASAN MEDICAL<br>CENTER</h3>
+      </div>
+      <!-- Item 4 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">04</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SAMSUNG SEOUL<br>HOSPITAL</h3>
+      </div>
+      <!-- Item 5 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">05</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEOUL ST. MARY'S<br>HOSPITAL</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 11 - Banner ===== -->
+<section class="bg-white p-5">
+  <div class="flex gap-5 h-[920px]">
+    <!-- Left - large banner -->
+    <div class="flex-[1192] rounded-2xl overflow-hidden relative bg-cover bg-center flex flex-col justify-end p-8 gap-4" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,0.67)),url('https://images.unsplash.com/photo-1714462550204-5e2ab9ea0546?w=1200&q=80')">
+      <p class="text-white/70 text-sm font-semibold tracking-[2px]">MEDI-W 2026</p>
+      <h2 class="text-white text-6xl font-bold leading-[1.3]">상반기 교육<br>프로그램 모집</h2>
+      <p class="text-white/85 text-base leading-relaxed">한국 최고의 대학병원에서 진행되는 전문 의료 교육에 참여하세요. 조기 마감될 수 있습니다.</p>
+      <div><a href="#" class="inline-block bg-white text-black text-sm font-semibold px-8 py-4 rounded-[10px]">프로그램 보기</a></div>
+    </div>
+    <!-- Right column -->
+    <div class="flex-[584] flex flex-col gap-5">
+      <!-- Top card -->
+      <div class="flex-[340] bg-[#e7e8ed] rounded-2xl p-8 flex flex-col justify-end gap-2">
+        <h3 class="text-[32px] font-bold leading-[1.2]">글로벌 의료<br>네트워크</h3>
+        <p class="text-sm opacity-70">전 세계 50개국 에이전시와 연결</p>
+        <a href="#" class="inline-block bg-white text-navy text-sm font-semibold px-8 py-4 rounded-[10px] w-fit mt-2">프로그램 보기</a>
+      </div>
+      <!-- Bottom card -->
+      <div class="flex-[560] rounded-2xl overflow-hidden relative bg-cover bg-center flex flex-col justify-end p-8 gap-2" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,0.67)),url('https://images.unsplash.com/photo-1666886573264-38075cc56104?w=800&q=80')">
+        <h3 class="text-white text-[28px] font-bold leading-[1.2]">컨시어지<br>프리미엄 케어</h3>
+        <p class="text-white/80 text-sm leading-relaxed">공항 픽업부터 숙소, 통역까지<br>올인원 의료 관광 서비스</p>
+        <a href="#" class="inline-block bg-white text-black text-sm font-semibold px-8 py-4 rounded-[10px] w-fit mt-2">프로그램 보기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 12 - Testimonials ===== -->
+<section class="bg-white px-[60px] py-20 overflow-hidden">
+  <div class="flex justify-between items-end mb-12">
+    <div class="flex flex-col gap-4">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">후기</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">MEDI-W<br>실사용자 후기</h2>
+    </div>
+    <div class="flex gap-4">
+      <button class="w-12 h-12 rounded-full border border-[#E2E8F0] flex items-center justify-center"><span class="material-symbols-outlined text-navy">arrow_back</span></button>
+      <button class="w-12 h-12 rounded-full bg-navy flex items-center justify-center"><span class="material-symbols-outlined text-white">arrow_forward</span></button>
+    </div>
+  </div>
+  <div class="grid grid-cols-3 gap-6">
+    <!-- Card 1 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"전체 과정이 매끄러웠습니다. 적합한 심장외과 프로그램을 찾는 것부터 호텔 예약까지 — 모든 것이 처리되었습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-cyan flex items-center justify-center text-white font-bold text-sm">AK</div><div><p class="text-navy text-sm font-semibold">Dr. Amir Kozlov</p><p class="text-muted text-[13px]">우즈베키스탄 · 심장외과</p></div></div>
+    </div>
+    <!-- Card 2 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"의료 관광 에이전시로서, MediW가 전체 업무 흐름을 간소화해 주었습니다. 고객 관리와 병원 협력이 수월해졌습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-cyan flex items-center justify-center text-white font-bold text-sm">NI</div><div><p class="text-navy text-sm font-semibold">Nurlan Ismailov</p><p class="text-muted text-[13px]">카자흐스탄 · MedTour Central 대표</p></div></div>
+    </div>
+    <!-- Card 3 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"세브란스에서의 척추수술 참관은 세계적인 수준이었습니다. 컨시어지 지원 덕분에 프리미엄 경험이었습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-amber-600 flex items-center justify-center text-white font-bold text-sm">PD</div><div><p class="text-navy text-sm font-semibold">Dr. Pham Duc</p><p class="text-muted text-[13px]">베트남 · 정형외과</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 13 - CTA & Contact ===== -->
+<section class="relative overflow-hidden" style="background-image:linear-gradient(rgba(0,0,0,0.53),rgba(0,0,0,0.53)),url('https://images.unsplash.com/photo-1728676839129-2e9417e07414?w=1920&q=80');background-size:cover;background-position:center">
+  <div class="flex gap-10 px-[60px] py-20">
+    <div class="flex-1 flex flex-col gap-8">
+      <p class="text-white/70 text-sm font-semibold tracking-[2px]">문의하기</p>
+      <h2 class="text-white text-5xl font-bold leading-[1.3] font-inter max-w-[600px]">글로벌 의료 <br>네트워크의 시작</h2>
+      <div class="flex flex-col gap-3 max-w-fit">
+        <div class="flex flex-col gap-1">
+          <p class="text-muted text-sm font-inter">이메일</p>
+          <p class="text-white text-base font-inter font-semibold">contact@mediw.co.kr</p>
+        </div>
+        <div class="flex flex-col gap-1">
+          <p class="text-muted text-sm font-inter">전화</p>
+          <p class="text-white text-base font-inter font-semibold">+82-2-1234-5678</p>
+        </div>
+      </div>
+    </div>
+    <!-- Contact Form -->
+    <div class="w-[500px] shrink-0 rounded-[20px] p-10 flex flex-col gap-6" style="background:rgba(255,255,255,0.19);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.27)">
+      <h3 class="text-white text-xl font-semibold font-inter leading-[1.5]">한국 의료와 연결하고 싶으신가요?<br>지금 바로 문의하세요</h3>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Name*</label>
+        <input type="text" class="w-full h-11 rounded-lg bg-transparent border border-white/33 px-3 text-white text-sm outline-none focus:border-white/60">
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Email*</label>
+        <input type="email" class="w-full h-11 rounded-lg bg-transparent border border-white/33 px-3 text-white text-sm outline-none focus:border-white/60">
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Text Message*</label>
+        <textarea class="w-full h-[60px] rounded-lg bg-transparent border border-white/33 px-3 py-2 text-white text-sm outline-none focus:border-white/60 resize-none"></textarea>
+      </div>
+      <button class="w-full h-[50px] bg-[#1A1A1A] text-white text-base font-semibold font-inter rounded-full">Send →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 14 - Footer ===== -->
+<footer class="bg-black px-[60px] pt-[60px] pb-10">
+  <div class="flex gap-10 mb-[60px]">
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-base font-bold font-inter tracking-[2px]">MEDI-W ™</p>
+      <p class="text-white text-sm font-inter leading-relaxed max-w-[300px]">환자와 의료진을 매끄럽게 연결하는<br>스마트 의료 예약 서비스.</p>
+    </div>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">서비스</p>
+      <a href="#" class="text-white text-sm font-inter">기능</a>
+      <a href="#" class="text-white text-sm font-inter">요금제</a>
+      <a href="#" class="text-white text-sm font-inter">사례 연구</a>
+      <a href="#" class="text-white text-sm font-inter">업데이트</a>
+    </div>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">회사</p>
+      <a href="#" class="text-white text-sm font-inter">소개</a>
+      <a href="#" class="text-white text-sm font-inter">채용</a>
+      <a href="#" class="text-white text-sm font-inter">블로그</a>
+      <a href="#" class="text-white text-sm font-inter">문의</a>
+    </div>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">지원</p>
+      <a href="#" class="text-white text-sm font-inter">고객센터</a>
+      <a href="#" class="text-white text-sm font-inter">문서</a>
+      <a href="#" class="text-white text-sm font-inter">개인정보처리방침</a>
+      <a href="#" class="text-white text-sm font-inter">이용약관</a>
+    </div>
+  </div>
+  <div class="flex justify-between items-center pt-5 border-t border-white/10">
+    <p class="text-white text-[13px] font-inter">© 2026 MEDI-W. 모든 권리 보유.</p>
+    <div class="flex gap-6">
+      <a href="#" class="text-white text-[13px] font-inter">트위터</a>
+      <a href="#" class="text-white text-[13px] font-inter">링크드인</a>
+      <a href="#" class="text-white text-[13px] font-inter">인스타그램</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
