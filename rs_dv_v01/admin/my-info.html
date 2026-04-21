@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 정보 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/admin/css/common.css">
+  <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
+  <style>
+    .info-layout{display:flex;flex:1;overflow:hidden}
+    .info-body{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:28px}
+    .info-section h2{font-size:16px;font-weight:700;color:var(--fg-primary);margin-bottom:4px}
+    .info-section .section-desc{font-size:13px;color:var(--fg-muted);margin-bottom:20px}
+    .info-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+    .info-form-grid .full{grid-column:1/-1}
+    .file-upload-area{display:flex;gap:16px}
+    .file-upload-card{width:160px;height:100px;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--fg-muted);cursor:pointer;transition:border-color .15s}
+    .file-upload-card:hover{border-color:var(--accent)}
+    .file-upload-card .upload-icon{font-size:20px;color:var(--fg-muted)}
+    .file-upload-card .upload-ext{font-size:11px;color:var(--fg-muted)}
+    .bottom-bar .progress-bar{width:200px}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
+    <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
+    <a href="my-info.html" class="sidebar-user">
+      <div class="su-av">AD</div>
+      <div class="user-info">
+        <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
+        <div class="su-mail">admin@mediw.co.kr</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospitals.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="cases.html" class="nav-item"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agencies.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
+  </aside>
+
+  <div class="main-content">
+    <!-- TopBar -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <h1>관리자 정보</h1>
+        <p>파트너십 등록 및 관리를 위한 회사 정보를 입력하세요</p>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
+        <div class="bell-wrapper">
+          <button class="bell-btn" onclick="location.href='notification.html'"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
+        </div>
+        <button class="btn-icon"><i class="icon-edit" style="font-size:16px;color:var(--fg-secondary)"></i></button>
+      </div>
+    </div>
+
+    <div class="info-layout">
+      <!-- Sub-nav -->
+      <div style="width:240px;padding:20px;border-right:1px solid var(--border);flex-shrink:0;background:var(--bg-card)">
+        <div class="sub-nav" style="width:100%">
+          <div class="sub-nav-item active" data-tab="company"><i class="icon-building-2 sub-nav-icon"></i> 회사 / 담당자 정보</div>
+          <div class="sub-nav-item" data-tab="business"><i class="icon-file-text sub-nav-icon"></i> 사업 / 서류</div>
+          <div class="sub-nav-item" data-tab="billing"><i class="icon-wallet sub-nav-icon"></i> 정산 정보</div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Company/Contact -->
+      <div class="info-body" data-tab-panel="company">
+        <div class="info-section">
+          <h2>회사 / 담당자 정보</h2>
+          <div class="section-desc">회사 기본 정보와 담당자 정보를 입력해 주세요</div>
+
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">회사 기본 정보</h3>
+          <div class="info-form-grid">
+            <div class="form-group">
+              <label class="form-label">회사명 <span class="required">*</span></label>
+              <input class="form-input" placeholder="회사명을 입력하세요">
+            </div>
+            <div class="form-group">
+              <label class="form-label">회사명 (영문명) <span class="required">*</span></label>
+              <input class="form-input" placeholder="영문회사명 입력">
+            </div>
+            <div class="form-group">
+              <label class="form-label">사업자등록번호 / 법인번호 <span class="required">*</span></label>
+              <input class="form-input" id="bizNo" inputmode="numeric" maxlength="12" placeholder="000-00-00000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">설립 국가 <span class="required">*</span></label>
+              <select class="form-select"><option>국가를 선택하세요</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">회사 주소 <span class="required">*</span></label>
+              <input class="form-input" placeholder="주소">
+            </div>
+            <div class="form-group">
+              <label class="form-label">웹사이트</label>
+              <input class="form-input" placeholder="https://example.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section" style="margin-top:12px">
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">담당자 정보</h3>
+          <div class="info-form-grid">
+            <div class="form-group">
+              <label class="form-label">담당자명 <span class="required">*</span></label>
+              <input class="form-input" placeholder="담당자명">
+            </div>
+            <div class="form-group">
+              <label class="form-label">담당자 직책</label>
+              <input class="form-input" placeholder="직책">
+            </div>
+            <div class="form-group">
+              <label class="form-label">담당자 연락처 <span class="required">*</span></label>
+              <input class="form-input" id="contactTel" inputmode="numeric" maxlength="13" placeholder="000-0000-0000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp / Telegram</label>
+              <input class="form-input" placeholder="@username 또는 연락처">
+            </div>
+            <div class="form-group">
+              <label class="form-label">담당자 이메일 <span class="required">*</span></label>
+              <input class="form-input" id="contactEmail" type="email" placeholder="email@company.com">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Business / Documents -->
+      <div class="info-body" data-tab-panel="business" style="display:none">
+        <div class="info-section">
+          <h2>사업 / 서류</h2>
+          <div class="section-desc">사업 정보와 서류를 관리해 주세요</div>
+
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">사업 종류</h3>
+          <div class="info-form-grid">
+            <div class="form-group full">
+              <label class="form-label">사업 업종 <span class="required">*</span></label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+                <span class="badge badge-active" style="padding:6px 14px;cursor:pointer">의료관광 에이전시</span>
+                <span class="badge badge-gray" style="padding:6px 14px;cursor:pointer">외국인 진료소</span>
+                <span class="badge badge-gray" style="padding:6px 14px;cursor:pointer">건강검진센터</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">연간 원자 유출 규모 <span class="required">*</span></label>
+              <select class="form-select"><option>규모를 선택하세요</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">주 송출 국가</label>
+              <input class="form-input" placeholder="국가, 지역입니다, 한국/의료관광">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">주요 진료 분야 <span class="required">*</span></label>
+              <input class="form-input" placeholder="진료 분야를 선택하여 입력하세요 (최대 5개까지 선택 가능)">
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section" style="margin-top:12px">
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:16px">서류 업로드</h3>
+          <div class="info-form-grid">
+            <div class="form-group">
+              <label class="form-label">사업자등록증 <span class="required">*</span></label>
+              <div class="file-upload-card">
+                <i class="icon-upload upload-icon"></i>
+                <span>클릭하여 업로드</span>
+                <span class="upload-ext">PDF, JPG, PNG</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">회사 소개서</label>
+              <div class="file-upload-card">
+                <i class="icon-upload upload-icon"></i>
+                <span>클릭하여 업로드</span>
+                <span class="upload-ext">PDF, DOC, PPT</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">회사 보고</label>
+              <div class="file-upload-card">
+                <i class="icon-upload upload-icon"></i>
+                <span>클릭하여 업로드</span>
+                <span class="upload-ext">PNG, JPG, SVG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Billing -->
+      <div class="info-body" data-tab-panel="billing" style="display:none">
+        <div class="info-section">
+          <h2>정산 계좌 정보</h2>
+          <div class="section-desc">수수료 정산을 위한 계좌 정보를 입력해 주세요</div>
+
+          <div class="info-form-grid">
+            <div class="form-group">
+              <label class="form-label">은행명 <span class="required">*</span></label>
+              <input class="form-input" placeholder="은행명 입력">
+            </div>
+            <div class="form-group">
+              <label class="form-label">계좌번호 <span class="required">*</span></label>
+              <input class="form-input" placeholder="계좌번호 입력">
+            </div>
+            <div class="form-group">
+              <label class="form-label">SWIFT Code</label>
+              <input class="form-input" placeholder="SWIFT / BIC Code">
+            </div>
+            <div class="form-group">
+              <label class="form-label">예금주 <span class="required">*</span></label>
+              <input class="form-input" placeholder="예금주를 입력">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar" id="bottomBar">
+      <div class="progress-info">
+        <span>프로필 완성도</span>
+        <div class="progress-bar" style="width:200px"><div class="progress-fill" id="progressFill" style="width:9%;background:var(--accent)"></div></div>
+        <span class="font-mono" style="font-weight:600" id="progressText">9%</span>
+      </div>
+      <div style="display:flex;gap:12px" id="bottomActions">
+        <button class="btn btn-secondary" id="btnPrev" style="display:none" onclick="switchTab('prev')"><i class="icon-chevron-left" style="font-size:14px"></i> 이전으로</button>
+        <button class="btn btn-secondary" id="btnCancel">취소하기</button>
+        <button class="btn btn-primary" id="btnNext" onclick="switchTab('next')">다음으로</button>
+        <button class="btn btn-primary" id="btnSave" style="display:none" onclick="showSuccess('저장이 완료되었습니다','변경 사항이 저장되었습니다.')"><i class="icon-check" style="font-size:14px"></i> 저장하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modals -->
+<div class="modal-overlay" id="unsavedModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FFF8EE"><i class="icon-alert-triangle" style="color:#FF9500;font-size:24px"></i></div><div class="modal-title">저장하지 않은 변경사항이 있습니다</div><div class="modal-desc">이 페이지를 떠나면 변경사항이 사라집니다.<br>정말 나가시겠습니까?</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('unsavedModal')">나가기</button><button class="btn btn-dark" onclick="closeModal('unsavedModal')">저장 후 나가기</button></div></div></div>
+<div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
+
+<script src="../assets/admin/js/common.js"></script>
+<script>
+  const tabs = ['company', 'business', 'billing'];
+  const progress = { company: 9, business: 50, billing: 100 };
+  let currentIdx = 0;
+
+  function getCurrentPanel() {
+    return Array.from(document.querySelectorAll('[data-tab-panel]')).find(p => p.style.display !== 'none');
+  }
+  function getRequiredFields(panel) {
+    return Array.from(panel.querySelectorAll('.form-group'))
+      .filter(g => g.querySelector('.required'))
+      .map(g => g.querySelector('input, select, textarea'))
+      .filter(Boolean);
+  }
+  function isFilled(el) {
+    if (!el) return true;
+    if (el.tagName === 'SELECT') {
+      const txt = el.options[el.selectedIndex]?.text || '';
+      return el.selectedIndex > 0 && !txt.includes('선택');
+    }
+    return el.value.trim() !== '';
+  }
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function getFieldError(el) {
+    if (!isFilled(el)) return '필수 입력 필드입니다';
+    if (el.type === 'email' && !isValidEmail(el.value.trim())) return '이메일 형식이 올바르지 않습니다';
+    return null;
+  }
+  function showFieldError(el, msg) {
+    el.classList.toggle('error', !!msg);
+    const group = el.closest('.form-group');
+    if (!group) return;
+    let err = group.querySelector('.form-error');
+    if (msg) {
+      if (!err) {
+        err = document.createElement('div');
+        err.className = 'form-error';
+        group.appendChild(err);
+      }
+      err.textContent = msg;
+    } else if (err) {
+      err.remove();
+    }
+  }
+  function updateNextBtn() {
+    const panel = getCurrentPanel();
+    if (!panel) return;
+    const allOk = getRequiredFields(panel).every(el => !getFieldError(el));
+    // Also all non-required email fields must be valid if filled
+    const extraOk = Array.from(panel.querySelectorAll('input[type="email"]')).every(el => !el.value.trim() || isValidEmail(el.value.trim()));
+    const btn = document.getElementById('btnNext');
+    const save = document.getElementById('btnSave');
+    [btn, save].forEach(b => {
+      if (!b) return;
+      b.disabled = !(allOk && extraOk);
+      b.classList.toggle('btn-disabled', !(allOk && extraOk));
+    });
+  }
+  function bindLiveValidation() {
+    document.querySelectorAll('.info-body .form-input, .info-body .form-select, .info-body .form-textarea').forEach(el => {
+      const h = () => {
+        if (el.classList.contains('error')) showFieldError(el, getFieldError(el));
+        updateNextBtn();
+      };
+      el.addEventListener('input', h);
+      el.addEventListener('change', h);
+    });
+  }
+
+  function switchTab(dir) {
+    // Validate current before moving next
+    if (dir === 'next') {
+      const panel = getCurrentPanel();
+      const fields = getRequiredFields(panel);
+      let ok = true;
+      fields.forEach(el => {
+        const msg = getFieldError(el);
+        showFieldError(el, msg);
+        if (msg) ok = false;
+      });
+      // Also validate non-required emails if filled
+      panel.querySelectorAll('input[type="email"]').forEach(el => {
+        if (el.value.trim() && !isValidEmail(el.value.trim())) {
+          showFieldError(el, '이메일 형식이 올바르지 않습니다');
+          ok = false;
+        }
+      });
+      if (!ok) return;
+      if (currentIdx < tabs.length - 1) currentIdx++;
+    } else if (dir === 'prev' && currentIdx > 0) currentIdx--;
+    activateTab(tabs[currentIdx]);
+  }
+
+  function activateTab(tabName) {
+    currentIdx = tabs.indexOf(tabName);
+    // Update sub-nav
+    document.querySelectorAll('.sub-nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.tab === tabName);
+    });
+    // Update panels
+    document.querySelectorAll('[data-tab-panel]').forEach(panel => {
+      panel.style.display = panel.dataset.tabPanel === tabName ? '' : 'none';
+    });
+    // Update progress
+    const pct = progress[tabName];
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = pct + '%';
+    // Update buttons
+    const isFirst = currentIdx === 0;
+    const isLast = currentIdx === tabs.length - 1;
+    document.getElementById('btnPrev').style.display = isFirst ? 'none' : '';
+    document.getElementById('btnCancel').style.display = isFirst ? '' : 'none';
+    document.getElementById('btnNext').style.display = isLast ? 'none' : '';
+    document.getElementById('btnSave').style.display = isLast ? '' : 'none';
+    updateNextBtn();
+  }
+
+  // Numeric input masks
+  function maskInput(el, pattern){
+    if(!el) return;
+    el.addEventListener('input', () => {
+      const digits = el.value.replace(/\D/g,'').slice(0, pattern.filter(n=>typeof n==='number').reduce((a,b)=>a+b,0));
+      let out = '', i = 0;
+      for (const seg of pattern){
+        if (i >= digits.length) break;
+        const take = digits.slice(i, i+seg);
+        out += (out ? '-' : '') + take;
+        i += seg;
+      }
+      el.value = out;
+    });
+  }
+  maskInput(document.getElementById('bizNo'), [3,2,5]);     // 000-00-00000
+  maskInput(document.getElementById('contactTel'), [3,4,4]); // 000-0000-0000
+
+  // Initial state
+  document.addEventListener('DOMContentLoaded', () => {
+    bindLiveValidation();
+    updateNextBtn();
+  });
+
+  // Override sub-nav click to use our function
+  document.querySelectorAll('.sub-nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activateTab(item.dataset.tab);
+    });
+  });
+</script>
+</body>
+</html>

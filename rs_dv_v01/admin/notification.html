@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>알림 센터 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/admin/css/common.css">
+  <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
+  <style>
+    .noti-page{padding:24px 28px;display:flex;flex-direction:column;gap:16px}
+    .noti-stats{display:flex;gap:12px;font-size:13px;color:var(--fg-muted)}
+    .noti-stats span{font-family:var(--font-mono);font-weight:600;color:var(--fg-primary)}
+    .noti-list{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+    .noti-list-item{display:flex;gap:16px;padding:18px 24px;border-bottom:1px solid var(--border-light);align-items:flex-start;transition:background .1s}
+    .noti-list-item:last-child{border-bottom:none}
+    .noti-list-item:hover{background:var(--bg-secondary)}
+    .noti-list-item.unread{background:rgba(238,239,252,.15)}
+    .noti-list-item.read .noti-dot{background:var(--border)!important}
+    .noti-list-item.read .noti-icon-circle{background:var(--border-light)!important}
+    .noti-list-item.read .noti-icon-circle i{color:var(--fg-muted)!important}
+    .noti-list-item.read .noti-type{background:var(--border-light)!important;color:var(--fg-muted)!important}
+    .noti-list-item.read .noti-msg,.noti-list-item.read .noti-time{color:var(--fg-muted)!important}
+    .noti-list-item.read .noti-mark-btn{display:none}
+    .noti-list-item .noti-dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0}
+    .noti-list-item .noti-icon-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .noti-list-item .noti-content{flex:1;min-width:0}
+    .noti-list-item .noti-content-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .noti-list-item .noti-type{display:inline-flex;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600}
+    .noti-list-item .noti-time{font-size:12px;color:var(--fg-muted);font-family:var(--font-mono)}
+    .noti-list-item .noti-msg{font-size:14px;color:var(--fg-primary);line-height:1.5}
+    .noti-list-item .noti-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .noti-mark-btn{font-size:13px;color:var(--accent);cursor:pointer;font-weight:500;white-space:nowrap}
+    .noti-pagination{display:flex;align-items:center;justify-content:center;padding-top:8px;position:relative}
+    .noti-pagination .page-info{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--fg-muted);font-family:var(--font-mono)}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
+    <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
+    <a href="my-info.html" class="sidebar-user">
+      <div class="su-av">AD</div>
+      <div class="user-info">
+        <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
+        <div class="su-mail">admin@mediw.co.kr</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospitals.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="cases.html" class="nav-item"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agencies.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
+  </aside>
+
+  <div class="main-content">
+    <!-- TopBar -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <h1>알림 센터</h1>
+        <p>모든 알림과 시스템 로그를 확인합니다</p>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
+        <div class="bell-wrapper">
+          <button class="bell-btn"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
+          <div class="noti-dropdown">
+            <div class="noti-header"><span class="noti-title">알림</span><span class="noti-read-all">모두 읽음</span></div>
+            <div class="noti-item unread"><div class="noti-dot" style="background:#3B43DB"></div><div class="noti-body"><span class="noti-badge" style="background:#EEEFFC;color:#3B43DB">새 상담 접수</span><span class="noti-time">10분 전</span><div class="noti-text">외국인 환자 상담을 요청했습니다</div></div></div>
+            <a href="notification.html" class="noti-footer">알림 센터 전체 보기 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-scroll">
+      <div class="noti-page" data-tab-container>
+        <!-- Stats + Tabs -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="noti-stats">총 <span>28</span> 알림 · 읽지 않음 <span>5</span>개 남음</div>
+          <span class="noti-mark-btn" style="font-size:14px">모두 읽음</span>
+        </div>
+
+        <div class="tab-bar">
+          <div class="tab-item active" data-tab="all">전체</div>
+          <div class="tab-item" data-tab="unread">읽지않음</div>
+          <div class="tab-item" data-tab="read">읽음</div>
+        </div>
+
+        <!-- All Tab -->
+        <div data-tab-panel="all">
+          <div class="noti-list">
+            <!-- Unread items -->
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--accent)"></div>
+              <div class="noti-icon-circle" style="background:var(--accent-light)"><i class="icon-message-square" style="color:var(--accent);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--accent-light);color:var(--accent)">새 상담 접수</span><span class="noti-time">10분 전</span></div>
+                <div class="noti-msg">외국인 환자 상담을 요청했습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--danger)"></div>
+              <div class="noti-icon-circle" style="background:#FEE2E2"><i class="icon-alert-circle" style="color:var(--danger);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FEE2E2;color:var(--danger)">취소 알림</span><span class="noti-time">30분 전</span></div>
+                <div class="noti-msg">Emily Chen 님의 04.18 예약이 취소되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--success)"></div>
+              <div class="noti-icon-circle" style="background:#EEFBF0"><i class="icon-check-circle" style="color:var(--success);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#EEFBF0;color:var(--success)">정산 완료</span><span class="noti-time">1시간 전</span></div>
+                <div class="noti-msg">MediLink Asia 3월 정산이 완료되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--warning)"></div>
+              <div class="noti-icon-circle" style="background:#FFF8EE"><i class="icon-calendar" style="color:var(--warning);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FFF8EE;color:var(--warning)">예약 관리 입력</span><span class="noti-time">2시간 전</span></div>
+                <div class="noti-msg">Beijing Care 예약(4월 7일) 조율완료되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <!-- Read items -->
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--border-light)"><i class="icon-building-2" style="color:var(--fg-secondary);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--border-light);color:var(--fg-secondary)">병원 업데이트</span><span class="noti-time">5시간 전</span></div>
+                <div class="noti-msg">서울아산병원 프로필 정보가 업데이트되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--accent-light)"><i class="icon-user-plus" style="color:var(--accent);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--accent-light);color:var(--accent)">계정 정보 수정</span><span class="noti-time">어제</span></div>
+                <div class="noti-msg">사용자 프로필 정보와 권한이 업데이트되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#FFF8EE"><i class="icon-file-text" style="color:var(--warning);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FFF8EE;color:var(--warning)">매뉴얼 갱신</span><span class="noti-time">어제</span></div>
+                <div class="noti-msg">관리 매뉴얼 V2 5차 변경이 갱신되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#EEFBF0"><i class="icon-handshake" style="color:var(--success);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#EEFBF0;color:var(--success)">파트너 등록</span><span class="noti-time">2일 전</span></div>
+                <div class="noti-msg">Thai Wellness Hub 파트너 등록이 승인되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#FEE2E2"><i class="icon-alert-triangle" style="color:var(--danger);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FEE2E2;color:var(--danger)">파트너 반환</span><span class="noti-time">3일 전</span></div>
+                <div class="noti-msg">Thai Wellness Hub 파트너 등록이 반려 상태변경되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--border-light)"><i class="icon-settings" style="color:var(--fg-secondary);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--border-light);color:var(--fg-secondary)">매뉴얼 발행</span><span class="noti-time">4일 전</span></div>
+                <div class="noti-msg">운영 매뉴얼 V2 5차 발행되었습니다</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unread Tab -->
+        <div data-tab-panel="unread" style="display:none">
+          <div class="noti-list">
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--accent)"></div>
+              <div class="noti-icon-circle" style="background:var(--accent-light)"><i class="icon-message-square" style="color:var(--accent);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--accent-light);color:var(--accent)">새 상담 접수</span><span class="noti-time">10분 전</span></div>
+                <div class="noti-msg">외국인 환자 상담을 요청했습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--danger)"></div>
+              <div class="noti-icon-circle" style="background:#FEE2E2"><i class="icon-alert-circle" style="color:var(--danger);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FEE2E2;color:var(--danger)">취소 알림</span><span class="noti-time">30분 전</span></div>
+                <div class="noti-msg">Emily Chen 님의 04.18 예약이 취소되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--success)"></div>
+              <div class="noti-icon-circle" style="background:#EEFBF0"><i class="icon-check-circle" style="color:var(--success);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#EEFBF0;color:var(--success)">정산 완료</span><span class="noti-time">1시간 전</span></div>
+                <div class="noti-msg">MediLink Asia 3월 정산이 완료되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+            <div class="noti-list-item unread">
+              <div class="noti-dot" style="background:var(--warning)"></div>
+              <div class="noti-icon-circle" style="background:#FFF8EE"><i class="icon-calendar" style="color:var(--warning);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FFF8EE;color:var(--warning)">예약 관리 입력</span><span class="noti-time">2시간 전</span></div>
+                <div class="noti-msg">Beijing Care 예약(4월 7일) 조율완료되었습니다</div>
+              </div>
+              <div class="noti-actions"><span class="noti-mark-btn">확인</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Read Tab -->
+        <div data-tab-panel="read" style="display:none">
+          <div class="noti-list">
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--border-light)"><i class="icon-building-2" style="color:var(--fg-secondary);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--border-light);color:var(--fg-secondary)">병원 업데이트</span><span class="noti-time">5시간 전</span></div>
+                <div class="noti-msg">서울아산병원 프로필 정보가 업데이트되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--accent-light)"><i class="icon-user-plus" style="color:var(--accent);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--accent-light);color:var(--accent)">계정 정보 수정</span><span class="noti-time">어제</span></div>
+                <div class="noti-msg">사용자 프로필 정보와 권한이 업데이트되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#FFF8EE"><i class="icon-file-text" style="color:var(--warning);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FFF8EE;color:var(--warning)">매뉴얼 갱신</span><span class="noti-time">어제</span></div>
+                <div class="noti-msg">관리 매뉴얼 V2 5차 변경이 갱신되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#EEFBF0"><i class="icon-handshake" style="color:var(--success);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#EEFBF0;color:var(--success)">파트너 등록</span><span class="noti-time">2일 전</span></div>
+                <div class="noti-msg">Thai Wellness Hub 파트너 등록이 승인되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:#FEE2E2"><i class="icon-alert-triangle" style="color:var(--danger);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:#FEE2E2;color:var(--danger)">파트너 반환</span><span class="noti-time">3일 전</span></div>
+                <div class="noti-msg">Thai Wellness Hub 파트너 등록이 반려 상태변경되었습니다</div>
+              </div>
+            </div>
+            <div class="noti-list-item">
+              <div class="noti-dot" style="background:transparent"></div>
+              <div class="noti-icon-circle" style="background:var(--border-light)"><i class="icon-settings" style="color:var(--fg-secondary);font-size:16px"></i></div>
+              <div class="noti-content">
+                <div class="noti-content-top"><span class="noti-type" style="background:var(--border-light);color:var(--fg-secondary)">매뉴얼 발행</span><span class="noti-time">4일 전</span></div>
+                <div class="noti-msg">운영 매뉴얼 V2 5차 발행되었습니다</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="noti-pagination">
+          <div class="page-info">1–20 / 28</div>
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn"><i class="icon-chevron-right" style="font-size:14px"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modals -->
+<div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
+
+<script src="../assets/admin/js/common.js"></script>
+<script>
+  // Mark individual notification as read
+  document.querySelectorAll('.noti-list-item .noti-mark-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const item = btn.closest('.noti-list-item');
+      if (item) {
+        item.classList.remove('unread');
+        item.classList.add('read');
+      }
+    });
+  });
+
+  // Top "확인" button → mark all as read
+  const topMark = document.querySelector('.noti-stats').nextElementSibling;
+  if (topMark && topMark.classList.contains('noti-mark-btn')) {
+    topMark.addEventListener('click', () => {
+      document.querySelectorAll('.noti-list-item').forEach(item => {
+        item.classList.remove('unread');
+        item.classList.add('read');
+      });
+    });
+  }
+</script>
+</body>
+</html>

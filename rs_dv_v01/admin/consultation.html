@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상담/예약 관리 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/admin/css/common.css">
+  <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
+  <style>
+    .sidebar-user .su-av{width:36px;height:36px;border-radius:50%;background:var(--fg-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+    .su-name-row{display:flex;align-items:center;gap:6px}
+    .su-name{font-size:13px;font-weight:600;color:var(--fg-primary)}
+    .su-tag{background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
+    .su-mail{font-size:12px;color:var(--fg-muted);margin-top:2px}
+
+    .act-bar{display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--border);padding:16px 24px;flex-shrink:0}
+    .act-bar .act-spacer{flex:1}
+    .act-count{color:var(--fg-muted);font-size:14px;font-weight:500}
+    .act-bar .btn{padding:10px 18px;font-size:14px}
+    .act-bar .btn-new{border-radius:8px;padding:12px 24px;font-size:14px;font-weight:600}
+
+    .stat-row{display:flex;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+    .stat-cell{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--border)}
+    .stat-cell:last-child{border-right:none}
+    .stat-cell .sv{font-family:var(--font-mono);font-size:24px;font-weight:700;line-height:1.3}
+    .stat-cell .sl{font-size:14px;color:var(--fg-muted)}
+
+    .kb{display:flex;flex:1;min-height:0;overflow:hidden}
+    .kb-col{flex:1;min-width:0;background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:8px;padding:12px 10px;overflow-y:auto}
+    .kb-col:last-child{border-right:none}
+    .kb-col-h{display:flex;align-items:center;justify-content:space-between;padding:0 0 4px}
+    .kb-col-h .kb-dot-wrap{display:flex;align-items:center;gap:6px}
+    .kb-col-h .kb-dot{width:8px;height:8px;border-radius:50%}
+    .kb-col-h .kb-t{font-size:14px;font-weight:600;color:var(--fg-primary)}
+    .kb-col-h .kb-cnt{font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--fg-muted)}
+
+    .kc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:6px;cursor:grab}
+    .kc.dragging{opacity:.4;cursor:grabbing}
+    .kc-ck{cursor:pointer}
+    .kc-grip{cursor:grab}
+    .kc.highlight-warn{border-color:var(--warning)}
+    .kc.highlight-accent{border-color:var(--accent)}
+    .kc.highlight-success{border-color:var(--success)}
+    .kc.highlight-muted{border-color:var(--fg-muted)}
+    .kc.done{opacity:.6}
+    .kc-top{display:flex;align-items:center;gap:6px}
+    .kc-grip{color:var(--fg-muted);font-size:12px}
+    .kc-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0}
+    .kc-name{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--fg-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kc-ck{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .kc-ck.on{background:var(--accent);border-color:var(--accent);color:#fff}
+    .kc-ck.warn{background:var(--warning);border-color:var(--warning);color:#fff}
+    .kc-ck.success{background:var(--success);border-color:var(--success);color:#fff}
+    .kc-ck.muted{background:var(--fg-muted);border-color:var(--fg-muted);color:#fff}
+    .kc-ck i{font-size:12px}
+    .kc-body{display:flex;flex-direction:column;gap:6px;padding-left:18px}
+    .kc-sub{font-size:14px;color:var(--fg-muted)}
+    .kc-meta{font-family:var(--font-mono);font-size:14px;color:var(--fg-muted)}
+    .kc-meta.accent{color:var(--accent);font-family:'Pretendard',sans-serif}
+    .kc-meta.success{color:var(--success)}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
+    <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
+    <a href="my-info.html" class="sidebar-user">
+      <div class="su-av">AD</div>
+      <div class="user-info">
+        <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
+        <div class="su-mail">admin@mediw.co.kr</div>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospitals.html" class="nav-item"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="cases.html" class="nav-item"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item active"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agencies.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
+  </aside>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <h1>상담/예약 관리</h1>
+        <p>환자 상담 접수 및 예약 현황을 관리합니다</p>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색..."></div>
+        <div class="bell-wrapper">
+          <button class="bell-btn"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
+          <div class="noti-dropdown">
+            <div class="noti-header"><span class="noti-title">알림</span><span class="noti-read-all">모두 읽음</span></div>
+            <div class="noti-item unread"><div class="noti-dot" style="background:#3B43DB"></div><div class="noti-body"><span class="noti-badge" style="background:#EEEFFC;color:#3B43DB">새 상담 접수</span><span class="noti-time">10분 전</span><div class="noti-text">외국인 환자 상담을 요청했습니다</div></div></div>
+            <div class="noti-item unread"><div class="noti-dot" style="background:#34C759"></div><div class="noti-body"><span class="noti-badge" style="background:#EEFBF0;color:#34C759">정산 완료</span><span class="noti-time">1시간 전</span><div class="noti-text">MediLink Asia 3월 정산 완료</div></div></div>
+            <div class="noti-item"><div class="noti-dot" style="background:#FF9500"></div><div class="noti-body"><span class="noti-badge" style="background:#FFF8EE;color:#FF9500">예약 관리</span><span class="noti-time">3시간 전</span><div class="noti-text">Beijing Care 예약 확정</div></div></div>
+            <a href="notification.html" class="noti-footer">알림 센터 전체 보기 →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="act-bar">
+      <button class="btn btn-dark btn-new" onclick="openModal('consultationModal')"><i class="icon-plus"></i>상담 접수</button>
+      <div class="act-spacer"></div>
+      <span class="act-count">2개 선택됨</span>
+      <button class="btn" style="background:#4B5563;color:#fff"><i class="icon-arrow-right"></i>일괄 이동</button>
+      <button class="btn btn-secondary">선택 해제</button>
+      <button class="btn btn-secondary"><i class="icon-trash-2"></i>삭제</button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell" style="background:#FFF8EE"><span class="sv" style="color:var(--warning)">12</span><span class="sl">대기중</span></div>
+      <div class="stat-cell" style="background:#EEF2FF"><span class="sv" style="color:var(--accent)">8</span><span class="sl">상담중</span></div>
+      <div class="stat-cell" style="background:#EEFBF0"><span class="sv" style="color:var(--success)">23</span><span class="sl">예약확정</span></div>
+      <div class="stat-cell" style="background:#F3EEFF"><span class="sv" style="color:var(--fg-primary)">367</span><span class="sl">완료</span></div>
+    </div>
+
+    <div class="kb">
+      <div class="kb-col">
+        <div class="kb-col-h"><div class="kb-dot-wrap"><span class="kb-dot" style="background:var(--warning)"></span><span class="kb-t">대기중</span></div><span class="kb-cnt">12</span></div>
+
+        <div class="kc highlight-warn">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#14B8A6">TY</div>
+            <span class="kc-name">타나카 유미</span>
+            <div class="kc-ck warn"><i class="icon-check"></i></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">일본 · 성형외과 문의</span>
+            <span class="kc-meta">30분 전</span>
+          </div>
+        </div>
+
+        <div class="kc">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#6366F1">JM</div>
+            <span class="kc-name">John Miller</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">미국 · 치과 임플란트</span>
+            <span class="kc-meta">1시간 전</span>
+          </div>
+        </div>
+
+        <div class="kc">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#EC4899">王</div>
+            <span class="kc-name">왕 리징</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">중국 · 피부과 레이저</span>
+            <span class="kc-meta">2시간 전</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-col-h"><div class="kb-dot-wrap"><span class="kb-dot" style="background:var(--accent)"></span><span class="kb-t">상담중</span></div><span class="kb-cnt">8</span></div>
+
+        <div class="kc highlight-accent">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:var(--accent)">SK</div>
+            <span class="kc-name">사토 켄</span>
+            <div class="kc-ck on"><i class="icon-check"></i></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">일본 · 안과 라식</span>
+            <span class="kc-meta accent">담당: 강남세브란스</span>
+          </div>
+        </div>
+
+        <div class="kc">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#F59E0B">EC</div>
+            <span class="kc-name">Emily Chen</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">미국 · 성형외과</span>
+            <span class="kc-meta accent">담당: 서울대학교병원</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-col-h"><div class="kb-dot-wrap"><span class="kb-dot" style="background:var(--success)"></span><span class="kb-t">예약확정</span></div><span class="kb-cnt">23</span></div>
+
+        <div class="kc">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#14B8A6">NT</div>
+            <span class="kc-name">응우옌 탄</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">베트남 · 치과</span>
+            <span class="kc-meta success">04.15 예약</span>
+          </div>
+        </div>
+
+        <div class="kc">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#EF4444">SA</div>
+            <span class="kc-name">스즈키 아야</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">일본 · 피부과</span>
+            <span class="kc-meta success">04.18 예약</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-col-h"><div class="kb-dot-wrap"><span class="kb-dot" style="background:var(--fg-muted)"></span><span class="kb-t">완료</span></div><span class="kb-cnt">367</span></div>
+
+        <div class="kc done">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#14B8A6">김</div>
+            <span class="kc-name">김태호</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">한국 · 성형외과</span>
+            <span class="kc-meta">03.28 완료</span>
+          </div>
+        </div>
+
+        <div class="kc done">
+          <div class="kc-top">
+            <i class="icon-grip-vertical kc-grip"></i>
+            <div class="kc-av" style="background:#14B8A6">LP</div>
+            <span class="kc-name">Lisa Park</span>
+            <div class="kc-ck"></div>
+          </div>
+          <div class="kc-body">
+            <span class="kc-sub">미국 · 피부과</span>
+            <span class="kc-meta">03.25 완료</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Consultation Intake Modal -->
+<div class="modal-overlay" id="consultationModal">
+  <div class="modal-content" style="width:520px;padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)">
+      <div style="font-size:18px;font-weight:700;color:var(--fg-primary);font-family:'Pretendard',sans-serif">상담 접수</div>
+      <i class="icon-x" style="font-size:20px;color:var(--fg-muted);cursor:pointer" onclick="closeModal('consultationModal')"></i>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">환자명 <span class="required">*</span></label>
+          <input class="form-input" type="text" placeholder="환자 이름">
+        </div>
+        <div class="form-group">
+          <label class="form-label">국적 <span class="required">*</span></label>
+          <select class="form-select"><option value="">국가 선택</option><option>일본</option><option>중국</option><option>베트남</option><option>태국</option><option>미국</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">상담 유형 <span class="required">*</span></label>
+        <select class="form-select"><option value="">진료과 선택</option><option>건강검진</option><option>정형외과</option><option>성형외과</option><option>피부과</option><option>안과</option><option>산부인과</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">상담 내용</label>
+        <textarea class="form-textarea" placeholder="상담 내용을 간략히 입력하세요" style="min-height:80px"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;padding:16px 24px;border-top:1px solid var(--border)">
+      <button class="btn btn-secondary" style="flex:1;height:44px" onclick="closeModal('consultationModal')">취소</button>
+      <button class="btn btn-primary" style="flex:1;height:44px" onclick="closeModal('consultationModal');showSuccess('상담 접수가 완료되었습니다','담당 코디네이터가 곧 배정됩니다.')">접수하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shared Modals -->
+<div class="modal-overlay" id="unsavedModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FFF8EE"><i class="icon-alert-triangle" style="color:#FF9500;font-size:24px"></i></div><div class="modal-title">저장하지 않은 변경사항이 있습니다</div><div class="modal-desc">이 페이지를 떠나면 변경사항이 사라집니다.<br>정말 나가시겠습니까?</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('unsavedModal')">나가기</button><button class="btn btn-dark" onclick="closeModal('unsavedModal')">저장 후 나가기</button></div></div></div>
+<div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
+<div class="modal-overlay" id="deleteModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FEE2E2"><i class="icon-trash-2" style="color:#FF3B30;font-size:24px"></i></div><div class="modal-title">정말 삭제하시겠습니까?</div><div class="modal-desc">삭제된 데이터는 복구할 수 없습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('deleteModal')">취소</button><button class="btn btn-danger" onclick="closeModal('deleteModal')">삭제</button></div></div></div>
+<div class="modal-overlay" id="successModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#EEFBF0"><i class="icon-check-circle" style="color:#34C759;font-size:24px"></i></div><div class="modal-title">등록이 완료되었습니다</div><div class="modal-desc">목록 페이지로 이동하거나 상세보기 할 수 있습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('successModal')">목록으로</button><button class="btn btn-primary" onclick="closeModal('successModal')">상세보기</button></div></div></div>
+<div class="modal-overlay" id="errorModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FEE2E2"><i class="icon-alert-circle" style="color:#FF3B30;font-size:24px"></i></div><div class="modal-title">일시적인 오류가 발생했습니다</div><div class="modal-desc">서비스 이용 중 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('errorModal')">닫기</button><button class="btn btn-danger" onclick="closeModal('errorModal')">다시 시도</button></div></div></div>
+
+<script src="../assets/admin/js/common.js"></script>
+<script>
+(function(){
+  const HIGHLIGHTS = ['highlight-warn','highlight-accent','highlight-success','highlight-muted'];
+  const CK_CLASS = ['warn','on','success','muted'];
+  const cards = document.querySelectorAll('.kc');
+  const cols = document.querySelectorAll('.kb-col');
+
+  function colIndex(card){
+    const col = card.closest('.kb-col');
+    return [...cols].indexOf(col);
+  }
+  function applyHighlight(card, on){
+    HIGHLIGHTS.forEach(c => card.classList.remove(c));
+    const ck = card.querySelector('.kc-ck');
+    if (ck) CK_CLASS.forEach(c => ck.classList.remove(c));
+    if (on){
+      const i = Math.max(0, colIndex(card));
+      card.classList.add(HIGHLIGHTS[i]);
+      if (ck) ck.classList.add(CK_CLASS[i]);
+    }
+  }
+
+  cards.forEach(card => {
+    card.classList.remove('highlight-warn','highlight-accent','highlight-success','highlight-muted');
+    const ck = card.querySelector('.kc-ck');
+    if (ck) {
+      ck.classList.remove('on','warn','success','muted');
+      ck.innerHTML = '';
+      ck.addEventListener('click', e => {
+        e.stopPropagation();
+        const nowOn = !ck.classList.contains('on') && !ck.classList.contains('warn') && !ck.classList.contains('success') && !ck.classList.contains('muted');
+        applyHighlight(card, nowOn);
+        ck.innerHTML = nowOn ? '<i class="icon-check"></i>' : '';
+      });
+    }
+    card.setAttribute('draggable','true');
+    card.addEventListener('dragstart', e => {
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      const i = colIndex(card);
+      card.classList.toggle('done', i === 3);
+      if (card.querySelector('.kc-ck.on, .kc-ck.warn, .kc-ck.success, .kc-ck.muted')) {
+        applyHighlight(card, true);
+      }
+    });
+  });
+
+  cols.forEach(col => {
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = document.querySelector('.kc.dragging');
+      if (!dragging) return;
+      const after = [...col.querySelectorAll('.kc:not(.dragging)')].find(c => {
+        const r = c.getBoundingClientRect();
+        return e.clientY < r.top + r.height / 2;
+      });
+      if (after) col.insertBefore(dragging, after);
+      else col.appendChild(dragging);
+    });
+  });
+})();
+</script>
+</body>
+</html>
