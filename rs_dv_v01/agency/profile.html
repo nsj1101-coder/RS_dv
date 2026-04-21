@@ -15,7 +15,8 @@
     .su-tag{background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
     .su-mail{font-size:12px;color:var(--fg-muted);margin-top:2px}
 
-    .pf-wrap{flex:1;overflow-y:auto;padding:24px 32px 32px;display:flex;flex-direction:column;gap:20px}
+    .pf-wrap{flex:1;overflow-y:auto;padding:24px 32px 96px;display:flex;flex-direction:column;gap:20px}
+    [data-panel]{display:flex;flex-direction:column;gap:16px}
 
     .partner-card{background:linear-gradient(135deg,#3B43DB,#6B73E8);border-radius:var(--radius-lg);padding:24px 28px;color:#fff;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
     .partner-logo{width:72px;height:72px;border-radius:18px;background:#fff;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.12)}
@@ -76,7 +77,8 @@
     .hist-table tbody tr:last-child td{border-bottom:none}
     .hist-amount{font-family:var(--font-mono);font-weight:700;color:var(--success)}
 
-    .pf-action-bar{position:sticky;bottom:0;background:var(--bg-card);border-top:1px solid var(--border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center;margin:0 -28px -24px;border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+    .pf-action-bar{position:fixed;bottom:0;left:var(--sidebar-w);right:0;background:var(--bg-card);border-top:1px solid var(--border);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
+    html.sidebar-collapsed .pf-action-bar{left:var(--sidebar-collapsed-w)}
     .pf-action-bar .pf-status{font-size:12px;color:var(--fg-muted)}
     .pf-action-bar .pf-status strong{color:var(--fg-primary);font-weight:600}
 
@@ -127,9 +129,8 @@
           <div class="partner-name">MedLink Asia 의료관광 에이전시</div>
           <div class="partner-name-en">MedLink Asia Medical Tourism Agency Co., Ltd.</div>
         </div>
-        <div class="partner-stats">
+        <div class="partner-stats" style="grid-template-columns:repeat(2,1fr);min-width:280px">
           <div class="ps-item"><div class="ps-val">86</div><div class="ps-lbl">누적 송출 환자</div></div>
-          <div class="ps-item"><div class="ps-val">4.8 / 5.0</div><div class="ps-lbl">병원 평가 평균</div></div>
           <div class="ps-item"><div class="ps-val">₩2,400만</div><div class="ps-lbl">이달 정산 예정</div></div>
         </div>
       </div>
@@ -304,17 +305,6 @@
               </div>
             </div>
 
-            <div class="pf-section">
-              <h2><i class="icon-receipt" style="font-size:18px;color:var(--accent)"></i> 세금 정보</h2>
-              <div class="desc">세금계산서 발행을 위한 정보를 입력해 주세요.</div>
-              <div class="pf-form-grid">
-                <div class="form-group"><label class="form-label">세금계산서 이메일</label><input class="form-input" type="email" value="tax@medlinkasia.com"></div>
-                <div class="form-group"><label class="form-label">업태</label><input class="form-input" value="서비스업"></div>
-                <div class="form-group"><label class="form-label">종목</label><input class="form-input" value="의료관광알선업"></div>
-                <div class="form-group"><label class="form-label">원천징수 적용</label><select class="form-select"><option selected>적용 (3.3%)</option><option>미적용</option></select></div>
-              </div>
-            </div>
-
             <div class="pf-action-bar">
               <span class="pf-status">다음 정산일: <strong>2026-05-15</strong> · 예상 금액 <strong>₩24,000,000</strong></span>
               <div style="display:flex;gap:10px"><button class="btn btn-secondary">취소</button><button class="btn btn-primary"><i class="icon-check" style="font-size:14px"></i> 변경사항 저장</button></div>
@@ -364,25 +354,6 @@
               </div>
               <div style="margin-top:14px;text-align:right">
                 <button class="btn btn-primary" style="padding:10px 18px"><i class="icon-key" style="font-size:14px"></i> 비밀번호 변경</button>
-              </div>
-            </div>
-
-            <div class="pf-section">
-              <h2><i class="icon-shield" style="font-size:18px;color:var(--accent)"></i> 2단계 인증</h2>
-              <div class="desc">로그인 시 추가 보안 단계를 거칩니다.</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
-                <div>
-                  <div style="font-size:14px;font-weight:600;color:var(--fg-primary)">SMS 인증</div>
-                  <div style="font-size:12px;color:var(--fg-muted);margin-top:2px">로그인 시 +82-10-1234-5678로 인증 코드 발송</div>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border-light)">
-                <div>
-                  <div style="font-size:14px;font-weight:600;color:var(--fg-primary)">앱 인증 (TOTP)</div>
-                  <div style="font-size:12px;color:var(--fg-muted);margin-top:2px">Google Authenticator, Authy 등</div>
-                </div>
-                <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
               </div>
             </div>
 
