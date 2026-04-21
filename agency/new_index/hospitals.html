@@ -61,8 +61,8 @@
     .hs-detail{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
     .hs-img-row{display:flex;gap:12px;height:160px;flex-shrink:0}
     .hs-img{flex:1;border-radius:var(--radius-sm);background-size:cover;background-position:center}
-    .hs-img.img1{background-image:url('../assets/img/generated-1776044203736.png')}
-    .hs-img.img2{background-image:url('../assets/img/generated-1776044221333.png')}
+    .hs-img.img1{background-image:url('assets/img/generated-1776044203736.png')}
+    .hs-img.img2{background-image:url('assets/img/generated-1776044221333.png')}
     .hs-name-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
     .hs-name{font-size:20px;font-weight:700;color:var(--fg-primary)}
     .hs-action-row{display:flex;align-items:center;gap:8px}
@@ -74,7 +74,7 @@
     .hs-bdg i{font-size:14px}
     .hs-d-label{font-size:15px;font-weight:700;color:var(--fg-primary)}
     .hs-desc{font-size:14px;line-height:1.6;color:var(--fg-secondary)}
-    .hs-map{width:100%;height:140px;border-radius:var(--radius-sm);background:url('../assets/img/generated-1776047895332.png') center/cover no-repeat}
+    .hs-map{width:100%;height:140px;border-radius:var(--radius-sm);background:url('assets/img/generated-1776047895332.png') center/cover no-repeat}
     .hs-addr-row{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--fg-secondary)}
     .hs-addr-row i{font-size:18px;color:var(--fg-muted)}
     .hs-divider{height:1px;background:var(--border-light)}
@@ -385,6 +385,10 @@
       updateIntake();
     });
   });
+
+  // 초기 상태: 첫 병원 자동 선택 (오른쪽 상세 영역 비어있는 것 방지)
+  const firstCard = document.querySelector('.hs-list .hs-card');
+  if (firstCard) firstCard.click();
 </script>
 </body>
 </html>
