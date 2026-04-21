@@ -3,64 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MEDI-W Admin</title>
+  <title>MEDI-W Admin — Preview</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden}
-    iframe{width:100vw;height:100vh;border:none;display:block}
+    html,body{height:100%;font-family:'Pretendard',-apple-system,sans-serif;background:#F9FAFB;color:#111827}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+    .card{max-width:920px;width:100%;background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:40px 44px;box-shadow:0 4px 24px rgba(0,0,0,.04)}
+    .logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+    .logo i{color:#3B43DB;font-size:24px}
+    .logo .t{font-size:16px;font-weight:800;letter-spacing:-.3px}
+    .logo .s{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:.6px;margin-left:auto}
+    h1{font-size:24px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
+    p.desc{font-size:14px;color:#6B7280;margin-bottom:28px}
+    .group{margin-bottom:22px}
+    .g-title{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;padding-left:2px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .item{display:flex;align-items:center;gap:8px;padding:11px 14px;border:1px solid #E5E7EB;border-radius:8px;font-size:13.5px;color:#111827;text-decoration:none;transition:all .15s;background:#fff}
+    .item:hover{border-color:#3B43DB;background:#EEEFFC;color:#3B43DB}
+    .item i{font-size:15px;color:#6B7280;flex-shrink:0}
+    .item:hover i{color:#3B43DB}
+    .item .label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .item .arrow{font-size:12px;color:#C7CAEE;opacity:0}
+    .item:hover .arrow{opacity:1}
+    @media (max-width:720px){.grid{grid-template-columns:repeat(2,1fr)} .card{padding:28px 20px}}
+    @media (max-width:480px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <iframe id="pvFrame" src="about:blank" title="Preview"></iframe>
-  <script>
-    const pages = [
-      { group: '인증', items: [
-        { file: 'login.html',           label: '로그인' },
-        { file: 'session-expired.html', label: '세션 만료' },
-      ]},
-      { group: '메인', items: [
-        { file: 'dashboard.html',    label: '대시보드' },
-        { file: 'notification.html', label: '알림 센터' },
-      ]},
-      { group: '병원', items: [
-        { file: 'hospital-search.html',   label: '병원 검색' },
-        { file: 'hospital-list.html',     label: '병원 관리' },
-        { file: 'hospital-register.html', label: '병원 등록' },
-      ]},
-      { group: '환자 · 상담', items: [
-        { file: 'patient.html',          label: '환자 관리' },
-        { file: 'patient-register.html', label: '새 환자 등록 (v2 전용)' },
-        { file: 'consultation.html',     label: '상담/예약 관리' },
-      ]},
-      { group: '파트너', items: [
-        { file: 'agency.html', label: '에이전시 파트너' },
-      ]},
-      { group: '통계/리포트', items: [
-        { file: 'statistics.html',            label: '통계 — 개요' },
-        { file: 'statistics-patient.html',    label: '통계 — 환자 분석' },
-        { file: 'statistics-revenue.html',    label: '통계 — 수익 분석' },
-        { file: 'statistics-operations.html', label: '통계 — 운영 효율' },
-      ]},
-      { group: '내 정보', items: [
-        { file: 'my-info.html', label: '관리자 정보' },
-      ]},
-      { group: '설정', items: [
-        { file: 'settings.html',              label: '설정' },
-        { file: 'settings-general.html',      label: '설정 — 일반' },
-        { file: 'settings-notification.html', label: '설정 — 알림' },
-        { file: 'settings-permission.html',   label: '설정 — 권한' },
-        { file: 'settings-data.html',         label: '설정 — 데이터' },
-      ]},
-      { group: '오류', items: [
-        { file: '404.html', label: '404 · Not Found' },
-        { file: '403.html', label: '403 · Forbidden' },
-      ]},
-    ];
+<div class="wrap">
+  <div class="card">
+    <div class="logo">
+      <i class="icon-heart-pulse"></i>
+      <span class="t">MEDI-W Admin</span>
+      <span class="s">Preview</span>
+    </div>
+    <h1>어드민 화면 프리뷰</h1>
+    <p class="desc">아래 목록에서 화면을 선택하면 해당 페이지로 이동합니다. (총 22개 화면 · v03)</p>
 
-    const PAGES_DIR = 'pages/';
-    const initial = location.hash.replace(/^#/, '');
-    const match = pages.flatMap(g => g.items).find(i => i.file === initial);
-    document.getElementById('pvFrame').src = PAGES_DIR + (match ? match.file : 'dashboard.html');
-  </script>
+    <div class="group">
+      <div class="g-title">인증</div>
+      <div class="grid">
+        <a class="item" href="pages/login.html"><i class="icon-log-in"></i><span class="label">로그인</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/session-expired.html"><i class="icon-clock"></i><span class="label">세션 만료</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">메인</div>
+      <div class="grid">
+        <a class="item" href="pages/dashboard.html"><i class="icon-layout-dashboard"></i><span class="label">대시보드</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/notification.html"><i class="icon-bell"></i><span class="label">알림 센터</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">병원</div>
+      <div class="grid">
+        <a class="item" href="pages/hospital-search.html"><i class="icon-search"></i><span class="label">병원 검색</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/hospital-list.html"><i class="icon-building-2"></i><span class="label">병원 관리</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/hospital-register.html"><i class="icon-plus"></i><span class="label">병원 등록</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">환자 · 상담</div>
+      <div class="grid">
+        <a class="item" href="pages/patient.html"><i class="icon-users"></i><span class="label">환자 관리</span><span class="arrow">→</span></a>
+        <a class="item" href="pages-v2/patient-register.html"><i class="icon-user-plus"></i><span class="label">환자 등록 (v2)</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/consultation.html"><i class="icon-message-square"></i><span class="label">상담/예약 관리</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">파트너</div>
+      <div class="grid">
+        <a class="item" href="pages/agency.html"><i class="icon-handshake"></i><span class="label">에이전시 파트너</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">통계 / 리포트</div>
+      <div class="grid">
+        <a class="item" href="pages/statistics.html"><i class="icon-chart-bar"></i><span class="label">통계 — 개요</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/statistics-patient.html"><i class="icon-user-search"></i><span class="label">환자 분석</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/statistics-revenue.html"><i class="icon-coins"></i><span class="label">수익 분석</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/statistics-operations.html"><i class="icon-activity"></i><span class="label">운영 효율</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">내 정보</div>
+      <div class="grid">
+        <a class="item" href="pages/my-info.html"><i class="icon-user"></i><span class="label">관리자 정보</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">설정</div>
+      <div class="grid">
+        <a class="item" href="pages/settings.html"><i class="icon-settings"></i><span class="label">설정 허브</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/settings-general.html"><i class="icon-sliders"></i><span class="label">일반</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/settings-notification.html"><i class="icon-bell-ring"></i><span class="label">알림</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/settings-permission.html"><i class="icon-shield"></i><span class="label">권한</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/settings-data.html"><i class="icon-database"></i><span class="label">데이터</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="g-title">오류</div>
+      <div class="grid">
+        <a class="item" href="pages/404.html"><i class="icon-file-question"></i><span class="label">404 · Not Found</span><span class="arrow">→</span></a>
+        <a class="item" href="pages/403.html"><i class="icon-lock"></i><span class="label">403 · Forbidden</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
