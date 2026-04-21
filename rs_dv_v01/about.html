@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회사 소개 — MediW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/public/css/common.css">
+  <style>
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2.5rem 0;}
+    .stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#3391ff,#8eceff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em;}
+    .stat-lbl{font-size:.8125rem;color:var(--text-tertiary);margin-top:.25rem;}
+    .timeline{border-left:2px solid var(--border);padding-left:1.5rem;}
+    .tl-item{padding-bottom:1.25rem;position:relative;}
+    .tl-item::before{content:'';position:absolute;left:-1.625rem;top:.25rem;width:.75rem;height:.75rem;border-radius:50%;background:#3391ff;}
+    .tl-year{font-size:.75rem;font-weight:700;color:#3391ff;margin-bottom:.125rem;}
+    .tl-text{font-size:.9375rem;color:var(--text-secondary);}
+    @media (max-width:720px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo"><div class="logo-icon">M</div><span class="logo-text">MediW</span></a>
+      <div class="nav-links">
+        <a href="about.html">회사 소개</a>
+        <a href="support.html">고객센터</a>
+        <a href="contact.html">문의</a>
+      </div>
+      <div class="nav-actions">
+        <button class="theme-toggle" onclick="toggleTheme()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></button>
+        <a href="login.html" class="btn btn-ghost">로그인</a>
+        <a href="signup.html" class="btn btn-primary">회원가입</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="page-hero">
+      <h1>글로벌 의료, 더 가깝게</h1>
+      <p>MediW는 해외 환자와 국내 병원을 잇는 글로벌 의료 허브 플랫폼입니다. 언어·절차·신뢰의 장벽을 걷어내고, 누구나 최고의 치료를 받을 수 있는 세상을 만듭니다.</p>
+    </div>
+
+    <div class="container-sm section">
+      <div class="stats-row">
+        <div><div class="stat-num">150+</div><div class="stat-lbl">파트너 병원</div></div>
+        <div><div class="stat-num">23</div><div class="stat-lbl">서비스 국가</div></div>
+        <div><div class="stat-num">2,400+</div><div class="stat-lbl">연수 프로그램</div></div>
+        <div><div class="stat-num">98%</div><div class="stat-lbl">환자 만족도</div></div>
+      </div>
+
+      <h2 class="section-title">미션</h2>
+      <p class="prose">의료는 국경이 있어서는 안 됩니다. 우리는 국제 환자가 언어·절차·신뢰의 문제 없이 한국의 첨단 의료 인프라를 활용할 수 있도록 기술과 네트워크를 제공합니다. 환자·병원·에이전시가 하나의 플랫폼 위에서 연결될 때, 글로벌 의료의 진짜 혁신이 시작된다고 믿습니다.</p>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">어떻게 일하나요</h2>
+      <div class="info-grid" style="margin-top:1.5rem;">
+        <div class="info-box">
+          <div class="ic"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h12A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6z"/></svg></div>
+          <h4>검증된 의료 네트워크</h4>
+          <p>JCI · 보건복지부 인증 기반으로 파트너 병원을 엄선합니다.</p>
+        </div>
+        <div class="info-box">
+          <div class="ic"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg></div>
+          <h4>빠른 상담 매칭</h4>
+          <p>환자 프로필을 기반으로 최적의 병원과 의료진을 연결합니다.</p>
+        </div>
+        <div class="info-box">
+          <div class="ic"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h4>끝까지 책임지는 컨시어지</h4>
+          <p>비자·통역·숙소·교통까지 전 과정을 함께 준비합니다.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">연혁</h2>
+      <div class="timeline" style="margin-top:1.5rem;">
+        <div class="tl-item"><div class="tl-year">2026</div><div class="tl-text">플랫폼 v03 런칭, 에이전시 포털 공개</div></div>
+        <div class="tl-item"><div class="tl-year">2025</div><div class="tl-text">23개국 150개 파트너 병원 연결 완료</div></div>
+        <div class="tl-item"><div class="tl-year">2024</div><div class="tl-text">시리즈 A 투자 유치, 해외 환자 2,400명 유치</div></div>
+        <div class="tl-item"><div class="tl-year">2023</div><div class="tl-text">MediW 법인 설립, MVP 오픈</div></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="about.html">회사 소개</a>
+        <a href="contact.html">문의</a>
+        <a href="support.html">고객센터</a>
+        <a href="privacy.html">개인정보처리방침</a>
+        <a href="terms.html">이용약관</a>
+      </div>
+      <div class="footer-copy">© 2026 MediW. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="assets/public/js/common.js"></script>
+</body>
+</html>

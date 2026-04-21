@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신규 에이전시 등록 — MEDI-W Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+  <link rel="stylesheet" href="../assets/admin/css/common.css">
+  <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
+  <style>
+    body{background:var(--bg-primary)}
+    .reg-wrap{display:flex;flex-direction:column;min-height:100vh}
+    .reg-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .reg-header .back-link{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--fg-primary);cursor:pointer}
+    .reg-header .cancel-btn{font-size:14px;color:var(--fg-muted);cursor:pointer;font-weight:500}
+    .reg-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:32px 20px;overflow-y:auto}
+    .reg-form{width:100%;max-width:520px;display:flex;flex-direction:column;gap:28px}
+    .reg-form h2{font-size:18px;font-weight:700;color:var(--fg-primary)}
+    .reg-form .reg-desc{font-size:13px;color:var(--fg-muted);margin-top:-20px}
+    .reg-footer{display:flex;justify-content:center;padding:24px}
+    .reg-footer .btn{min-width:300px;padding:14px 0;font-size:16px}
+    .reg-footer-split{display:flex;justify-content:center;gap:16px;padding:24px}
+    .reg-footer-split .btn{min-width:140px;padding:14px 0;font-size:16px}
+  </style>
+</head>
+<body>
+  <div class="reg-wrap">
+    <!-- Header -->
+    <div class="reg-header">
+      <a href="agencies.html" class="back-link"><i class="icon-chevron-left" style="font-size:18px"></i> 신규 에이전시 등록</a>
+      <span class="cancel-btn" onclick="navigateTo('agencies.html')">취소</span>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step active" id="step1">
+        <div class="step-number">1</div>
+        <span>기본 정보</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="step2">
+        <div class="step-number">2</div>
+        <span>진료 정보</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">
+        <div class="step-number">3</div>
+        <span>계약 정보</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Basic Info -->
+    <div class="reg-body" id="panel1">
+      <div class="reg-form">
+        <h2>기본 정보</h2>
+        <p class="reg-desc">병원의 기본 정보를 입력해 주세요</p>
+        <div class="form-group">
+          <label class="form-label">병원명 <span class="required">*</span></label>
+          <input class="form-input" placeholder="병원명을 입력하세요">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">소재지 <span class="required">*</span></label>
+            <select class="form-select"><option>지역 선택</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">상세 주소</label>
+            <input class="form-input" placeholder="상세 주소를 입력하세요">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">대표 연락처 <span class="required">*</span></label>
+            <input class="form-input" placeholder="02-000-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">이메일</label>
+            <input class="form-input" placeholder="hospital@example.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">병원 소개</label>
+          <textarea class="form-textarea" placeholder="병원에 대한 간략한 소개를 입력하세요"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Medical Info (hidden by default) -->
+    <div class="reg-body" id="panel2" style="display:none">
+      <div class="reg-form">
+        <h2>진료 정보</h2>
+        <p class="reg-desc">진료과 및 의료 관련 정보를 입력하세요</p>
+        <div class="form-group">
+          <label class="form-label">주요 진료과 <span class="required">*</span></label>
+          <select class="form-select"><option>진료과 선택</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">진료 분야</label>
+            <input class="form-input" placeholder="진료 분야를 입력하세요">
+          </div>
+          <div class="form-group">
+            <label class="form-label">배정인 수 <span class="required">*</span></label>
+            <input class="form-input" placeholder="0" type="number">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">병상 수</label>
+            <input class="form-input" placeholder="0" type="number">
+          </div>
+          <div class="form-group">
+            <label class="form-label">수술실 수</label>
+            <input class="form-input" placeholder="0" type="number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">주요 시설/서류</label>
+          <textarea class="form-textarea" placeholder="주요 시설 및 보유 장비 정보를 입력하세요"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">진료사항</label>
+          <textarea class="form-textarea" placeholder="기타 특이사항을 입력하세요"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Contract Info (hidden by default) -->
+    <div class="reg-body" id="panel3" style="display:none">
+      <div class="reg-form">
+        <h2>계약 정보</h2>
+        <p class="reg-desc">계약 및 비즈니스 관련 정보를 입력하세요</p>
+        <div class="form-group">
+          <label class="form-label">계약 유형 <span class="required">*</span></label>
+          <select class="form-select"><option>계약 유형 선택</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">수수료율 <span class="required">*</span></label>
+            <input class="form-input" placeholder="수수료율을 입력하세요 (%)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">결산 주기 <span class="required">*</span></label>
+            <select class="form-select"><option>결산 주기 선택</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">계약 시작일 <span class="required">*</span></label>
+            <input class="form-input" type="date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">계약 종료일</label>
+            <input class="form-input" type="date">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">특약 사항</label>
+          <textarea class="form-textarea" placeholder="특약 사항을 입력하세요"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer: Step 1 -->
+    <div class="reg-footer" id="footer1">
+      <button class="btn btn-primary" onclick="goStep(2)">다음: 진료 정보 →</button>
+    </div>
+    <!-- Footer: Step 2 -->
+    <div class="reg-footer" id="footer2" style="display:none">
+      <button class="btn btn-primary" onclick="goStep(3)">다음: 진료 정보 →</button>
+    </div>
+    <!-- Footer: Step 3 -->
+    <div class="reg-footer-split" id="footer3" style="display:none">
+      <button class="btn btn-secondary" onclick="goStep(2)">이전</button>
+      <button class="btn btn-primary" onclick="showSuccess('등록이 완료되었습니다','신규 병원이 정상적으로 등록되었습니다.')"><i class="icon-check" style="font-size:16px"></i> 등록 완료</button>
+    </div>
+  </div>
+
+<script>
+  let currentStep = 1;
+
+  function goStep(step) {
+    // Hide all panels and footers
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('panel' + i).style.display = 'none';
+      const footer = document.getElementById('footer' + i);
+      if (footer) footer.style.display = 'none';
+    }
+
+    // Show target panel and footer
+    document.getElementById('panel' + step).style.display = '';
+    const footerId = 'footer' + step;
+    const footer = document.getElementById(footerId);
+    if (footer) footer.style.display = step === 3 ? 'flex' : '';
+
+    // Update stepper states
+    for (let i = 1; i <= 3; i++) {
+      const stepEl = document.getElementById('step' + i);
+      stepEl.classList.remove('active', 'completed');
+      if (i < step) stepEl.classList.add('completed');
+      else if (i === step) stepEl.classList.add('active');
+    }
+    for (let i = 1; i <= 2; i++) {
+      const line = document.getElementById('line' + i);
+      line.classList.toggle('active', i < step);
+    }
+
+    currentStep = step;
+  }
+</script>
+</body>
+</html>

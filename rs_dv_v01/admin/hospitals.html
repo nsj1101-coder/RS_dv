@@ -3,102 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>병원 검색 — MEDI-W 에이전시</title>
+  <title>병원 관리 — MEDI-W Admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
   <link rel="stylesheet" href="../assets/admin/css/common.css">
   <script>document.documentElement.classList.add("preload");if(localStorage.getItem("sidebar-collapsed")==="true"){document.documentElement.classList.add("sidebar-collapsed")}</script>
   <style>
-    .sidebar-user .su-av{width:36px;height:36px;border-radius:50%;background:var(--fg-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
-    .su-name-row{display:flex;align-items:center;gap:6px}
-    .su-name{font-size:13px;font-weight:600;color:var(--fg-primary)}
-    .su-tag{background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
-    .su-mail{font-size:12px;color:var(--fg-muted);margin-top:2px}
+    .hl-layout{display:flex;height:100%;min-height:0}
+    .hl-pagination{position:relative;display:flex;align-items:center;justify-content:center;padding:16px 24px;border-top:1px solid var(--border-light)}
+    .hl-pagination .page-info{position:absolute;left:24px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--fg-muted);font-family:var(--font-mono)}
+    .hl-filter{width:240px;flex-shrink:0;background:var(--bg-card);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+    .hl-add-btn{width:100%;background:#111827;color:#fff;border:0;border-radius:var(--radius-sm);padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
+    .hl-add-btn i{font-size:16px}
+    .hl-tabs{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    .hl-tabs .hl-tab{flex:1;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--fg-secondary);background:var(--bg-card);cursor:pointer;border-left:1px solid var(--border)}
+    .hl-tabs .hl-tab:first-child{border-left:0}
+    .hl-tabs .hl-tab.active{background:var(--accent);color:#fff;font-weight:600;border-left-color:var(--accent)}
+    .hl-divider{height:1px;background:var(--border-light);margin:0 -4px}
+    .hl-filter-section{display:flex;flex-direction:column;gap:10px}
+    .hl-filter-label{font-size:14px;font-weight:600;color:var(--fg-muted)}
+    .hl-check{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg-primary);cursor:pointer}
+    .hl-check .custom-checkbox{width:16px;height:16px;border-radius:3px}
+    .hl-check.active{font-weight:500}
 
-    .hs-layout{display:flex;flex:1;min-height:0;overflow:hidden}
-    .hs-filter{width:240px;flex-shrink:0;background:var(--bg-card);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
-    .hs-filter-header{display:flex;align-items:center;justify-content:space-between}
-    .hs-filter-header .fh-title{font-size:16px;font-weight:700;color:var(--fg-primary)}
-    .hs-reset{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border:1px solid var(--border);border-radius:20px;background:var(--bg-card);font-size:11px;font-weight:600;color:var(--fg-secondary);cursor:pointer}
-    .hs-reset i{font-size:12px}
-    .hs-section{display:flex;flex-direction:column;gap:10px}
-    .hs-section-label{font-size:14px;font-weight:600;color:var(--fg-primary)}
-    .hs-chips{display:flex;flex-wrap:wrap;gap:6px}
-    .hs-chip{display:inline-flex;align-items:center;height:30px;padding:6px 10px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--fg-secondary);font-size:12px;font-weight:500;cursor:pointer}
-    .hs-chip.active{background:var(--accent);border-color:var(--accent);color:var(--fg-inverse);font-weight:700}
-    .hs-check-list{display:flex;flex-direction:column;gap:10px}
-    .hs-check{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg-primary);cursor:pointer}
-    .hs-check .cb{width:16px;height:16px;border-radius:3px;border:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .hs-check.checked .cb{background:var(--fg-primary);border-color:var(--fg-primary)}
-    .hs-check.checked.accent .cb{background:var(--accent);border-color:var(--accent)}
-    .hs-check .cb i{font-size:10px;color:#fff;display:none}
-    .hs-check.checked .cb i{display:inline-block}
-    .hs-check.checked .lbl{font-weight:500}
+    .hl-table-area{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-card)}
+    .hl-info-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;flex-shrink:0}
+    .hl-info-text{font-size:14px;color:var(--fg-muted)}
+    .hl-sort{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;font-size:14px;font-weight:500;color:var(--fg-secondary);cursor:pointer}
+    .hl-sort i{font-size:14px}
 
-    .hs-list{width:320px;flex-shrink:0;background:var(--bg-card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-    .hs-list-header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border)}
-    .hs-list-title{display:flex;align-items:center;gap:8px}
-    .hs-list-title .lt{font-size:16px;font-weight:700;color:var(--fg-primary)}
-    .hs-list-count{background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
-    .hs-list-search{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);color:var(--fg-muted);font-size:14px}
-    .hs-list-items{flex:1;overflow-y:auto}
-    .hs-card{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border-light);cursor:pointer;align-items:flex-start}
-    .hs-card:hover{background:var(--bg-secondary)}
-    .hs-card.selected{background:#F9F9FF}
-    .hs-card .hc-av{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
-    .hs-card .hc-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-    .hs-card .hc-name{font-size:14px;font-weight:600;color:var(--fg-primary)}
-    .hs-card .hc-meta{font-size:12px;color:var(--fg-secondary)}
-    .hs-card .hc-tags{display:flex;flex-wrap:wrap;gap:4px}
-    .hs-tag{padding:4px 8px;border-radius:9999px;font-size:12px;font-weight:600;line-height:1}
-    .hs-tag.accent{background:var(--accent-light);color:var(--accent)}
-    .hs-tag.warning{background:#FFF7ED;color:var(--warning)}
-    .hs-tag.success{background:#ECFDF5;color:#059669}
-    .hs-tag.info{background:#EFF6FF;color:#2563EB}
-    .hs-mgmt-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);display:flex;align-items:center;justify-content:center;color:var(--fg-secondary);cursor:pointer;flex-shrink:0}
-
-    .hs-detail-wrap{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg-card);overflow:hidden}
-    .hs-detail{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
-    .hs-img-row{display:flex;gap:12px;height:160px;flex-shrink:0}
-    .hs-img{flex:1;border-radius:var(--radius-sm);background-size:cover;background-position:center}
-    .hs-img.img1{background-image:url('../assets/admin/img/generated-1776044203736.png')}
-    .hs-img.img2{background-image:url('../assets/admin/img/generated-1776044221333.png')}
-    .hs-name-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .hs-name{font-size:20px;font-weight:700;color:var(--fg-primary)}
-    .hs-action-row{display:flex;align-items:center;gap:8px}
-    .hs-btn-wa{display:inline-flex;align-items:center;gap:6px;height:34px;padding:6px 12px;border-radius:6px;background:#25D366;color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer}
-    .hs-btn-sec{display:inline-flex;align-items:center;gap:6px;height:34px;padding:6px 12px;border-radius:6px;background:var(--bg-card);color:var(--fg-secondary);font-size:13px;font-weight:600;border:1px solid var(--border);cursor:pointer}
-    .hs-addr{font-size:14px;color:var(--fg-secondary)}
-    .hs-badges{display:flex;flex-wrap:wrap;gap:8px}
-    .hs-bdg{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:9999px;border:1px solid var(--border);background:var(--bg-secondary);font-size:12px;font-weight:600;color:var(--fg-secondary)}
-    .hs-bdg i{font-size:14px}
-    .hs-d-label{font-size:15px;font-weight:700;color:var(--fg-primary)}
-    .hs-desc{font-size:14px;line-height:1.6;color:var(--fg-secondary)}
-    .hs-map{width:100%;height:140px;border-radius:var(--radius-sm);background:url('../assets/admin/img/generated-1776047895332.png') center/cover no-repeat}
-    .hs-addr-row{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--fg-secondary)}
-    .hs-addr-row i{font-size:18px;color:var(--fg-muted)}
-    .hs-divider{height:1px;background:var(--border-light)}
-    .hs-dept-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .hs-dept-search{width:200px;height:40px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;gap:6px;padding:6px 10px;color:var(--fg-muted);font-size:14px}
-    .hs-dept-list{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-    .hs-dept-row{display:flex;justify-content:space-between;align-items:center;height:40px;padding:10px 14px;border-bottom:1px solid var(--border-light)}
-    .hs-dept-row:last-child{border-bottom:none}
-    .hs-dept-row.all{background:#F9F9FF}
-    .hs-dept-left{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg-primary)}
-    .hs-dept-right{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg-muted)}
-    .hs-dept-right i{font-size:16px}
-
-    .hs-intake{height:56px;background:var(--fg-primary);padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-    .hs-intake-left{color:var(--fg-inverse);font-size:14px;font-weight:500}
-    .hs-intake-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);background:var(--accent);color:var(--fg-inverse);font-size:14px;font-weight:600;border:none;cursor:pointer}
+    .hl-card{background:var(--bg-card);overflow:auto;flex:1;min-height:0}
+    .hl-table{width:100%;border-collapse:collapse}
+    .hl-table thead th{background:var(--bg-secondary);height:44px;padding:0 12px;font-size:14px;font-weight:600;color:var(--fg-muted);text-align:center;border-bottom:1px solid var(--border-light);white-space:nowrap}
+    .hl-table thead th:first-child{padding-left:24px}
+    .hl-table thead th:last-child{padding-right:24px}
+    .hl-table tbody td{height:52px;padding:0 12px;font-size:14px;color:var(--fg-primary);border-bottom:1px solid var(--border-light);vertical-align:middle;text-align:center}
+    .hl-table tbody td:first-child{padding-left:24px}
+    .hl-table tbody td:last-child{padding-right:24px}
+    .hl-table tbody td .hl-actions{justify-content:center}
+    .hl-table tbody tr.selected{background:#F9F9FF;box-shadow:0 4px 12px rgba(0,0,0,.1);position:relative;z-index:1}
+    .hl-table tbody tr.selected .grip-handle,
+    .hl-table tbody tr.selected .hl-mono{color:var(--accent)}
+    .hl-table tbody tr:hover:not(.selected){background:var(--bg-secondary)}
+    .grip-handle{color:var(--fg-muted);cursor:grab;font-size:16px;display:inline-flex}
+    .grip-handle:active{cursor:grabbing}
+    .hl-table tbody tr.dragging{opacity:.4}
+    .hl-table tbody tr.drag-over-top td{box-shadow:inset 0 2px 0 0 var(--accent)}
+    .hl-table tbody tr.drag-over-bottom td{box-shadow:inset 0 -2px 0 0 var(--accent)}
+    .hl-mono{font-family:var(--font-mono);font-weight:600;color:var(--fg-primary)}
+    .hl-name{font-weight:500;color:var(--fg-primary)}
+    .hl-dept{color:var(--fg-secondary)}
+    .hl-stars{font-family:var(--font-mono);color:var(--fg-muted);letter-spacing:1px}
+    .hl-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:9999px;font-size:13px;font-weight:500}
+    .hl-badge.active{background:var(--accent-light);color:var(--accent)}
+    .hl-badge.inactive{background:#FFEBEE;color:var(--danger)}
+    .hl-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+    .hl-actions button{background:transparent;border:0;color:var(--fg-muted);cursor:pointer;padding:4px;display:inline-flex;border-radius:4px}
+    .hl-actions button:hover{background:var(--border-light);color:var(--fg-primary)}
   </style>
 </head>
 <body>
 <div class="app">
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <a href="dashboard.html" class="sidebar-logo"><i class="icon-heart-pulse logo-icon"></i><span class="logo-text">MEDI-W</span></a>
     <div class="sidebar-toggle"><button id="sidebarToggle"><i class="icon-panel-left-close"></i></button></div>
-    <a href="profile.html" class="sidebar-user">
+    <a href="my-info.html" class="sidebar-user">
       <div class="su-av">AD</div>
       <div class="user-info">
         <div class="su-name-row"><span class="su-name">관리자</span><span class="su-tag">에이전시</span></div>
@@ -107,288 +77,334 @@
     </a>
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-item"><i class="icon-layout-dashboard nav-icon"></i><span class="nav-label">대시보드</span></a>
-      <a href="profile.html" class="nav-item"><i class="icon-user nav-icon"></i><span class="nav-label">내 정보</span></a>
-      <a href="patient-list.html" class="nav-item"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
-      <a href="hospitals.html" class="nav-item active"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="users.html" class="nav-item"><i class="icon-user-cog nav-icon"></i><span class="nav-label">회원 관리</span></a>
+      <a href="hospital-search.html" class="nav-item"><i class="icon-search nav-icon"></i><span class="nav-label">병원 검색</span></a>
+      <a href="hospitals.html" class="nav-item active"><i class="icon-building-2 nav-icon"></i><span class="nav-label">병원 관리</span></a>
+      <a href="cases.html" class="nav-item"><i class="icon-users nav-icon"></i><span class="nav-label">환자 관리</span></a>
+      <a href="consultation.html" class="nav-item"><i class="icon-message-square nav-icon"></i><span class="nav-label">상담/예약 관리</span></a>
+      <a href="agencies.html" class="nav-item"><i class="icon-handshake nav-icon"></i><span class="nav-label">에이전시 파트너</span></a>
+      <a href="statistics.html" class="nav-item"><i class="icon-chart-bar nav-icon"></i><span class="nav-label">통계/리포트</span></a>
+      <a href="settings.html" class="nav-item"><i class="icon-settings nav-icon"></i><span class="nav-label">설정</span></a>
     </nav>
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="openModal('logoutModal')"><i class="icon-log-out logout-icon"></i><span class="logout-label">로그아웃</span></button>
   </aside>
 
   <div class="main-content">
+    <!-- TopBar -->
     <div class="top-bar">
       <div class="top-bar-left">
-        <h1>병원 검색</h1>
-        <p>진료과, 지역, 언어 등 조건으로 병원을 검색합니다</p>
+        <h1>병원 관리</h1>
+        <p>웹사이트에 노출되는 병원 리스트의 순서와 표시 여부를 관리합니다</p>
       </div>
       <div class="top-bar-right">
-        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색..."></div>
+        <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
         <div class="bell-wrapper">
-          <button class="bell-btn"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
-          <div class="noti-dropdown">
-            <div class="noti-header"><span class="noti-title">알림</span><span class="noti-read-all">모두 읽음</span></div>
-            <div class="noti-item unread"><div class="noti-dot" style="background:#3B43DB"></div><div class="noti-body"><span class="noti-badge" style="background:#EEEFFC;color:#3B43DB">새 상담 접수</span><span class="noti-time">10분 전</span><div class="noti-text">외국인 환자 상담을 요청했습니다</div></div></div>
-            <div class="noti-item unread"><div class="noti-dot" style="background:#34C759"></div><div class="noti-body"><span class="noti-badge" style="background:#EEFBF0;color:#34C759">정산 완료</span><span class="noti-time">1시간 전</span><div class="noti-text">MediLink Asia 3월 정산 완료</div></div></div>
-            <div class="noti-item"><div class="noti-dot" style="background:#FF9500"></div><div class="noti-body"><span class="noti-badge" style="background:#FFF8EE;color:#FF9500">예약 관리</span><span class="noti-time">3시간 전</span><div class="noti-text">Beijing Care 예약 확정</div></div></div>
-            <a href="dashboard.html" class="noti-footer">알림 센터 전체 보기 →</a>
-          </div>
+          <button class="bell-btn" onclick="location.href='notification.html'"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
         </div>
       </div>
     </div>
 
-    <div class="hs-layout">
-      <aside class="hs-filter">
-        <div class="hs-filter-header">
-          <span class="fh-title">필터</span>
-          <button class="hs-reset"><i class="icon-rotate-ccw"></i>초기화</button>
-        </div>
-        <div class="hs-section">
-          <span class="hs-section-label">진료과목</span>
-          <div class="hs-chips">
-            <span class="hs-chip active">종양내과</span>
-            <span class="hs-chip">심장내과</span>
-            <span class="hs-chip">신경외과</span>
-            <span class="hs-chip">정형외과</span>
-            <span class="hs-chip">피부과</span>
-            <span class="hs-chip">안과</span>
-            <span class="hs-chip">산부인과</span>
-          </div>
-        </div>
-        <div class="hs-section">
-          <span class="hs-section-label">병원 유형</span>
-          <div class="hs-check-list">
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">전체</span></label>
-            <label class="hs-check checked"><span class="cb"><i class="icon-check"></i></span><span class="lbl">상급종합병원</span></label>
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">종합병원</span></label>
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">전문병원</span></label>
-          </div>
-        </div>
-        <div class="hs-section">
-          <span class="hs-section-label">지역</span>
-          <div class="hs-chips">
-            <span class="hs-chip active">서울</span>
-            <span class="hs-chip">경기</span>
-            <span class="hs-chip">부산</span>
-            <span class="hs-chip">인천</span>
-            <span class="hs-chip">대구</span>
-          </div>
-        </div>
-        <div class="hs-section">
-          <span class="hs-section-label">언어 지원</span>
-          <div class="hs-check-list">
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">전체</span></label>
-            <label class="hs-check checked accent"><span class="cb"><i class="icon-check"></i></span><span class="lbl">러시아어</span></label>
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">영어</span></label>
-            <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">중국어</span></label>
-          </div>
-        </div>
-      </aside>
+    <div class="content-scroll" style="overflow:hidden;background:var(--bg-card)">
+      <div class="hl-layout">
+        <!-- Left Filter Panel -->
+        <aside class="hl-filter">
+          <a href="hospital-register.html" class="hl-add-btn"><i class="icon-plus"></i>병원 추가</a>
 
-      <section class="hs-list">
-        <div class="hs-list-header">
-          <div class="hs-list-title">
-            <span class="lt">병원 목록</span>
-            <span class="hs-list-count">32개</span>
+          <div class="hl-tabs" data-tab-container>
+            <div class="hl-tab active" data-tab="all">전체</div>
+            <div class="hl-tab" data-tab="visible">노출</div>
+            <div class="hl-tab" data-tab="hidden">비노출</div>
           </div>
-          <i class="icon-external-link" style="color:var(--fg-muted);font-size:16px"></i>
-        </div>
-        <div class="hs-list-search">
-          <i class="icon-search"></i>
-          <span>목록에서 병원을 선택하세요</span>
-        </div>
-        <div class="hs-list-items">
-          <div class="hs-card">
-            <div class="hc-av" style="background:#A5B4FC">서울</div>
-            <div class="hc-info">
-              <div class="hc-name">서울아산병원</div>
-              <div class="hc-meta">상급종합병원 · 서울 송파구</div>
-              <div class="hc-tags">
-                <span class="hs-tag accent">종양내과</span>
-                <span class="hs-tag accent">심장내과</span>
-                <span class="hs-tag warning">러시아어</span>
-              </div>
-            </div>
-            <button class="hs-mgmt-btn"><i class="icon-settings"></i></button>
-          </div>
-          <div class="hs-card">
-            <div class="hc-av" style="background:#A5B4FC">강남</div>
-            <div class="hc-info">
-              <div class="hc-name">강남세브란스</div>
-              <div class="hc-meta">상급종합병원 · 서울 강남구</div>
-              <div class="hc-tags">
-                <span class="hs-tag accent">신경외과</span>
-                <span class="hs-tag success">영어</span>
-              </div>
-            </div>
-            <button class="hs-mgmt-btn"><i class="icon-settings"></i></button>
-          </div>
-          <div class="hs-card">
-            <div class="hc-av" style="background:#C4B5FD">삼성</div>
-            <div class="hc-info">
-              <div class="hc-name">삼성서울병원</div>
-              <div class="hc-meta">상급종합병원 · 서울 강남구</div>
-              <div class="hc-tags">
-                <span class="hs-tag accent">종양내과</span>
-                <span class="hs-tag warning">러시아어</span>
-              </div>
-            </div>
-            <button class="hs-mgmt-btn"><i class="icon-settings"></i></button>
-          </div>
-          <div class="hs-card">
-            <div class="hc-av" style="background:#F9A8D4">제주</div>
-            <div class="hc-info">
-              <div class="hc-name">제주올레스메디</div>
-              <div class="hc-meta">전문병원 · 제주시</div>
-              <div class="hc-tags">
-                <span class="hs-tag accent">피부과</span>
-                <span class="hs-tag info">중국어</span>
-              </div>
-            </div>
-            <button class="hs-mgmt-btn"><i class="icon-settings"></i></button>
-          </div>
-          <div class="hs-card">
-            <div class="hc-av" style="background:#5EEAD4">인천</div>
-            <div class="hc-info">
-              <div class="hc-name">인천성모병원</div>
-              <div class="hc-meta">종합병원 · 인천 부평구</div>
-              <div class="hc-tags">
-                <span class="hs-tag accent">정형외과</span>
-                <span class="hs-tag success">영어</span>
-              </div>
-            </div>
-            <button class="hs-mgmt-btn"><i class="icon-settings"></i></button>
-          </div>
-        </div>
-      </section>
 
-      <section class="hs-detail-wrap" id="hsDetail" style="display:none">
-        <div class="hs-detail">
-          <div class="hs-img-row">
-            <div class="hs-img img1"></div>
-            <div class="hs-img img2"></div>
+          <div class="hl-divider"></div>
+
+          <div class="hl-filter-section">
+            <div class="hl-filter-label">진료과별</div>
+            <label class="hl-check"><div class="custom-checkbox" data-role="all" data-group="dept"></div>전체</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>종합병원(건강검진)</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>정형외과</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>피부과</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>성형외과</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>성형외과(모발 전문)</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>치과</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>안과</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="dept"></div>산부인과</label>
           </div>
-          <div>
-            <div class="hs-name-row">
-              <div class="hs-name">서울아산병원</div>
-              <div class="hs-action-row">
-                <button class="hs-btn-wa"><i class="icon-message-circle"></i>WhatsApp</button>
-                <button class="hs-btn-sec"><i class="icon-mail"></i>Email</button>
-                <button class="hs-btn-sec"><i class="icon-settings"></i>병원 관리</button>
-              </div>
-            </div>
-            <div class="hs-addr" style="margin-top:8px">상급종합병원 · 서울특별시 송파구 올림픽로 43길 88</div>
+
+          <div class="hl-filter-section">
+            <div class="hl-filter-label">지역별</div>
+            <label class="hl-check"><div class="custom-checkbox" data-role="all" data-group="region"></div>전체</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>서울</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>경기도</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>부산</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>인천</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>대전</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>대구</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>광주</label>
+            <label class="hl-check"><div class="custom-checkbox" data-role="item" data-group="region"></div>울산</label>
           </div>
-          <div class="hs-badges">
-            <span class="hs-bdg"><i class="icon-shield-check"></i>JCI 인증</span>
-            <span class="hs-bdg"><i class="icon-award"></i>보건복지부 외국인환자 유치 의료기관</span>
+        </aside>
+
+        <!-- Right Table Area -->
+        <div class="hl-table-area">
+          <div class="hl-info-bar">
+            <span class="hl-info-text">총 128개 병원 · 드래그하여 순서 변경</span>
+            <button class="hl-sort"><i class="icon-arrow-up-down"></i>추천순</button>
           </div>
-          <div class="hs-section">
-            <span class="hs-d-label">병원 소개</span>
-            <p class="hs-desc">서울아산병원은 대한민국을 대표하는 상급종합병원으로, 2,715병상 규모를 갖추고 있습니다. 첨단 의료 장비와 우수한 의료진을 바탕으로 종양, 심장, 장기이식 분야에서 세계적인 수준의 의료 서비스를 제공합니다.</p>
-          </div>
-          <div class="hs-section">
-            <span class="hs-d-label">위치</span>
-            <div class="hs-map"></div>
-            <div class="hs-addr-row"><i class="icon-map-pin"></i>서울특별시 송파구 올림픽로 43길 88</div>
-          </div>
-          <div class="hs-divider"></div>
-          <div class="hs-section">
-            <div class="hs-dept-head">
-              <span class="hs-d-label">진료과</span>
-              <div class="hs-dept-search"><i class="icon-search"></i>진료과 검색</div>
-            </div>
-            <div class="hs-dept-list">
-              <div class="hs-dept-row" data-role="all">
-                <div class="hs-dept-left">
-                  <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">전체</span></label>
-                </div>
-                <div class="hs-dept-right">의사 19명<i class="icon-chevron-down"></i></div>
-              </div>
-              <div class="hs-dept-row">
-                <div class="hs-dept-left">
-                  <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">심장내과</span></label>
-                </div>
-                <div class="hs-dept-right">의사 8명<i class="icon-chevron-right"></i></div>
-              </div>
-              <div class="hs-dept-row">
-                <div class="hs-dept-left">
-                  <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">신경과</span></label>
-                </div>
-                <div class="hs-dept-right">의사 6명<i class="icon-chevron-right"></i></div>
-              </div>
-              <div class="hs-dept-row">
-                <div class="hs-dept-left">
-                  <label class="hs-check"><span class="cb"><i class="icon-check"></i></span><span class="lbl">정형외과</span></label>
-                </div>
-                <div class="hs-dept-right">의사 5명<i class="icon-chevron-right"></i></div>
+
+          <div class="hl-card">
+            <table class="hl-table" id="hlTable">
+              <thead>
+                <tr>
+                  <th style="width:24px"></th>
+                  <th style="width:24px"><div class="custom-checkbox" data-role="all" data-group="hospital"></div></th>
+                  <th style="width:60px">순위</th>
+                  <th style="width:220px">병원명</th>
+                  <th style="width:140px">진료과</th>
+                  <th style="width:110px">상태</th>
+                  <th style="width:130px">평점</th>
+                  <th style="width:130px">조회수</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">1</td>
+                  <td><span class="hl-name">서울대학교병원</span></td>
+                  <td class="hl-dept">성형외과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★★</span></td>
+                  <td class="hl-mono">12,450</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">2</td>
+                  <td><span class="hl-name">강남세브란스</span></td>
+                  <td class="hl-dept">피부과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">9,832</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">3</td>
+                  <td><span class="hl-name">부산메디병원</span></td>
+                  <td class="hl-dept">치과</td>
+                  <td><span class="hl-badge inactive">비노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">7,456</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">4</td>
+                  <td><span class="hl-name">제주헬스케어</span></td>
+                  <td class="hl-dept">안과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★☆☆</span></td>
+                  <td class="hl-mono">5,210</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">5</td>
+                  <td><span class="hl-name">인천글로벌병원</span></td>
+                  <td class="hl-dept">건강검진</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★★</span></td>
+                  <td class="hl-mono">3,600</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">6</td>
+                  <td><span class="hl-name">대전가로세로병원</span></td>
+                  <td class="hl-dept">안과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★★</span></td>
+                  <td class="hl-mono">3,421</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">7</td>
+                  <td><span class="hl-name">광주자생한방병원</span></td>
+                  <td class="hl-dept">치과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">3,128</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">8</td>
+                  <td><span class="hl-name">강변메디컬</span></td>
+                  <td class="hl-dept">피부과</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">2,980</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">9</td>
+                  <td><span class="hl-name">수원통합병원</span></td>
+                  <td class="hl-dept">건강검진</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">2,415</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">10</td>
+                  <td><span class="hl-name">삼성서울병원</span></td>
+                  <td class="hl-dept">종합</td>
+                  <td><span class="hl-badge active">노출</span></td>
+                  <td><span class="hl-stars">★★★★★</span></td>
+                  <td class="hl-mono">2,087</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">11</td>
+                  <td><span class="hl-name">분당차병원</span></td>
+                  <td class="hl-dept">안과</td>
+                  <td><span class="hl-badge inactive">비노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">1,890</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td><i class="icon-grip-vertical grip-handle"></i></td>
+                  <td><div class="custom-checkbox" data-role="item" data-group="hospital"></div></td>
+                  <td class="hl-mono">12</td>
+                  <td><span class="hl-name">아이누리병원</span></td>
+                  <td class="hl-dept">안과</td>
+                  <td><span class="hl-badge inactive">비노출</span></td>
+                  <td><span class="hl-stars">★★★★☆</span></td>
+                  <td class="hl-mono">1,623</td>
+                  <td><div class="hl-actions"><button><i class="icon-arrow-up"></i></button><button><i class="icon-arrow-down"></i></button></div></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="hl-pagination">
+              <span class="page-info">1–12 / 42</span>
+              <div class="pagination">
+                <button class="page-btn"><i class="icon-chevron-left" style="font-size:14px"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn"><i class="icon-chevron-right" style="font-size:14px"></i></button>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </div>
-    <div class="hs-intake" id="hsIntake" style="display:none">
-      <span class="hs-intake-left">1개 진료과 선택됨</span>
-      <button class="hs-intake-btn">의료 접수<i class="icon-arrow-right"></i></button>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="unsavedModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FFF8EE"><i class="icon-alert-triangle" style="color:#FF9500;font-size:24px"></i></div><div class="modal-title">저장하지 않은 변경사항이 있습니다</div><div class="modal-desc">이 페이지를 떠나면 변경사항이 사라집니다.<br>정말 나가시겠습니까?</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('unsavedModal')">나가기</button><button class="btn btn-dark" onclick="closeModal('unsavedModal')">저장 후 나가기</button></div></div></div>
+<!-- Shared Modals -->
+<div class="modal-overlay" id="unsavedModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FFF8EE"><i class="icon-alert-triangle" style="color:#FF9500;font-size:24px"></i></div><div class="modal-title">저장하지 않은 변경사항이 있습니다</div><div class="modal-desc">이 페이지를 떠나면 변경사항이 사라집니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('unsavedModal')">나가기</button><button class="btn btn-dark" onclick="closeModal('unsavedModal')">저장 후 나가기</button></div></div></div>
 <div class="modal-overlay" id="logoutModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#F3F4F6"><i class="icon-log-out" style="color:#4B5563;font-size:24px"></i></div><div class="modal-title">로그아웃 하시겠습니까?</div><div class="modal-desc">다시 로그인이 필요합니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">취소</button><button class="btn btn-dark" onclick="doLogout()">로그아웃</button></div></div></div>
 <div class="modal-overlay" id="deleteModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FEE2E2"><i class="icon-trash-2" style="color:#FF3B30;font-size:24px"></i></div><div class="modal-title">정말 삭제하시겠습니까?</div><div class="modal-desc">삭제된 데이터는 복구할 수 없습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('deleteModal')">취소</button><button class="btn btn-danger" onclick="closeModal('deleteModal')">삭제</button></div></div></div>
-<div class="modal-overlay" id="successModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#EEFBF0"><i class="icon-check-circle" style="color:#34C759;font-size:24px"></i></div><div class="modal-title">등록이 완료되었습니다</div><div class="modal-desc">목록 페이지로 이동하거나 상세보기 할 수 있습니다.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('successModal')">목록으로</button><button class="btn btn-primary" onclick="closeModal('successModal')">상세보기</button></div></div></div>
-<div class="modal-overlay" id="errorModal"><div class="modal-content" style="width:400px"><div class="modal-icon" style="background:#FEE2E2"><i class="icon-alert-circle" style="color:#FF3B30;font-size:24px"></i></div><div class="modal-title">일시적인 오류가 발생했습니다</div><div class="modal-desc">서비스 이용 중 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('errorModal')">닫기</button><button class="btn btn-danger" onclick="closeModal('errorModal')">다시 시도</button></div></div></div>
 
 <script src="../assets/admin/js/common.js"></script>
 <script>
-  // Hospital card selection
-  document.querySelectorAll('.hs-list .hs-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.hs-mgmt-btn')) return;
-      document.querySelectorAll('.hs-list .hs-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      document.getElementById('hsDetail').style.display = '';
-      // Reset department checks + hide intake when switching hospitals
-      document.querySelectorAll('#hsDetail .hs-check').forEach(c => c.classList.remove('checked'));
-      updateIntake();
+  document.querySelectorAll('.hl-tabs .hl-tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      t.parentElement.querySelectorAll('.hl-tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      const filter = t.dataset.tab; // all | visible | hidden
+      document.querySelectorAll('#hlTable tbody tr').forEach(row => {
+        const badge = row.querySelector('.hl-badge');
+        if (!badge) return;
+        const status = badge.classList.contains('active') ? 'visible' : 'hidden';
+        row.style.display = (filter === 'all' || filter === status) ? '' : 'none';
+      });
     });
   });
 
-  // Department check toggle
-  function updateIntake(){
-    const items = document.querySelectorAll('#hsDetail .hs-dept-row:not([data-role="all"]) .hs-check');
-    const count = Array.from(items).filter(c => c.classList.contains('checked')).length;
-    const bar = document.getElementById('hsIntake');
-    if (count > 0) {
-      bar.style.display = '';
-      bar.querySelector('.hs-intake-left').textContent = count + '개 진료과 선택됨';
-    } else {
-      bar.style.display = 'none';
+  (function(){
+    const tbody = document.querySelector('#hlTable tbody');
+    if(!tbody) return;
+
+    function renumber(){
+      Array.from(tbody.rows).forEach((r,i)=>{
+        const cell = r.cells[2];
+        if(cell) cell.textContent = (i+1);
+      });
     }
-    // Sync 전체 check state
-    const allRow = document.querySelector('#hsDetail .hs-dept-row[data-role="all"] .hs-check');
-    if (allRow) allRow.classList.toggle('checked', items.length > 0 && count === items.length);
-  }
-  document.querySelectorAll('#hsDetail .hs-dept-row .hs-check').forEach(chk => {
-    chk.addEventListener('click', (e) => {
-      e.preventDefault();
-      const row = chk.closest('.hs-dept-row');
-      if (row.dataset.role === 'all') {
-        const willCheck = !chk.classList.contains('checked');
-        document.querySelectorAll('#hsDetail .hs-dept-row:not([data-role="all"]) .hs-check').forEach(c => {
-          c.classList.toggle('checked', willCheck);
-        });
-      } else {
-        chk.classList.toggle('checked');
-      }
-      updateIntake();
-    });
-  });
 
-  // 초기 상태: 첫 병원 자동 선택 (오른쪽 상세 영역 비어있는 것 방지)
-  const firstCard = document.querySelector('.hs-list .hs-card');
-  if (firstCard) firstCard.click();
+    // Arrow up/down: swap with adjacent row
+    tbody.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.hl-actions button');
+      if(!btn) return;
+      const row = btn.closest('tr');
+      const isUp = !!btn.querySelector('.icon-arrow-up');
+      if(isUp && row.previousElementSibling){
+        tbody.insertBefore(row, row.previousElementSibling);
+      } else if(!isUp && row.nextElementSibling){
+        tbody.insertBefore(row.nextElementSibling, row);
+      }
+      renumber();
+    });
+
+    // Drag-and-drop via grip handle
+    let dragRow = null;
+
+    Array.from(tbody.rows).forEach(row=>{
+      const grip = row.querySelector('.grip-handle');
+      if(grip) grip.addEventListener('mousedown', ()=> row.setAttribute('draggable','true'));
+      row.addEventListener('dragstart', (e)=>{
+        dragRow = row;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try{ e.dataTransfer.setData('text/plain',''); }catch(_){}
+      });
+      row.addEventListener('dragend', ()=>{
+        row.classList.remove('dragging');
+        row.removeAttribute('draggable');
+        tbody.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(r=>r.classList.remove('drag-over-top','drag-over-bottom'));
+        dragRow = null;
+        renumber();
+      });
+      row.addEventListener('dragover', (e)=>{
+        if(!dragRow || dragRow===row) return;
+        e.preventDefault();
+        const rect = row.getBoundingClientRect();
+        const before = (e.clientY - rect.top) < rect.height/2;
+        row.classList.toggle('drag-over-top', before);
+        row.classList.toggle('drag-over-bottom', !before);
+      });
+      row.addEventListener('dragleave', ()=>{
+        row.classList.remove('drag-over-top','drag-over-bottom');
+      });
+      row.addEventListener('drop', (e)=>{
+        if(!dragRow || dragRow===row) return;
+        e.preventDefault();
+        const rect = row.getBoundingClientRect();
+        const before = (e.clientY - rect.top) < rect.height/2;
+        tbody.insertBefore(dragRow, before ? row : row.nextElementSibling);
+      });
+    });
+  })();
 </script>
 </body>
 </html>

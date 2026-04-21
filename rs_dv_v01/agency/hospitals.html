@@ -329,7 +329,7 @@
     </div>
     <div class="hs-intake" id="hsIntake" style="display:none">
       <span class="hs-intake-left">1개 진료과 선택됨</span>
-      <button class="hs-intake-btn">의료 접수<i class="icon-arrow-right"></i></button>
+      <button class="hs-intake-btn" onclick="goIntake()">의료 접수<i class="icon-arrow-right"></i></button>
     </div>
   </div>
 </div>
@@ -389,6 +389,19 @@
   // 초기 상태: 첫 병원 자동 선택 (오른쪽 상세 영역 비어있는 것 방지)
   const firstCard = document.querySelector('.hs-list .hs-card');
   if (firstCard) firstCard.click();
+
+  // 의료 접수 → 선택한 병원/진료과 쿼리 파라미터로 환자 접수 페이지 이동
+  function goIntake() {
+    const card = document.querySelector('.hs-list .hs-card.selected');
+    const hospital = card ? card.querySelector('.hc-name')?.textContent?.trim() : '';
+    const depts = Array.from(document.querySelectorAll('#hsDetail .hs-dept-row:not([data-role="all"]) .hs-check.checked'))
+      .map(c => c.closest('.hs-dept-row')?.querySelector('.hs-dept-left')?.textContent?.trim())
+      .filter(Boolean);
+    const params = new URLSearchParams();
+    if (hospital) params.set('hospital', hospital);
+    if (depts.length) params.set('departments', depts.join(','));
+    location.href = 'patient-register-step1.html?' + params.toString();
+  }
 </script>
 </body>
 </html>

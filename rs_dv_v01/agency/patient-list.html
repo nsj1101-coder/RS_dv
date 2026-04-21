@@ -190,6 +190,7 @@
         <p>접수된 환자 케이스를 관리합니다</p>
       </div>
       <div class="top-bar-right">
+        <a href="patient-resubmit.html" class="btn btn-secondary" style="gap:6px"><i class="icon-upload" style="font-size:14px"></i> 자료 재제출</a>
         <div class="search-box"><i class="icon-search search-icon"></i><input type="text" placeholder="검색.."></div>
         <div class="bell-wrapper">
           <button class="bell-btn" onclick="location.href='dashboard.html'"><i class="icon-bell" style="color:#4B5563;font-size:18px"></i><span class="bell-dot"></span></button>
@@ -202,7 +203,7 @@
       <div class="pt-layout">
         <!-- Left Sidebar: button + filter -->
         <aside class="pt-sidebar">
-          <button class="pt-add-btn" onclick="openPanel('newPatient')"><i class="icon-plus"></i>새 환자 등록</button>
+          <a class="pt-add-btn" href="patient-register-step1.html" style="text-decoration:none"><i class="icon-plus"></i>새 환자 등록</a>
           <div class="pt-filter" data-filter-for="cardview">
             <div class="pt-filter-item active"><span>전체</span><span class="pt-filter-count">55</span></div>
             <div class="pt-filter-item"><span>작성 중</span><span class="pt-filter-count">3</span></div>
@@ -229,7 +230,7 @@
           <div class="pt-content-header">
             <div class="pt-tabs">
               <div class="pt-tab active" data-tab="cardview">환자 목록</div>
-              <div class="pt-tab" data-tab="approval">승인 관리</div>
+              
             </div>
             <div class="view-toggle" id="viewToggle">
               <button class="active" onclick="switchView('card')" title="카드"><i class="icon-layout-grid" style="font-size:14px"></i></button>
