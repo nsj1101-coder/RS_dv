@@ -1,633 +1,552 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediW — 글로벌 의료 허브 플랫폼</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
-
-    /* ===== THEME VARIABLES ===== */
-    :root{
-      --transition:background .3s,color .3s,border-color .3s,box-shadow .3s;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDI-W | 올인원 의료 허브 플랫폼</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { dm: ['"DM Sans"','sans-serif'], inter: ['Inter','sans-serif'] },
+      colors: { 'navy':'#1E1B4B','cyan':'#0891B2','slate-txt':'#475569','muted':'#64748B','blue-accent':'#3B82F6' }
     }
-    [data-theme="dark"]{
-      --bg-primary:#0a0e1a;--bg-secondary:#0f1629;--bg-tertiary:#161d35;--bg-card:#161d35cc;
-      --bg-card-hover:#1e2744;--bg-elevated:#1e2744;
-      --text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--text-muted:rgba(255,255,255,.2);
-      --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);
-      --brand-bg:rgba(51,145,255,.08);--brand-border:rgba(51,145,255,.2);
-      --glow-opacity:.15;--nav-bg:rgba(10,14,26,.8);
-      --card-shadow:0 4px 24px rgba(0,0,0,.3);--card-hover-shadow:0 20px 60px rgba(51,145,255,.12);
-      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.06),transparent 60%);
-    }
-    [data-theme="light"]{
-      --bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-tertiary:#f1f5f9;--bg-card:#ffffff;
-      --bg-card-hover:#f8fafc;--bg-elevated:#ffffff;
-      --text-primary:#0f172a;--text-secondary:#334155;--text-tertiary:#64748b;--text-muted:#cbd5e1;
-      --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);
-      --brand-bg:rgba(51,145,255,.06);--brand-border:rgba(51,145,255,.15);
-      --glow-opacity:.06;--nav-bg:rgba(255,255,255,.85);
-      --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--card-hover-shadow:0 12px 40px rgba(51,145,255,.1);
-      --gradient-hero:linear-gradient(135deg,rgba(51,145,255,.04),transparent 60%);
-    }
-
-    body{background:var(--bg-primary);color:var(--text-primary);}
-
-    /* ===== COMPONENTS ===== */
-    .nav{position:fixed;top:0;width:100%;z-index:50;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:var(--nav-bg);border-bottom:1px solid var(--border);transition:var(--transition);}
-    .nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:4rem;display:flex;align-items:center;justify-content:space-between;}
-    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--text-primary);}
-    .logo-icon{width:2rem;height:2rem;border-radius:.5rem;background:linear-gradient(135deg,#3391ff,#8eceff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.75rem;}
-    .logo-text{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;}
-    .nav-links{display:flex;align-items:center;gap:2rem;font-size:.875rem;color:var(--text-tertiary);}
-    .nav-links a{color:inherit;text-decoration:none;transition:color .2s;}
-    .nav-links a:hover{color:var(--text-primary);}
-    .nav-actions{display:flex;align-items:center;gap:.75rem;}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-size:.875rem;font-weight:600;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
-    .btn-primary{background:#1a6ff5;color:#fff;padding:.625rem 1.25rem;}
-    .btn-primary:hover{background:#3391ff;}
-    .btn-ghost{background:transparent;color:var(--text-tertiary);padding:.5rem 1rem;}
-    .btn-ghost:hover{color:var(--text-primary);}
-    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:.75rem 2rem;}
-    .btn-outline:hover{border-color:var(--border-hover);background:var(--brand-bg);}
-    .btn-lg{padding:1rem 2rem;font-size:1rem;border-radius:.75rem;}
-
-    /* Theme Toggle */
-    .theme-toggle{width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-tertiary);}
-    .theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary);}
-    .theme-toggle svg{width:1.125rem;height:1.125rem;}
-    [data-theme="dark"] .icon-sun{display:none;}
-    [data-theme="dark"] .icon-moon{display:block;}
-    [data-theme="light"] .icon-sun{display:block;}
-    [data-theme="light"] .icon-moon{display:none;}
-
-    /* Mobile Menu */
-    .mobile-menu-btn{display:none;width:2.25rem;height:2.25rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);align-items:center;justify-content:center;cursor:pointer;color:var(--text-tertiary);}
-    .mobile-menu{display:none;position:fixed;top:4rem;left:0;right:0;background:var(--bg-primary);border-bottom:1px solid var(--border);padding:1rem 1.5rem;z-index:49;}
-    .mobile-menu.open{display:block;}
-    .mobile-menu a{display:block;padding:.75rem 0;color:var(--text-secondary);text-decoration:none;font-size:.875rem;border-bottom:1px solid var(--border);}
-    .mobile-menu a:last-child{border-bottom:none;}
-
-    /* Glow */
-    .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:var(--glow-opacity);}
-
-    /* Grid BG */
-    .grid-bg{background-image:linear-gradient(rgba(51,145,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(51,145,255,.03) 1px,transparent 1px);background-size:60px 60px;}
-
-    /* Gradient text */
-    .gradient-text{background:linear-gradient(135deg,#1a6ff5,#3391ff,#59b2ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-
-    /* Badge */
-    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem 1rem;border-radius:9999px;border:1px solid var(--brand-border);background:var(--brand-bg);font-size:.875rem;color:#3391ff;}
-    .badge-dot{width:.5rem;height:.5rem;border-radius:50%;background:#34d399;animation:pulse 2s infinite;}
-    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-    /* Sections */
-    .section{padding:6rem 1.5rem;}
-    .section-inner{max-width:1280px;margin:0 auto;}
-    .section-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#3391ff;}
-    .section-title{font-size:2rem;font-weight:700;margin-top:.75rem;line-height:1.2;color:var(--text-primary);}
-    .section-desc{color:var(--text-tertiary);margin-top:.75rem;max-width:32rem;}
-
-    /* Cards */
-    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:all .25s;}
-    .card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
-
-    /* Stats */
-    .stats-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg-secondary);transition:var(--transition);}
-    .stats-grid{max-width:1280px;margin:0 auto;padding:3rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;}
-    .stat-num{font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;}
-    .stat-label{font-size:.875rem;color:var(--text-tertiary);margin-top:.25rem;}
-
-    /* Schedule Preview */
-    .schedule-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:1rem;overflow:hidden;transition:var(--transition);}
-    .schedule-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-    .schedule-row{padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
-    .schedule-row:hover{background:var(--brand-bg);}
-    .schedule-row:last-child{border-bottom:none;}
-
-    /* Step Cards */
-    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
-    .step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;transition:all .25s;}
-    .step-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover-shadow);}
-    .step-icon{width:3rem;height:3rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
-
-    /* Hospital Cards */
-    .hosp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-    .hosp-card-top{height:12rem;display:flex;align-items:center;justify-content:center;position:relative;}
-    .hosp-logo{width:5rem;height:5rem;border-radius:1rem;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;}
-    .hosp-rating{position:absolute;top:1rem;right:1rem;display:flex;align-items:center;gap:.375rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(255,255,255,.1);font-size:.75rem;color:var(--text-secondary);}
-    .tag{display:inline-block;font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;}
-
-    /* Specialty Grid */
-    .spec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
-    .spec-card{background:var(--bg-card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem;text-align:center;transition:all .2s;cursor:pointer;}
-    .spec-card:hover{transform:translateY(-2px);box-shadow:var(--card-hover-shadow);}
-    .spec-icon{width:3.5rem;height:3.5rem;margin:0 auto .75rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-
-    /* Concierge */
-    .conc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
-    .conc-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:var(--bg-card);border-radius:.75rem;border:1px solid var(--border);}
-    .conc-icon{width:2.5rem;height:2.5rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-
-    /* Trip Dashboard */
-    .trip-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;transition:var(--transition);}
-    .trip-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:.75rem;padding:1rem;margin-top:1rem;transition:var(--transition);}
-
-    /* Testimonials */
-    .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-    .test-card{background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;}
-    .stars{display:flex;gap:.125rem;margin-bottom:1rem;}
-    .star{width:1rem;height:1rem;color:#f59e0b;}
-    .avatar{width:2.5rem;height:2.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;color:#fff;}
-
-    /* Partner Cards */
-    .partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-    .partner-card{border-radius:1rem;padding:2.5rem;position:relative;overflow:hidden;}
-    .partner-card ul{list-style:none;margin:1.5rem 0 2rem;}
-    .partner-card li{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--text-secondary);margin-bottom:.5rem;}
-
-    /* CTA */
-    .cta-section{text-align:center;position:relative;overflow:hidden;}
-    .cta-section h2{font-size:2.5rem;font-weight:700;}
-
-    /* Footer */
-    .footer{border-top:1px solid var(--border);background:var(--bg-secondary);transition:var(--transition);}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:2rem;max-width:1280px;margin:0 auto;padding:4rem 1.5rem;}
-    .footer-col-title{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-tertiary);margin-bottom:1rem;}
-    .footer-col a{display:block;font-size:.875rem;color:var(--text-tertiary);text-decoration:none;margin-bottom:.625rem;transition:color .2s;}
-    .footer-col a:hover{color:var(--text-primary);}
-    .footer-bottom{max-width:1280px;margin:0 auto;padding:2rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.75rem;color:var(--text-muted);}
-    .footer-bottom a{color:inherit;text-decoration:none;margin-left:1.5rem;transition:color .2s;}
-    .footer-bottom a:hover{color:var(--text-tertiary);}
-
-    /* Fade In */
-    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
-    .fade-in.visible{opacity:1;transform:translateY(0);}
-
-    /* ===== RESPONSIVE ===== */
-    @media(max-width:1024px){
-      .steps-grid{grid-template-columns:repeat(2,1fr);}
-      .hosp-grid{grid-template-columns:repeat(2,1fr);}
-      .spec-grid{grid-template-columns:repeat(3,1fr);}
-      .conc-grid{grid-template-columns:1fr;}
-      .test-grid{grid-template-columns:1fr 1fr;}
-      .footer-grid{grid-template-columns:repeat(3,1fr);}
-    }
-    @media(max-width:768px){
-      .nav-links{display:none;}
-      .mobile-menu-btn{display:flex;}
-      .section{padding:3rem 1rem;}
-      .section-title{font-size:1.5rem;}
-      .hero-title{font-size:2rem !important;}
-      .hero-sub{font-size:1rem !important;}
-      .stats-grid{grid-template-columns:repeat(2,1fr);padding:2rem 1rem;gap:1.5rem;}
-      .stat-num{font-size:1.5rem;}
-      .steps-grid{grid-template-columns:1fr;gap:1rem;}
-      .hosp-grid{grid-template-columns:1fr;}
-      .spec-grid{grid-template-columns:repeat(2,1fr);gap:.75rem;}
-      .spec-card{padding:1rem;}
-      .conc-grid{gap:2rem;}
-      .test-grid{grid-template-columns:1fr;}
-      .partner-grid{grid-template-columns:1fr;}
-      .cta-section h2{font-size:1.75rem;}
-      .footer-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem;padding:2rem 1rem;}
-      .footer-bottom{flex-direction:column;gap:.75rem;text-align:center;}
-      .hero-btns{flex-direction:column;width:100%;}
-      .hero-btns .btn{width:100%;}
-      .schedule-row{flex-direction:column;align-items:flex-start;gap:.5rem;}
-      .schedule-meta{display:flex;gap:.5rem;margin-top:.25rem;}
-    }
-    @media(max-width:480px){
-      .spec-grid{grid-template-columns:1fr 1fr;}
-      .stats-grid{grid-template-columns:1fr 1fr;}
-    }
-  </style>
+  }
+}
+</script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; color:#1A1A1A; }
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .glass { background:rgba(255,255,255,0.56); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.33); }
+  .glass-card { background:rgba(255,255,255,0.56); backdrop-filter:blur(24px); border:1px solid #E2E8F0; }
+  .hero-overlay { background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.67) 100%); }
+  .fade-left { background:linear-gradient(to right,#fff,transparent); }
+  .fade-right { background:linear-gradient(to left,#fff,transparent); }
+  .testimonials-track { display:flex; gap:24px; animation:scroll 30s linear infinite; }
+  @keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .partner-scroll { display:flex; gap:16px; animation:partnerScroll 25s linear infinite; }
+  @keyframes partnerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+</style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <div class="logo-icon">M</div>
-        <span class="logo-text">MediW</span>
-      </a>
-      <div class="nav-links">
-        <a href="programs.html">프로그램</a>
-        <a href="#hospitals">병원</a>
-        <a href="#how-it-works">이용 방법</a>
-        <a href="#concierge">컨시어지</a>
-      </div>
-      <div class="nav-actions">
-        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)" style="padding:.5rem .75rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:.875rem;cursor:pointer;transition:var(--transition);">
-          <option value="en">English</option>
-          <option value="ko">한국어</option>
-          <option value="ja">日本語</option>
-          <option value="zh">中文</option>
-          <option value="ru">Русский</option>
-        </select>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">
-          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-        </button>
-        <a class="btn btn-ghost" href="login.html">로그인</a>
-        <a class="btn btn-primary" href="signup.html">시작하기</a>
-        <button class="mobile-menu-btn" onclick="toggleMobile()">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-      </div>
+
+<!-- ===== Section 1 - Hero ===== -->
+<section class="bg-white p-5 md:px-[60px] md:pt-5 md:pb-5 min-h-screen flex flex-col gap-5">
+  <!-- Nav -->
+  <nav class="flex items-center justify-between h-10">
+    <span class="font-bold text-lg tracking-tight">MEDI-W®</span>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#" class="text-sm font-medium">서비스 소개</a>
+      <a href="#" class="text-sm font-medium">병원 목록</a>
+      <a href="#" class="text-sm font-medium">이용 방법</a>
+      <a href="#" class="text-sm font-medium">컨시어지</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="w-9 h-9 rounded-full border border-black/25 flex items-center justify-center"><span class="material-symbols-outlined text-lg">language</span></button>
+      <button class="w-9 h-9 rounded-full border border-black/25 flex items-center justify-center"><span class="material-symbols-outlined text-lg">light_mode</span></button>
+      <span class="text-sm font-medium hidden md:inline">로그인</span>
+      <a href="#" class="bg-[#1A1A1A] text-white text-sm font-semibold px-6 py-2.5 rounded-full">시작하기</a>
     </div>
   </nav>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="programs.html">프로그램</a>
-    <a href="#hospitals">병원</a>
-    <a href="#how-it-works">이용 방법</a>
-    <a href="#concierge">컨시어지</a>
-    <a href="login.html">로그인</a>
-  </div>
-
-  <!-- Hero -->
-  <section class="grid-bg" style="min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-top:4rem;">
-    <div class="glow" style="width:600px;height:600px;background:#3391ff;top:20%;left:20%;"></div>
-    <div class="glow" style="width:500px;height:500px;background:#8eceff;bottom:20%;right:20%;"></div>
-    <div style="position:relative;z-index:1;max-width:64rem;margin:0 auto;text-align:center;padding:4rem 1.5rem;">
-      <div class="badge" style="margin-bottom:2rem;">
-        <span class="badge-dot"></span>
-        120개 이상의 병원 프로그램 모집 중
+  <!-- Hero Image -->
+  <div class="relative flex-1 rounded-3xl overflow-hidden bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1686916058141-a04d7f501ba8?w=1920&q=80')">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="relative h-full flex flex-col justify-center p-[60px]">
+      <div class="flex flex-col items-center gap-1 w-full">
+        <p class="text-white/80 text-base font-medium text-center" style="text-shadow:0 2px 4px rgba(0,0,0,0.25)">대한민국 보건산업진흥원 등록 플랫폼</p>
+        <h1 class="text-white text-5xl md:text-7xl lg:text-[80px] font-extrabold text-center leading-[1.15] tracking-tight" style="text-shadow:0 4px 8px rgba(0,0,0,0.25)">한국 의료를 세계에 연결하는</h1>
+        <h1 class="text-[#A0F0E8] text-5xl md:text-7xl lg:text-[80px] font-extrabold text-center leading-[1.15] tracking-tight" style="text-shadow:0 4px 8px rgba(0,0,0,0.25)">올인원 의료 허브 플랫폼</h1>
       </div>
-      <h1 class="hero-title" style="font-size:3.5rem;font-weight:800;line-height:1.1;letter-spacing:-.02em;">
-        <span class="gradient-text">한국 의료의 우수성</span>으로<br>향하는 관문
-      </h1>
-      <p class="hero-sub" style="font-size:1.25rem;color:var(--text-tertiary);max-width:40rem;margin:1.5rem auto 2.5rem;line-height:1.6;">
-        한국 최고의 병원에서 교육 일정을 확인하세요. 펠로우십, 임상 관찰, 고급 프로그램에 지원하세요 — 하나의 플랫폼에서 모두 가능합니다.
-      </p>
-      <div class="hero-btns" style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:4rem;">
-        <a href="programs.html" class="btn btn-primary btn-lg" style="text-decoration:none;">
-          프로그램 탐색
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
-        <button class="btn btn-outline btn-lg">병원 관계자</button>
-      </div>
-
-      <!-- Live Schedule -->
-      <div style="max-width:48rem;margin:0 auto;position:relative;">
-        <div style="position:absolute;inset:-4px;background:linear-gradient(135deg,rgba(51,145,255,.15),rgba(142,206,255,.08));border-radius:1.25rem;filter:blur(12px);"></div>
-        <div class="schedule-box" style="position:relative;">
-          <div class="schedule-header">
-            <div style="display:flex;align-items:center;gap:.75rem;">
-              <div style="width:.5rem;height:.5rem;border-radius:50%;background:#34d399;"></div>
-              <span style="font-size:.875rem;font-weight:500;color:var(--text-secondary);">실시간 교육 일정</span>
-            </div>
-            <span style="font-size:.75rem;color:var(--text-muted);">2분 전 업데이트</span>
+      <div class="absolute bottom-[60px] left-[60px] right-[60px]">
+        <div class="glass rounded-[20px] p-8 max-w-[520px] flex flex-col gap-6" style="background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.33)">
+          <p class="text-white text-base leading-relaxed max-w-[450px]">MediW는 해외 의료 전문가·에이전시·환자를 한국의 상급종합병원과 연결하는 B2B/B2C 통합 플랫폼입니다.<br>교육 연수, 의료 관광, 환자 유치를 하나의 시스템에서 관리하세요.</p>
+          <div class="flex items-center gap-4">
+            <a href="#" class="border-[1.5px] border-white text-white text-[15px] font-medium px-8 py-3.5 rounded-full flex items-center gap-2"><span class="w-8 h-[1px] bg-white inline-block"></span>무료로 시작하기</a>
+            <a href="#" class="bg-white text-[#1A1A1A] text-[15px] font-medium px-8 py-3.5 rounded-full border-[1.5px] border-[#1A1A1A22]">플랫폼 소개 보기</a>
           </div>
-          <div class="schedule-row">
-            <div style="display:flex;align-items:center;gap:1rem;">
-              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(41,128,185,.15);display:flex;align-items:center;justify-content:center;color:#2980b9;font-size:.7rem;font-weight:700;">SNU</div>
-              <div style="text-align:left;">
-                <div style="font-size:.875rem;font-weight:500;">심장외과 고급 펠로우십</div>
-                <div style="font-size:.75rem;color:var(--text-tertiary);">서울대학교병원 · 12주</div>
-              </div>
-            </div>
-            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
-              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(52,211,153,.1);color:#34d399;">3자리</span>
-              <span style="font-size:.75rem;color:var(--text-muted);">2026년 4월</span>
-            </div>
-          </div>
-          <div class="schedule-row">
-            <div style="display:flex;align-items:center;gap:1rem;">
-              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(142,68,173,.15);display:flex;align-items:center;justify-content:center;color:#8e44ad;font-size:.7rem;font-weight:700;">AMC</div>
-              <div style="text-align:left;">
-                <div style="font-size:.875rem;font-weight:500;">로봇수술 참관 프로그램</div>
-                <div style="font-size:.75rem;color:var(--text-tertiary);">서울아산병원 · 4주</div>
-              </div>
-            </div>
-
-            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
-              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(245,158,11,.1);color:#f59e0b;">5자리</span>
-              <span style="font-size:.75rem;color:var(--text-muted);">2026년 5월</span>
-            </div>
-          </div>
-          <div class="schedule-row">
-            <div style="display:flex;align-items:center;gap:1rem;">
-              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(231,76,60,.15);display:flex;align-items:center;justify-content:center;color:#e74c3c;font-size:.7rem;font-weight:700;">KUA</div>
-              <div style="text-align:left;">
-                <div style="font-size:.875rem;font-weight:500;">두개저 수술 실습 교육</div>
-                <div style="font-size:.75rem;color:var(--text-tertiary);">고려대학교 안암병원 · 2주</div>
-              </div>
-            </div>
-            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
-              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(52,211,153,.1);color:#34d399;">모집 중</span>
-              <span style="font-size:.75rem;color:var(--text-muted);">2026년 5월</span>
-            </div>
-          </div>
-          <div class="schedule-row">
-            <div style="display:flex;align-items:center;gap:1rem;">
-              <div style="width:2.5rem;height:2.5rem;border-radius:.5rem;background:rgba(22,160,133,.15);display:flex;align-items:center;justify-content:center;color:#16a085;font-size:.7rem;font-weight:700;">SEV</div>
-              <div style="text-align:left;">
-                <div style="font-size:.875rem;font-weight:500;">내시경 척추수술 펠로우십</div>
-                <div style="font-size:.75rem;color:var(--text-tertiary);">세브란스병원 · 8주</div>
-              </div>
-            </div>
-            <div class="schedule-meta" style="display:flex;align-items:center;gap:.75rem;">
-              <span style="font-size:.75rem;padding:.25rem .625rem;border-radius:9999px;background:rgba(239,68,68,.1);color:#ef4444;">2자리</span>
-              <span style="font-size:.75rem;color:var(--text-muted);">2026년 4월</span>
-            </div>
-          </div>
-          <a href="programs.html" style="display:block;padding:.75rem;text-align:center;font-size:.75rem;color:#3391ff;text-decoration:none;border-top:1px solid var(--border);transition:background .2s;">
-            모집 중인 47개 프로그램 모두 보기 →
-          </a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <div class="stats-strip">
-    <div class="stats-grid">
-      <div><div class="stat-num gradient-text">150+</div><div class="stat-label">파트너 병원</div></div>
-      <div><div class="stat-num gradient-text">23</div><div class="stat-label">서비스 제공 국가</div></div>
-      <div><div class="stat-num gradient-text">2,400+</div><div class="stat-label">완료된 프로그램</div></div>
-      <div><div class="stat-num gradient-text">98%</div><div class="stat-label">만족도</div></div>
     </div>
   </div>
+</section>
 
-  <!-- How It Works -->
-  <section id="how-it-works" class="section">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
-        <div class="section-label">이용 방법</div>
-        <h2 class="section-title" style="font-size:2.5rem;">검색부터 한국 도착까지</h2>
-        <p class="section-desc" style="margin-left:auto;margin-right:auto;">저희가 한국 최고의 병원과의 복잡한 과정을 처리합니다. 학습에만 집중하세요 — 나머지는 저희가 해결합니다.</p>
+<!-- ===== Section 2 - Glass Cards ===== -->
+<section class="relative bg-white px-[60px] py-20">
+  <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1752780602852-9045062423fa?w=1920&q=80')"></div>
+  <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent"></div>
+  <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">menu_book</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">의료 교육 연수</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">펠로우십, 임상 참관, 학술 교류 프로그램을 검색하고 원클릭으로 지원하세요.</p>
+    </div>
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">group</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">환자 유치 관리</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">CIS·동남아 환자 접수부터 병원 매칭, 컨시어지까지 전 과정을 통합 관리합니다.</p>
+    </div>
+    <div class="glass-card rounded-[20px] p-8 flex flex-col gap-4">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-[#1A1A1A]">bar_chart</span></div>
+      <h3 class="text-xl font-bold text-[#1A1A1A]">에이전시 대시보드</h3>
+      <p class="text-slate-txt text-sm leading-relaxed">해외 에이전시 전용 CRM으로 고객 현황, 수익, 정산을 실시간 추적하세요.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 3 - Stats ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-10 items-stretch">
+    <div class="flex-1 flex flex-col justify-center gap-12 py-10">
+      <div class="flex gap-10">
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">152</span><span class="text-navy text-2xl font-semibold leading-[1.3]">곳</span></div>
+          <p class="text-muted text-sm">협력 병원</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +12 이번 분기</span>
+        </div>
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">87</span><span class="text-navy text-2xl font-semibold leading-[1.3]">곳</span></div>
+          <p class="text-muted text-sm">에이전시 파트너</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +8 이번 분기</span>
+        </div>
       </div>
-      <div class="steps-grid fade-in">
-        <div class="step-card">
-          <div class="step-icon" style="background:rgba(51,145,255,.1);">
-            <svg width="24" height="24" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          </div>
-          <div style="font-size:.75rem;color:#3391ff;font-weight:600;margin-bottom:.375rem;">1단계</div>
-          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">검색 및 필터링</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">전문 분야, 병원, 기간 또는 날짜별로 검색하세요. 실시간 가용 현황과 프로그램 상세 정보를 확인하세요.</p>
+      <div class="flex gap-10">
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">47</span><span class="text-navy text-2xl font-semibold leading-[1.3]">개</span></div>
+          <p class="text-muted text-sm">모집 중인 프로그램</p>
+          <span class="inline-block bg-blue-50 text-blue-500 text-xs font-medium px-3 py-1 rounded-full w-fit">실시간 업데이트</span>
         </div>
-        <div class="step-card">
-          <div class="step-icon" style="background:rgba(142,68,173,.1);">
-            <svg width="24" height="24" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          </div>
-          <div style="font-size:.75rem;color:#8e44ad;font-weight:600;margin-bottom:.375rem;">2단계</div>
-          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">온라인 지원</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">자격 증명과 선호 사항을 제출하세요. 안전하게 서류를 업로드하세요. 저희가 확인 후 병원으로 전달합니다.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-icon" style="background:rgba(52,211,153,.1);">
-            <svg width="24" height="24" fill="none" stroke="#34d399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <div style="font-size:.75rem;color:#34d399;font-weight:600;margin-bottom:.375rem;">3단계</div>
-          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">확정 받기</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">저희 팀이 병원과 직접 조율합니다. 합격 통보와 상세 프로그램 일정을 받으세요.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-icon" style="background:rgba(245,158,11,.1);">
-            <svg width="24" height="24" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
-          </div>
-          <div style="font-size:.75rem;color:#f59e0b;font-weight:600;margin-bottom:.375rem;">4단계</div>
-          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:.5rem;">도착 및 교육</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.5;">공항 픽업, 숙소, 이동 — 모두 준비됩니다. 의료 교육에만 집중하세요.</p>
+        <div class="flex-1 flex flex-col gap-2">
+          <div class="flex items-end gap-1"><span class="text-navy text-[56px] font-bold leading-none tracking-[-2px]">324</span><span class="text-navy text-2xl font-semibold leading-[1.3]">건</span></div>
+          <p class="text-muted text-sm">이번 달 환자 문의</p>
+          <span class="inline-block bg-green-50 text-green-500 text-xs font-medium px-3 py-1 rounded-full w-fit">↑ +23% 전월 대비</span>
         </div>
       </div>
     </div>
-  </section>
+    <div class="flex-1 h-[400px]">
+      <img src="https://images.unsplash.com/photo-1630531210843-d6f343ad1f90?w=900&q=80" alt="Medical" class="w-full h-full object-cover rounded-2xl">
+    </div>
+  </div>
+</section>
 
-  <!-- Featured Hospitals -->
-  <section id="hospitals" class="section" style="background:var(--bg-secondary);transition:var(--transition);">
-    <div class="section-inner">
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;" class="fade-in">
-        <div>
-          <div class="section-label">주요 병원</div>
-          <h2 class="section-title">한국을 대표하는 의료 기관</h2>
-        </div>
-        <a href="programs.html" style="display:none;font-size:.875rem;color:#3391ff;text-decoration:none;" class="desktop-only-link">모든 병원 보기 →</a>
+<!-- ===== Section 4 - Clients ===== -->
+<section class="bg-white overflow-hidden">
+  <!-- Header -->
+  <div class="relative px-[60px] pt-10">
+    <div class="absolute inset-0 opacity-[0.16] bg-cover bg-center" style="background-image:url('./images/earth.png')"></div>
+    <div class="absolute top-[60px] right-0 w-[250px] h-full bg-gradient-to-l from-white to-transparent z-10"></div>
+    <div class="relative flex flex-col gap-6 max-w-[800px]">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">신뢰할 수 있는 파트너</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">함께 성장하는<br>글로벌 네트워크</h2>
+      <p class="text-muted text-base">MediW와 함께하는 대표 협력 병원과 해외 에이전시 파트너를 소개합니다.</p>
+      <div class="flex gap-2">
+        <button class="bg-navy text-white text-sm font-semibold px-6 py-3 rounded-full">대표 협력 병원</button>
+        <button class="text-muted text-sm font-medium px-6 py-3 rounded-full border border-[#E2E8F0]">해외 에이전시 파트너</button>
       </div>
-      <div class="hosp-grid fade-in">
-        <div class="card">
-          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(41,128,185,.2),var(--bg-tertiary));">
-            <div class="hosp-logo" style="color:#2980b9;">SNU</div>
-            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.9</div>
-          </div>
-          <div style="padding:1.5rem;">
-            <h3 style="font-size:1.125rem;font-weight:600;">서울대학교병원</h3>
-            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">서울 종로구</p>
-            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
-              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">심장외과</span>
-              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">종양학</span>
-              <span class="tag" style="background:rgba(41,128,185,.1);color:#2980b9;">정형외과</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
-              <span style="font-size:.75rem;color:var(--text-muted);">12개 프로그램 모집 중</span>
-              <a href="programs.html" style="font-size:.875rem;color:#3391ff;text-decoration:none;">상세 보기 →</a>
-            </div>
-          </div>
+    </div>
+  </div>
+  <!-- Partner Grid -->
+  <div class="px-[60px] py-6 space-y-4">
+    <div class="grid grid-cols-6 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-sm font-bold text-center leading-tight">Asseco<br>BUSINESS SOLUTIONS</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">Arthrex</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-extrabold text-center leading-tight">LIQUI<br>MOLY</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[22px] font-bold">TASOMIX</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[13px] font-semibold text-center leading-tight">STRANDHOTEL<br>SEEROSE</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold text-center leading-tight">elprosys<br>automotive</span></div>
+    </div>
+    <div class="grid grid-cols-6 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg italic font-bold">ENERGYNAT</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">BioActiveT</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[28px] font-light">CQURE</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-sm font-extrabold text-center leading-tight">MK<br>MEDICINE KEY</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-semibold">SolarEnergia</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold text-center leading-tight">VERA<br>HEALTH</span></div>
+    </div>
+    <div class="grid grid-cols-5 gap-4">
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-base font-semibold">Omegpharma</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-bold tracking-[2px]">ORIOFARM</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-xl font-bold">MEDIVER</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-lg font-extrabold text-center leading-tight">HOFFEN<br>FARMA</span></div>
+      <div class="glass-card rounded-xl h-[120px] flex items-center justify-center"><span class="text-[#333] text-[22px] font-semibold">Stoltronic</span></div>
+    </div>
+  </div>
+  <!-- Government Bar -->
+  <div class="relative overflow-hidden bg-white px-[60px] py-4 h-[120px]">
+    <div class="absolute left-0 top-0 w-[120px] h-full fade-left z-10"></div>
+    <div class="absolute right-0 top-0 w-[120px] h-full fade-right z-10"></div>
+    <div class="flex items-center gap-4 overflow-hidden h-full">
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">shield</span></div><span class="text-navy text-xl font-semibold">보건복지부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">language</span></div><span class="text-navy text-xl font-semibold">외교부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">menu_book</span></div><span class="text-navy text-xl font-semibold">교육부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">factory</span></div><span class="text-navy text-xl font-semibold">산업통상자원부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">memory</span></div><span class="text-navy text-xl font-semibold">과학기술정보통신부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">map</span></div><span class="text-navy text-xl font-semibold">국토교통부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">balance</span></div><span class="text-navy text-xl font-semibold">법무부</span></div>
+      <div class="flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-6 py-4 shrink-0"><div class="w-11 h-11 bg-blue-50 rounded-[10px] flex items-center justify-center"><span class="material-symbols-outlined text-blue-accent text-xl">verified_user</span></div><span class="text-navy text-xl font-semibold">행정안전부</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 5 - Stats Numbers ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex justify-between items-center border-y border-[#E2E8F0] py-12">
+    <div class="flex-1 text-center"><p class="text-[40px] font-bold text-[#1A1A1A]">152</p><p class="text-sm text-muted mt-1">파트너 병원</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">87</p><p class="text-sm text-muted mt-1">에이전시 파트너</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">23</p><p class="text-sm text-muted mt-1">서비스 국가</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">3,847</p><p class="text-sm text-muted mt-1">누적 환자 유치</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">1,260</p><p class="text-sm text-muted mt-1">연수 프로그램 완료</p></div>
+    <div class="flex-1 text-center border-l border-[#E2E8F0]"><p class="text-[40px] font-bold text-[#1A1A1A]">98.2%</p><p class="text-sm text-muted mt-1">고객 만족도</p></div>
+  </div>
+</section>
+
+<!-- ===== Section 6 - CEO Message ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-[60px]">
+    <div class="w-[720px] h-[820px] shrink-0 rounded-3xl overflow-hidden">
+      <img src="./images/ceo.png" alt="CEO" class="w-full h-full object-cover">
+    </div>
+    <div class="flex-1 flex flex-col gap-6 relative">
+      <p class="text-blue-accent text-sm font-bold">대표 인사말</p>
+      <h2 class="text-[#1A1A1A] text-5xl font-extrabold leading-[1.3] tracking-tight">"한국 의료의 <br>가치를 세계로"</h2>
+      <p class="text-[#334155] text-base leading-[1.7]">안녕하세요. RayBusiness Group 대표 김성재입니다.</p>
+      <p class="text-[#334155] text-base leading-[1.7]">지난 10년간 CIS·동남아 의료관광 현장에서 직접 겪은 경험을 바탕으로, 해외 환자와 의료 전문가들이 한국 의료 시스템에 접근하는 과정이 얼마나 복잡하고 비효율적인지 절감했습니다.</p>
+      <blockquote class="border-l-[3px] border-blue-accent pl-6">
+        <p class="text-[#1E293B] text-base italic font-medium leading-[1.7]">"병원과 에이전시 사이에서 수많은 이메일과 전화가 오가고, 환자 정보가 여러 곳에 분산되며, 정산은 늘 뒤늦게 이루어집니다. 이 문제를 기술로 해결하고자 MediW를 만들었습니다."</p>
+      </blockquote>
+      <p class="text-[#334155] text-base leading-[1.7]">MediW는 단순한 중개 플랫폼이 아닙니다. 병원의 교육 프로그램 관리, 에이전시의 고객 관리, 환자의 진료 예약까지 — 의료관광 생태계 전체를 하나의 디지털 인프라로 통합합니다. 대한민국이 글로벌 헬스케어의 중심이 될 수 있도록, 저희가 그 기반을 만들겠습니다.</p>
+      <hr class="border-[#E2E8F0]">
+      <div class="flex gap-8">
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">work</span><span class="text-[#94A3B8] text-[13px] font-medium">의료관광 10년 경력</span></div>
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">public</span><span class="text-[#94A3B8] text-[13px] font-medium">CIS·중앙아시아 전문</span></div>
+        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#94A3B8] text-xl">school</span><span class="text-[#94A3B8] text-[13px] font-medium">연세대 국제경영 석사</span></div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0">
+        <p class="text-[#1A1A1A] text-4xl font-bold text-right">김 성 재</p>
+        <p class="text-muted text-2xl font-medium text-right">대표이사 · CEO</p>
+        <p class="text-[#94A3B8] text-base text-right">RayBusiness Group</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 7 - Why MediW ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-16">
+    <div class="w-[360px] shrink-0 flex flex-col gap-4 pt-5">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">WHY MEDIW</p>
+      <h2 class="text-navy text-5xl font-bold">MEDI-W가 <br>필요한 이유</h2>
+      <p class="text-muted text-base leading-[1.7] max-w-[472px]">한국 의료관광 시장은 연간 60만 명 이상의 외국인 환자가 방문하지만, 여전히 아날로그 방식으로 운영됩니다.</p>
+    </div>
+    <div class="flex-1 grid grid-cols-2 grid-rows-2">
+      <div class="p-8 flex flex-col justify-end gap-2 border-r border-b border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 01</p>
+        <h3 class="text-navy text-[22px] font-bold">분산된 정보</h3>
+        <p class="text-muted text-sm leading-[1.7]">병원별로 프로그램 정보가 흩어져 있고, 검색·비교가 어렵습니다. 해외 의사는 어디서부터 시작해야 할지 모릅니다.</p>
+      </div>
+      <div class="p-8 flex flex-col gap-2 border-b border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 02</p>
+        <h3 class="text-navy text-[22px] font-bold">비효율적 커뮤니케이션</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시-병원 간 이메일·카톡·전화가 뒤섞이고, 환자 정보가 유실됩니다. 응답까지 평균 3~5일이 소요됩니다.</p>
+      </div>
+      <div class="p-8 flex flex-col justify-end gap-2 border-r border-[#E2E8F0]">
+        <p class="text-muted text-[13px] font-semibold">문제점 03</p>
+        <h3 class="text-navy text-[22px] font-bold">불투명한 정산</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시 커미션, 컨시어지 비용, 병원 진료비가 별도로 관리되어 정산 분쟁이 빈번합니다.</p>
+      </div>
+      <div class="p-8 flex flex-col justify-end gap-2">
+        <p class="text-muted text-[13px] font-semibold">MediW 솔루션</p>
+        <h3 class="text-navy text-[22px] font-bold">하나의 플랫폼으로 해결</h3>
+        <p class="text-muted text-sm leading-[1.7]">정보 검색, 지원, 커뮤니케이션, 컨시어지, 정산까지 — 모든 과정을 디지털화하여 투명하게 관리합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 8 - Revenue Model ===== -->
+<section class="bg-white px-[60px] py-20">
+  <div class="flex gap-12">
+    <div class="w-[320px] shrink-0 flex flex-col gap-4">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">수익 모델</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">MediW<br>수익 창출 가이드</h2>
+      <p class="text-muted text-base max-w-[397px]">MediW 파트너로서 안정적인 수익을 창출할 수 있는 3가지 핵심 모델을 소개합니다.</p>
+    </div>
+    <div class="flex-1 flex gap-6">
+      <!-- Card 1 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">환자 유치 커미션</h4>
+          <p class="text-[#94A3B8] text-[13px]">에이전시 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">해외 환자를 한국 병원에 연결할 때마다 진료비의 일정 비율을 커미션으로 수령합니다. 수술·치료·건강검진 모든 건에 적용됩니다.</p>
         </div>
-        <div class="card">
-          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(142,68,173,.2),var(--bg-tertiary));">
-            <div class="hosp-logo" style="color:#8e44ad;">AMC</div>
-            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.8</div>
-          </div>
-          <div style="padding:1.5rem;">
-            <h3 style="font-size:1.125rem;font-weight:600;">서울아산병원</h3>
-            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">서울 송파구</p>
-            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
-              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">로봇수술</span>
-              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">이식</span>
-              <span class="tag" style="background:rgba(142,68,173,.1);color:#8e44ad;">소화기</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
-              <span style="font-size:.75rem;color:var(--text-muted);">8개 프로그램 모집 중</span>
-              <a href="programs.html" style="font-size:.875rem;color:#8e44ad;text-decoration:none;">상세 보기 →</a>
-            </div>
-          </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">건강검진</span><span class="text-navy text-sm font-bold">10~15%</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">외래 진료</span><span class="text-navy text-sm font-bold">8~12%</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">수술/입원</span><span class="text-navy text-sm font-bold">5~10%</span></div>
         </div>
-        <div class="card">
-          <div class="hosp-card-top" style="background:linear-gradient(135deg,rgba(22,160,133,.2),var(--bg-tertiary));">
-            <div class="hosp-logo" style="color:#16a085;">SEV</div>
-            <div class="hosp-rating"><svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>4.9</div>
-          </div>
-          <div style="padding:1.5rem;">
-            <h3 style="font-size:1.125rem;font-weight:600;">세브란스병원 (연세)</h3>
-            <p style="font-size:.875rem;color:var(--text-tertiary);margin:.25rem 0 1rem;">서울 서대문구</p>
-            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;">
-              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">척추</span>
-              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">성형외과</span>
-              <span class="tag" style="background:rgba(22,160,133,.1);color:#16a085;">피부과</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
-              <span style="font-size:.75rem;color:var(--text-muted);">6개 프로그램 모집 중</span>
-              <a href="programs.html" style="font-size:.875rem;color:#16a085;text-decoration:none;">상세 보기 →</a>
-            </div>
-          </div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <!-- Card 2 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">컨시어지 패키지</h4>
+          <p class="text-[#94A3B8] text-[13px]">에이전시 · 병원 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">공항 픽업, 숙소, 통역, 관광 등 부가 서비스를 패키지로 판매합니다. 환자 1인당 평균 부가 매출을 극대화할 수 있습니다.</p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">기본 패키지</span><span class="text-navy text-sm font-bold">$500~800</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">프리미엄 패키지</span><span class="text-navy text-sm font-bold">$1,200~2,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">VIP 패키지</span><span class="text-navy text-sm font-bold">$3,000+</span></div>
+        </div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <!-- Card 3 -->
+      <div class="flex-1 flex flex-col justify-between p-8 h-[380px]">
+        <div class="flex flex-col gap-2">
+          <h4 class="text-navy text-xl font-bold">교육 연수 수수료</h4>
+          <p class="text-[#94A3B8] text-[13px]">병원 · 플랫폼 대상</p>
+          <p class="text-slate-txt text-sm leading-[1.7]">해외 의사의 교육 연수 프로그램 등록 시 참가비의 일부가 플랫폼 이용료로 책정됩니다. 병원은 글로벌 인재를 확보합니다.</p>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex justify-between py-3"><span class="text-slate-txt text-sm">단기 참관 (1~2주)</span><span class="text-navy text-sm font-bold">$1,500~3,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">중기 연수 (4~8주)</span><span class="text-navy text-sm font-bold">$5,000~12,000</span></div>
+          <div class="flex justify-between py-3 border-t border-[#E2E8F0]"><span class="text-slate-txt text-sm">장기 펠로우십 (12주+)</span><span class="text-navy text-sm font-bold">$15,000~30,000</span></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Specialties -->
-  <section class="section">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
-        <div class="section-label">전문 분야</div>
-        <h2 class="section-title" style="font-size:2.5rem;">전문 분야를 찾으세요</h2>
-        <p class="section-desc" style="margin-left:auto;margin-right:auto;">한국 최고의 교육 병원에서 20개 이상의 의료 전문 분야 교육 프로그램을 탐색하세요.</p>
-      </div>
-      <div class="spec-grid fade-in">
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(239,68,68,.1);"><svg width="28" height="28" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">심장내과</div><div style="font-size:.75rem;color:var(--text-muted);">18개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(59,130,246,.1);"><svg width="28" height="28" fill="none" stroke="#3b82f6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div style="font-weight:500;font-size:.875rem;">로봇수술</div><div style="font-size:.75rem;color:var(--text-muted);">12개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(139,92,246,.1);"><svg width="28" height="28" fill="none" stroke="#8b5cf6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg></div><div style="font-weight:500;font-size:.875rem;">피부과</div><div style="font-size:.75rem;color:var(--text-muted);">15개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(6,182,212,.1);"><svg width="28" height="28" fill="none" stroke="#06b6d4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></div><div style="font-weight:500;font-size:.875rem;">안과</div><div style="font-size:.75rem;color:var(--text-muted);">9개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(34,197,94,.1);"><svg width="28" height="28" fill="none" stroke="#22c55e" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div><div style="font-weight:500;font-size:.875rem;">종양학</div><div style="font-size:.75rem;color:var(--text-muted);">14개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(249,115,22,.1);"><svg width="28" height="28" fill="none" stroke="#f97316" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg></div><div style="font-weight:500;font-size:.875rem;">정형외과</div><div style="font-size:.75rem;color:var(--text-muted);">11개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(236,72,153,.1);"><svg width="28" height="28" fill="none" stroke="#ec4899" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">성형외과</div><div style="font-size:.75rem;color:var(--text-muted);">20개 프로그램</div></div>
-        <div class="spec-card"><div class="spec-icon" style="background:rgba(20,184,166,.1);"><svg width="28" height="28" fill="none" stroke="#14b8a6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div style="font-weight:500;font-size:.875rem;">+ 13개 더</div><div style="font-size:.75rem;color:var(--text-muted);">모두 보기</div></div>
+<!-- ===== Section 9 - Workflow ===== -->
+<section class="bg-[#f7f7f7] px-[60px] py-20">
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">활용 방법</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">회원 유형별 <br>최적화 워크플로우</h2>
+      <p class="text-muted text-base">회원 유형에 따라 최적화된 워크플로우를 제공합니다.</p>
+      <div class="flex gap-2 mt-2">
+        <button class="bg-navy text-white text-sm font-semibold px-6 py-2.5 rounded-full">병원</button>
+        <button class="text-muted text-sm font-medium px-6 py-2.5 rounded-full border border-[#E2E8F0]">에이전시</button>
+        <button class="text-muted text-sm font-medium px-6 py-2.5 rounded-full border border-[#E2E8F0]">의사 및 환자</button>
       </div>
     </div>
-  </section>
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-4 gap-5">
+      <!-- Row 1 -->
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">01</span>
+        <h3 class="font-inter text-[22px] font-bold">교육 프로그램 등록</h3>
+        <p class="text-muted text-sm leading-[1.7]">진료과, 일정, 정원, 비용을 설정하고<br>교육 프로그램을 플랫폼에 등록합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1758206523660-3ef5a51f1113?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">03</span>
+        <h3 class="font-inter text-[22px] font-bold">환자 유치 관리</h3>
+        <p class="text-muted text-sm leading-[1.7]">에이전시를 통해 연계된 환자를 접수하고<br>진료 일정을 체계적으로 관리합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1758691463354-055e4d72e5fc?w=600&q=80" class="w-full h-full object-cover"></div>
+      <!-- Row 2 -->
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1579356687668-cbdd5a551c18?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">02</span>
+        <h3 class="font-inter text-[22px] font-bold">지원자 접수 및 심사</h3>
+        <p class="text-muted text-sm leading-[1.7]">서류 검토, 면접을 진행한 후<br>합격자에게 통보합니다.</p>
+      </div>
+      <div class="rounded-[20px] overflow-hidden h-[220px]"><img src="https://images.unsplash.com/photo-1668600418417-aa0c6ed84e8c?w=600&q=80" class="w-full h-full object-cover"></div>
+      <div class="bg-white/50 border border-[#E2E8F0] rounded-[20px] p-8 flex flex-col gap-5 h-[220px]">
+        <span class="text-muted text-base font-bold tracking-tight">04</span>
+        <h3 class="font-inter text-[22px] font-bold">정산 및 리포트</h3>
+        <p class="text-muted text-sm leading-[1.7]">월별 매출과 에이전시 커미션을<br>자동으로 정산하고 리포트를 확인합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- Concierge -->
-  <section id="concierge" class="section" style="background:var(--bg-secondary);transition:var(--transition);">
-    <div class="section-inner">
-      <div class="conc-grid">
-        <div class="fade-in">
-          <div class="section-label">풀서비스 컨시어지</div>
-          <h2 class="section-title">단순히 연결만 하지 않습니다.<br>모든 것을 관리합니다.</h2>
-          <p style="color:var(--text-tertiary);margin:1rem 0 2rem;line-height:1.6;">한국에 도착하는 순간부터 출국까지, 저희 컨시어지 팀이 물류를 처리하여 중요한 일에 집중할 수 있도록 합니다.</p>
-          <div style="display:flex;flex-direction:column;gap:.75rem;">
-            <div class="conc-item"><div class="conc-icon" style="background:rgba(51,145,255,.1);"><svg width="20" height="20" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">공항 픽업 및 이동</div><div style="font-size:.75rem;color:var(--text-tertiary);">인천/김포 공항에서 전용 차량 대기.</div></div></div>
-            <div class="conc-item"><div class="conc-icon" style="background:rgba(142,68,173,.1);"><svg width="20" height="20" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">프리미엄 숙소</div><div style="font-size:.75rem;color:var(--text-tertiary);">병원 인근 3-5성급 호텔.</div></div></div>
-            <div class="conc-item"><div class="conc-icon" style="background:rgba(52,211,153,.1);"><svg width="20" height="20" fill="none" stroke="#34d399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">통역 및 지원</div><div style="font-size:.75rem;color:var(--text-tertiary);">24시간 다국어 코디네이터.</div></div></div>
-            <div class="conc-item"><div class="conc-icon" style="background:rgba(245,158,11,.1);"><svg width="20" height="20" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div><div><div style="font-size:.875rem;font-weight:500;">비자 및 서류 지원</div><div style="font-size:.75rem;color:var(--text-tertiary);">초청장 및 비자 안내.</div></div></div>
-          </div>
+<!-- ===== Section 10 - Hospital List ===== -->
+<section class="bg-white min-h-[1020px] relative px-[60px] py-20">
+  <div class="flex gap-20">
+    <div class="w-[600px] shrink-0 flex flex-col gap-5 pt-5">
+      <p class="text-muted text-sm font-medium">리스트</p>
+      <h2 class="text-navy text-5xl font-bold leading-[1.15] tracking-tight">대한민국<br>대표 의료 기관</h2>
+      <p class="text-muted text-[15px] leading-[1.7] max-w-[450px]">MEDI-W는 세계적 수준의 의료 기관들과 협력하여 최상의 의료 서비스를 제공합니다.</p>
+      <div class="flex gap-2">
+        <button class="bg-navy text-white text-sm font-semibold px-5 py-2.5 rounded-full">중증환자</button>
+        <button class="text-muted text-sm font-medium px-5 py-2.5 rounded-full border border-[#E2E8F0]">성형 및 피부</button>
+        <button class="text-muted text-sm font-medium px-5 py-2.5 rounded-full border border-[#E2E8F0]">의학연수</button>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-col">
+      <!-- Item 1 - expanded -->
+      <div class="flex gap-10 py-9 border-t border-navy/20">
+        <span class="text-navy text-sm">01</span>
+        <div class="flex-1 flex flex-col gap-5">
+          <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEOUL NATIONAL<br>UNIVERSITY HOSPITAL</h3>
+          <p class="text-[#8B8578] text-[13px] leading-relaxed max-w-[420px]">We create a complete design concept, carefully balancing style and functionality to reflect your vision in every detail.</p>
         </div>
-        <div class="fade-in">
-          <div class="trip-box">
-            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
-              <div style="width:.5rem;height:.5rem;border-radius:50%;background:#34d399;"></div>
-              <span style="font-size:.875rem;font-weight:500;color:var(--text-secondary);">여행 대시보드</span>
-            </div>
-            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">항공편 도착</span><span style="font-size:.75rem;color:#34d399;">확정</span></div><div style="font-size:.875rem;font-weight:500;">KC 932 · Almaty → Incheon</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">2026년 4월 14일 · 08:40 KST</div></div>
-            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">공항 픽업</span><span style="font-size:.75rem;color:#3391ff;">예정</span></div><div style="font-size:.875rem;font-weight:500;">김 기사님 · 블랙 제네시스 G80</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">제1터미널 · A 게이트</div></div>
-            <div class="trip-card"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">숙소</span><span style="font-size:.75rem;color:#34d399;">예약 완료</span></div><div style="font-size:.875rem;font-weight:500;">롯데호텔 서울 · 디럭스</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">4/14 – 5/10 · 26박</div></div>
-            <div class="trip-card" style="border:1px solid rgba(51,145,255,.2);"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem;"><span style="font-size:.75rem;color:var(--text-tertiary);">교육 프로그램</span><span style="font-size:.75rem;color:#f59e0b;">3일 후 시작</span></div><div style="font-size:.875rem;font-weight:500;">심장외과 · 서울대병원</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;">4/17 – 5/9 · 김 교수님 팀</div></div>
-          </div>
+        <div class="w-[260px] h-[180px] rounded-lg overflow-hidden shrink-0"><img src="https://images.unsplash.com/photo-1770381142493-075344e6fc9b?w=400&q=80" class="w-full h-full object-cover"></div>
+      </div>
+      <!-- Item 2 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">02</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEVERANCE<br>HOSPITAL</h3>
+      </div>
+      <!-- Item 3 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">03</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">ASAN MEDICAL<br>CENTER</h3>
+      </div>
+      <!-- Item 4 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">04</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SAMSUNG SEOUL<br>HOSPITAL</h3>
+      </div>
+      <!-- Item 5 -->
+      <div class="flex gap-10 py-9 border-t border-navy/20 items-baseline">
+        <span class="text-navy text-sm">05</span>
+        <h3 class="text-navy text-[42px] font-bold leading-[1.05] tracking-tight">SEOUL ST. MARY'S<br>HOSPITAL</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 11 - Banner ===== -->
+<section class="bg-white p-5">
+  <div class="flex gap-5 h-[920px]">
+    <!-- Left - large banner -->
+    <div class="flex-[1192] rounded-2xl overflow-hidden relative bg-cover bg-center flex flex-col justify-end p-8 gap-4" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,0.67)),url('https://images.unsplash.com/photo-1714462550204-5e2ab9ea0546?w=1200&q=80')">
+      <p class="text-white/70 text-sm font-semibold tracking-[2px]">MEDI-W 2026</p>
+      <h2 class="text-white text-6xl font-bold leading-[1.3]">상반기 교육<br>프로그램 모집</h2>
+      <p class="text-white/85 text-base leading-relaxed">한국 최고의 대학병원에서 진행되는 전문 의료 교육에 참여하세요. 조기 마감될 수 있습니다.</p>
+      <div><a href="#" class="inline-block bg-white text-black text-sm font-semibold px-8 py-4 rounded-[10px]">프로그램 보기</a></div>
+    </div>
+    <!-- Right column -->
+    <div class="flex-[584] flex flex-col gap-5">
+      <!-- Top card -->
+      <div class="flex-[340] bg-[#e7e8ed] rounded-2xl p-8 flex flex-col justify-end gap-2">
+        <h3 class="text-[32px] font-bold leading-[1.2]">글로벌 의료<br>네트워크</h3>
+        <p class="text-sm opacity-70">전 세계 50개국 에이전시와 연결</p>
+        <a href="#" class="inline-block bg-white text-navy text-sm font-semibold px-8 py-4 rounded-[10px] w-fit mt-2">프로그램 보기</a>
+      </div>
+      <!-- Bottom card -->
+      <div class="flex-[560] rounded-2xl overflow-hidden relative bg-cover bg-center flex flex-col justify-end p-8 gap-2" style="background-image:linear-gradient(to bottom,transparent,rgba(0,0,0,0.67)),url('https://images.unsplash.com/photo-1666886573264-38075cc56104?w=800&q=80')">
+        <h3 class="text-white text-[28px] font-bold leading-[1.2]">컨시어지<br>프리미엄 케어</h3>
+        <p class="text-white/80 text-sm leading-relaxed">공항 픽업부터 숙소, 통역까지<br>올인원 의료 관광 서비스</p>
+        <a href="#" class="inline-block bg-white text-black text-sm font-semibold px-8 py-4 rounded-[10px] w-fit mt-2">프로그램 보기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 12 - Testimonials ===== -->
+<section class="bg-white px-[60px] py-20 overflow-hidden">
+  <div class="flex justify-between items-end mb-12">
+    <div class="flex flex-col gap-4">
+      <p class="text-cyan text-sm font-semibold tracking-[2px]">후기</p>
+      <h2 class="text-navy text-5xl font-bold tracking-tight">MEDI-W<br>실사용자 후기</h2>
+    </div>
+    <div class="flex gap-4">
+      <button class="w-12 h-12 rounded-full border border-[#E2E8F0] flex items-center justify-center"><span class="material-symbols-outlined text-navy">arrow_back</span></button>
+      <button class="w-12 h-12 rounded-full bg-navy flex items-center justify-center"><span class="material-symbols-outlined text-white">arrow_forward</span></button>
+    </div>
+  </div>
+  <div class="grid grid-cols-3 gap-6">
+    <!-- Card 1 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"전체 과정이 매끄러웠습니다. 적합한 심장외과 프로그램을 찾는 것부터 호텔 예약까지 — 모든 것이 처리되었습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-cyan flex items-center justify-center text-white font-bold text-sm">AK</div><div><p class="text-navy text-sm font-semibold">Dr. Amir Kozlov</p><p class="text-muted text-[13px]">우즈베키스탄 · 심장외과</p></div></div>
+    </div>
+    <!-- Card 2 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"의료 관광 에이전시로서, MediW가 전체 업무 흐름을 간소화해 주었습니다. 고객 관리와 병원 협력이 수월해졌습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-cyan flex items-center justify-center text-white font-bold text-sm">NI</div><div><p class="text-navy text-sm font-semibold">Nurlan Ismailov</p><p class="text-muted text-[13px]">카자흐스탄 · MedTour Central 대표</p></div></div>
+    </div>
+    <!-- Card 3 -->
+    <div class="bg-white border border-[#E2E8F0] rounded-xl p-8 flex flex-col justify-between min-h-[300px]">
+      <div><p class="text-yellow-400 text-base tracking-[2px] mb-5">★ ★ ★ ★ ★</p><p class="text-navy text-base leading-[1.7]">"세브란스에서의 척추수술 참관은 세계적인 수준이었습니다. 컨시어지 지원 덕분에 프리미엄 경험이었습니다."</p></div>
+      <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full bg-amber-600 flex items-center justify-center text-white font-bold text-sm">PD</div><div><p class="text-navy text-sm font-semibold">Dr. Pham Duc</p><p class="text-muted text-[13px]">베트남 · 정형외과</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 13 - CTA & Contact ===== -->
+<section class="relative overflow-hidden" style="background-image:linear-gradient(rgba(0,0,0,0.53),rgba(0,0,0,0.53)),url('https://images.unsplash.com/photo-1728676839129-2e9417e07414?w=1920&q=80');background-size:cover;background-position:center">
+  <div class="flex gap-10 px-[60px] py-20">
+    <div class="flex-1 flex flex-col gap-8">
+      <p class="text-white/70 text-sm font-semibold tracking-[2px]">문의하기</p>
+      <h2 class="text-white text-5xl font-bold leading-[1.3] font-inter max-w-[600px]">글로벌 의료 <br>네트워크의 시작</h2>
+      <div class="flex flex-col gap-3 max-w-fit">
+        <div class="flex flex-col gap-1">
+          <p class="text-muted text-sm font-inter">이메일</p>
+          <p class="text-white text-base font-inter font-semibold">contact@mediw.co.kr</p>
+        </div>
+        <div class="flex flex-col gap-1">
+          <p class="text-muted text-sm font-inter">전화</p>
+          <p class="text-white text-base font-inter font-semibold">+82-2-1234-5678</p>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="section">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:3rem;" class="fade-in">
-        <div class="section-label">후기</div>
-        <h2 class="section-title">전 세계 의료 전문가들이 신뢰합니다</h2>
+    <!-- Contact Form -->
+    <div class="w-[500px] shrink-0 rounded-[20px] p-10 flex flex-col gap-6" style="background:rgba(255,255,255,0.19);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.27)">
+      <h3 class="text-white text-xl font-semibold font-inter leading-[1.5]">한국 의료와 연결하고 싶으신가요?<br>지금 바로 문의하세요</h3>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Name*</label>
+        <input type="text" class="w-full h-11 rounded-lg bg-transparent border border-white/33 px-3 text-white text-sm outline-none focus:border-white/60">
       </div>
-      <div class="test-grid fade-in">
-        <div class="test-card">
-          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"전체 과정이 매끄러웠습니다. 적합한 심장외과 프로그램을 찾는 것부터 호텔 예약까지 — 모든 것이 처리되었습니다."</p>
-          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#3391ff,#1a6ff5);">A</div><div><div style="font-size:.875rem;font-weight:500;">Dr. Aidar Suleimenov</div><div style="font-size:.75rem;color:var(--text-muted);">심장내과 전문의 · 카자흐스탄 알마티</div></div></div>
-        </div>
-        <div class="test-card">
-          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"의료 관광 에이전시로서, MediW가 전체 업무 흐름을 간소화해 주었습니다. 고객 관리와 병원 협력이 수월해졌습니다."</p>
-          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#8e44ad,#6c3483);">M</div><div><div style="font-size:.875rem;font-weight:500;">Marina Kozlova</div><div style="font-size:.75rem;color:var(--text-muted);">CEO, MedTravel Agency · 모스크바</div></div></div>
-        </div>
-        <div class="test-card">
-          <div class="stars"><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="star" fill="#f59e0b" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;margin-bottom:1.5rem;">"세브란스에서의 척추수술 참관은 세계적인 수준이었습니다. 컨시어지 지원 덕분에 프리미엄 경험이었습니다."</p>
-          <div style="display:flex;align-items:center;gap:.75rem;"><div class="avatar" style="background:linear-gradient(135deg,#16a085,#1abc9c);">B</div><div><div style="font-size:.875rem;font-weight:500;">Dr. Batbayar Enkhbat</div><div style="font-size:.75rem;color:var(--text-muted);">정형외과 전문의 · 울란바토르</div></div></div>
-        </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Email*</label>
+        <input type="email" class="w-full h-11 rounded-lg bg-transparent border border-white/33 px-3 text-white text-sm outline-none focus:border-white/60">
       </div>
-    </div>
-  </section>
-
-  <!-- Partner Cards -->
-  <section class="section" style="background:var(--bg-secondary);transition:var(--transition);">
-    <div class="section-inner">
-      <div class="partner-grid fade-in">
-        <div class="partner-card" style="background:linear-gradient(135deg,rgba(51,145,255,.08),var(--bg-card));border:1px solid rgba(51,145,255,.15);">
-          <div class="section-label">병원 관계자</div>
-          <h3 style="font-size:1.5rem;font-weight:700;margin:.75rem 0;">해외 의료 전문가와 연결하세요</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;">교육 프로그램을 등록하고, 지원을 관리하며, 전 세계 우수 전문가들과 연결하세요.</p>
-          <ul><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>교육 일정 게시</li><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>지원자 자격 검토</li><li><svg width="16" height="16" fill="none" stroke="#3391ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>전용 병원 대시보드</li></ul>
-          <button class="btn btn-primary">파트너 되기</button>
-        </div>
-        <div class="partner-card" style="background:linear-gradient(135deg,rgba(142,68,173,.08),var(--bg-card));border:1px solid rgba(142,68,173,.15);">
-          <div class="section-label" style="color:#8e44ad;">에이전시 및 여행 파트너</div>
-          <h3 style="font-size:1.5rem;font-weight:700;margin:.75rem 0;">의료 관광 비즈니스를 확장하세요</h3>
-          <p style="font-size:.875rem;color:var(--text-tertiary);line-height:1.6;">고객을 등록하고, 케이스를 관리하며, 대시보드에서 한국 병원과 협력하세요.</p>
-          <ul><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>고객 케이스 등록 및 관리</li><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>병원 직접 협력</li><li><svg width="16" height="16" fill="none" stroke="#8e44ad" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>수익 추적 및 정산</li></ul>
-          <button class="btn" style="background:#8e44ad;color:#fff;padding:.625rem 1.25rem;">파트너 되기</button>
-        </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-white/80 text-[13px] font-medium font-inter">Text Message*</label>
+        <textarea class="w-full h-[60px] rounded-lg bg-transparent border border-white/33 px-3 py-2 text-white text-sm outline-none focus:border-white/60 resize-none"></textarea>
       </div>
+      <button class="w-full h-[50px] bg-[#1A1A1A] text-white text-base font-semibold font-inter rounded-full">Send →</button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section class="section cta-section" style="position:relative;overflow:hidden;">
-    <div class="glow" style="width:800px;height:400px;background:#3391ff;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.08;"></div>
-    <div style="position:relative;max-width:48rem;margin:0 auto;">
-      <h2>한국에서 <span class="gradient-text">의료 경력을 발전</span>시킬<br>준비가 되셨나요?</h2>
-      <p style="color:var(--text-tertiary);font-size:1.125rem;margin:1.5rem auto 2.5rem;max-width:36rem;line-height:1.6;">한국의 세계적 의료 시스템으로 향하는 관문으로 MediW를 선택한 수천 명의 의료 전문가와 함께하세요.</p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
-        <a href="programs.html" class="btn btn-primary btn-lg" style="text-decoration:none;">모집 중인 프로그램 보기</a>
-        <button class="btn btn-outline btn-lg">문의하기</button>
-      </div>
+<!-- ===== Section 14 - Footer ===== -->
+<footer class="bg-black px-[60px] pt-[60px] pb-10">
+  <div class="flex gap-10 mb-[60px]">
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-base font-bold font-inter tracking-[2px]">MEDI-W ™</p>
+      <p class="text-white text-sm font-inter leading-relaxed max-w-[300px]">환자와 의료진을 매끄럽게 연결하는<br>스마트 의료 예약 서비스.</p>
     </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-grid">
-      <div>
-        <div class="logo" style="margin-bottom:1rem;">
-          <div class="logo-icon">M</div>
-          <span class="logo-text">MediW</span>
-        </div>
-        <p style="font-size:.75rem;color:var(--text-muted);line-height:1.6;max-width:16rem;">한국 의료의 우수성으로 향하는 관문. 전 세계 전문가와 세계적 수준의 병원을 연결합니다.</p>
-      </div>
-      <div class="footer-col"><div class="footer-col-title">플랫폼</div><a href="programs.html">교육 프로그램</a><a href="#">병원 디렉토리</a><a href="#">환자 서비스</a><a href="#">컨시어지</a></div>
-      <div class="footer-col"><div class="footer-col-title">파트너</div><a href="#">병원 관계자</a><a href="#">에이전시</a><a href="#">파트너 되기</a><a href="#">호텔 컨소시엄</a></div>
-      <div class="footer-col"><div class="footer-col-title">회사</div><a href="#">RBG 소개</a><a href="#">채용</a><a href="#">블로그</a><a href="#">연락처</a></div>
-      <div class="footer-col"><div class="footer-col-title">언어</div><a href="#">Русский</a><a href="#">Қазақша</a><a href="#">Монгол</a><a href="#">English</a></div>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">서비스</p>
+      <a href="#" class="text-white text-sm font-inter">기능</a>
+      <a href="#" class="text-white text-sm font-inter">요금제</a>
+      <a href="#" class="text-white text-sm font-inter">사례 연구</a>
+      <a href="#" class="text-white text-sm font-inter">업데이트</a>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 RayBusiness Group. All rights reserved. 모든 권리 보유.</span>
-      <div><a href="#">개인정보</a><a href="#">이용약관</a><a href="#">쿠키</a></div>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">회사</p>
+      <a href="#" class="text-white text-sm font-inter">소개</a>
+      <a href="#" class="text-white text-sm font-inter">채용</a>
+      <a href="#" class="text-white text-sm font-inter">블로그</a>
+      <a href="#" class="text-white text-sm font-inter">문의</a>
     </div>
-  </footer>
+    <div class="flex-1 flex flex-col gap-4">
+      <p class="text-white text-sm font-semibold font-inter">지원</p>
+      <a href="#" class="text-white text-sm font-inter">고객센터</a>
+      <a href="#" class="text-white text-sm font-inter">문서</a>
+      <a href="#" class="text-white text-sm font-inter">개인정보처리방침</a>
+      <a href="#" class="text-white text-sm font-inter">이용약관</a>
+    </div>
+  </div>
+  <div class="flex justify-between items-center pt-5 border-t border-white/10">
+    <p class="text-white text-[13px] font-inter">© 2026 MEDI-W. 모든 권리 보유.</p>
+    <div class="flex gap-6">
+      <a href="#" class="text-white text-[13px] font-inter">트위터</a>
+      <a href="#" class="text-white text-[13px] font-inter">링크드인</a>
+      <a href="#" class="text-white text-[13px] font-inter">인스타그램</a>
+    </div>
+  </div>
+</footer>
 
-  <script>
-    // Theme
-    function getTheme(){return localStorage.getItem('mediw-theme')||'dark';}
-    function setTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mediw-theme',t);}
-    function toggleTheme(){setTheme(getTheme()==='dark'?'light':'dark');}
-    setTheme(getTheme());
-
-    // Mobile menu
-    function toggleMobile(){document.getElementById('mobileMenu').classList.toggle('open');}
-
-    // Language
-    function changeLanguage(lang){localStorage.setItem('language',lang);console.log('Language changed to:',lang);}
-    if(document.getElementById('langSelector')){document.getElementById('langSelector').value=localStorage.getItem('language')||'en';}
-
-    // Fade in
-    const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:.1});
-    document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-
-    // Show desktop login
-    if(window.innerWidth>768)document.getElementById('loginBtnDesktop').style.display='';
-  </script>
 </body>
 </html>
